@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+/* Gilroy Font Face Declarations */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/Gilroy-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/Gilroy-ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --brand-teal: #236B7C;
+  --brand-orange: #D98958;
+  --brand-ivory: #F3F3E0;
+  --brand-teal-dark: #1c4d59;
+  --brand-orange-dark: #a35a3d;
+  --font-gilroy: 'Gilroy', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 400;
+  color: var(--brand-teal-dark);
+  background: #fafafa;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* Logo styling with Gilroy */
+.logo {
+  font-family: var(--font-gilroy);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Modern headings with clean styling */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-gilroy), serif;
+  font-weight: 700;
+  color: var(--brand-teal);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 1.25rem;
+}
+
+/* Clean body text */
+p {
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--brand-teal-dark);
+  margin-bottom: 1.75rem;
+}
+
+/* Elegant emphasis */
+strong {
+  font-weight: 600;
+  color: var(--brand-teal);
+}
+
+em {
+  font-style: italic;
+  color: var(--brand-orange);
+  font-weight: 500;
+}
+
+/* Clean links */
+a {
+  color: var(--brand-teal);
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+a:hover {
+  color: var(--brand-orange);
+}
+
+/* Modern buttons */
+button {
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+/* Clean lists */
+ul, ol {
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+}
+
+li {
+  font-weight: 400;
+  color: var(--brand-teal-dark);
+  margin-bottom: 0.75rem;
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+/* Elegant blockquotes */
+blockquote {
+  border-left: 3px solid var(--brand-orange);
+  padding-left: 2rem;
+  margin: 3rem 0;
+  font-style: italic;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--brand-teal);
+  background: var(--brand-ivory);
+  padding: 2rem;
+  border-radius: 8px;
+  position: relative;
+}
+
+blockquote::before {
+  content: '"';
+  font-size: 4rem;
+  color: var(--brand-orange);
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  font-family: var(--font-playfair), serif;
+}
+
+/* Clean code styling */
+code {
+  background-color: var(--brand-ivory);
+  color: var(--brand-teal);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+pre {
+  background-color: var(--brand-ivory);
+  padding: 2rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  border: 1px solid #e5e5e5;
+  margin: 2rem 0;
+}
+
+/* Utilities */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Clean focus styles */
+*:focus {
+  outline: 2px solid var(--brand-orange);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Selection styles */
+::selection {
+  background-color: var(--brand-teal);
+  color: white;
+}
+
+/* Minimal scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-teal);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-orange);
+}
+
+/* Modern card styling */
+.card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--brand-teal);
+  transform: translateY(-2px);
+}
+
+/* Modern button base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.btn-primary {
+  background: var(--brand-teal);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--brand-orange);
+  color: white;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--brand-teal);
+  border-color: var(--brand-teal);
+}
+
+.btn-outline:hover {
+  background: var(--brand-teal);
+  color: white;
+}
