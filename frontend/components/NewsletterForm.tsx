@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Button from "./Button";
 
 interface NewsletterFormProps {
     variant?: 'default' | 'inline' | 'sidebar' | 'blog-post';
@@ -45,6 +44,7 @@ export default function NewsletterForm({
                 setError(data.message || "Something went wrong. Please try again.");
             }
         } catch (err) {
+            console.error('Newsletter subscription error:', err);
             setError("Failed to subscribe. Please check your connection and try again.");
         } finally {
             setIsLoading(false);

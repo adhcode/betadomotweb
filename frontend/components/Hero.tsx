@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function Hero() {
     const [isVisible, setIsVisible] = useState(false);
@@ -15,13 +15,6 @@ export default function Hero() {
 
         return () => clearTimeout(timer);
     }, []);
-
-    const scrollToProducts = () => {
-        const productsSection = document.getElementById('featured-products');
-        if (productsSection) {
-            productsSection.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
 
     return (
         <section className="relative min-h-screen flex items-center justify-center bg-white overflow-hidden">

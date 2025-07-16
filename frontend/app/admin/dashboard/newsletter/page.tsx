@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     Mail,
@@ -8,11 +8,9 @@ import {
     Eye,
     Users,
     FileText,
-    Settings,
     AlertCircle,
     CheckCircle,
-    RefreshCw,
-    Download
+    RefreshCw
 } from 'lucide-react';
 
 interface NewsletterStats {
@@ -172,6 +170,7 @@ export default function NewsletterPage() {
     const [sending, setSending] = useState(false);
     const [view, setView] = useState<'composer' | 'subscribers'>('composer');
     const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+    const [loadingSubscribers, setLoadingSubscribers] = useState(false);
     const [newSubscriberEmail, setNewSubscriberEmail] = useState('');
     const [productDetails, setProductDetails] = useState({
         name: '',
@@ -225,34 +224,35 @@ export default function NewsletterPage() {
         }
     };
 
-    const loadStats = async () => {
+    const loadStats = useCallback(async () => {
+        setLoading(true);
+        setError('');
         try {
-            setError('');
-            // Try to get newsletter stats, but provide fallback if endpoint doesn't exist
-            try {
-                const data = await makeAuthenticatedRequest('/admin/newsletter/stats');
-                if (data) {
-                    setStats(data);
-                }
-            } catch (error) {
-                // Fallback: get subscriber count from main dashboard
-                const dashboardData = await makeAuthenticatedRequest('/admin/dashboard');
-                if (dashboardData) {
-                    setStats({
-                        total_subscribers: dashboardData.total_subscribers || 0,
-                        active_subscribers: dashboardData.total_subscribers || 0,
-                        last_sent: null,
-                        total_sent: 0,
-                        open_rate: 'N/A'
-                    });
-                }
-            }
-        } catch (error) {
-            setError(error instanceof Error ? error.message : 'Failed to load stats');
+            const response = await fetch('http://localhost:8080/admin/newsletter/stats');
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            const data = await response.json();
+            setStats(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load stats');
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
+
+    const loadSubscribers = useCallback(async () => {
+        setLoadingSubscribers(true);
+        setError('');
+        try {
+            const response = await fetch('http://localhost:8080/admin/newsletter/subscribers');
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            const data = await response.json();
+            setSubscribers(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load subscribers');
+        } finally {
+            setLoadingSubscribers(false);
+        }
+    }, []);
 
     const handleTemplateSelect = (templateId: string) => {
         const template = DEFAULT_TEMPLATES.find(t => t.id === templateId);
@@ -337,6 +337,28 @@ export default function NewsletterPage() {
         setPreviewMode(true);
     };
 
+    const handleAddSubscriber = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newSubscriberEmail) {
+            setError('Please enter an email address.');
+            return;
+        }
+
+        try {
+            setError('');
+            setSuccess('');
+            await makeAuthenticatedRequest('/newsletter/subscribe', {
+                method: 'POST',
+                body: JSON.stringify({ email: newSubscriberEmail })
+            });
+            setSuccess(`Successfully subscribed ${newSubscriberEmail}.`);
+            setNewSubscriberEmail('');
+            loadSubscribers(); // Refresh the list
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to subscribe');
+        }
+    };
+
     useEffect(() => {
         if (selectedTemplate === 'product') {
             const template = DEFAULT_TEMPLATES.find(t => t.id === 'product');
@@ -355,47 +377,12 @@ export default function NewsletterPage() {
         }
     }, [productDetails, selectedTemplate]);
 
-    const loadSubscribers = async () => {
-        try {
-            setError('');
-            const data = await makeAuthenticatedRequest('/admin/subscribers');
-            if (data) {
-                setSubscribers(data);
-            }
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to load subscribers');
-        }
-    };
-
-    const handleAddSubscriber = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newSubscriberEmail) {
-            setError('Please enter an email address.');
-            return;
-        }
-
-        try {
-            setError('');
-            setSuccess('');
-            // Using the public endpoint, which is fine for admin use
-            await makeAuthenticatedRequest('/newsletter/subscribe', {
-                method: 'POST',
-                body: JSON.stringify({ email: newSubscriberEmail })
-            });
-            setSuccess(`Successfully subscribed ${newSubscriberEmail}.`);
-            setNewSubscriberEmail('');
-            loadSubscribers(); // Refresh the list
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to subscribe');
-        }
-    };
-
     useEffect(() => {
         loadStats();
         loadSubscribers();
-    }, []);
+    }, [loadStats, loadSubscribers]);
 
-    const StatCard = ({ title, value, icon: Icon }: any) => (
+    const StatCard = ({ title, value, icon: Icon }: { title: string; value: string | number; icon: React.ComponentType<{ className?: string }> }) => (
         <div className="bg-white rounded-xl p-6 ring-1 ring-gray-200 hover:ring-gray-300 hover:shadow-md transition-shadow duration-200">
             <div className="flex items-center justify-between">
                 <div>
@@ -688,19 +675,26 @@ export default function NewsletterPage() {
                             />
                             <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Add</button>
                         </form>
-                        <div className="divide-y divide-gray-200">
-                            {subscribers.map(sub => (
-                                <div key={sub.id} className="py-3 flex justify-between items-center">
-                                    <div>
-                                        <p className="font-medium">{sub.email}</p>
-                                        <p className="text-sm text-gray-500">Subscribed on {new Date(sub.subscribed_at).toLocaleDateString()}</p>
+                        {loadingSubscribers ? (
+                            <div className="text-center py-8">
+                                <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                                <p className="text-gray-500">Loading subscribers...</p>
+                            </div>
+                        ) : (
+                            <div className="divide-y divide-gray-200">
+                                {subscribers.map(sub => (
+                                    <div key={sub.id} className="py-3 flex justify-between items-center">
+                                        <div>
+                                            <p className="font-medium">{sub.email}</p>
+                                            <p className="text-sm text-gray-500">Subscribed on {new Date(sub.subscribed_at).toLocaleDateString()}</p>
+                                        </div>
+                                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${sub.status === 'subscribed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                                            {sub.status}
+                                        </span>
                                     </div>
-                                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${sub.status === 'subscribed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                                        {sub.status}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

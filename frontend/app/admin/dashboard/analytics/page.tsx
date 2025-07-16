@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, registerables } from 'chart.js';
@@ -44,7 +44,7 @@ export default function AnalyticsPage() {
         return res.json();
     };
 
-    const load = async () => {
+    const load = useCallback(async () => {
         try {
             setLoading(true);
             setError('');
@@ -55,11 +55,11 @@ export default function AnalyticsPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [makeAuthenticatedRequest]);
 
     useEffect(() => {
         load();
-    }, []);
+    }, [load]);
 
     const barData = {
         labels: ['Posts', 'Views', 'Comments', 'Subscribers'],

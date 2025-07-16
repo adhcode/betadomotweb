@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     BarChart2,
@@ -67,24 +67,30 @@ export default function AdminDashboard() {
         }
     };
 
-    const loadDashboardStats = async () => {
+    const loadDashboardStats = useCallback(async () => {
+        setLoading(true);
+        setError('');
         try {
-            setLoading(true);
-            setError('');
             const data = await makeAuthenticatedRequest('/admin/dashboard');
-            if (data) {
-                setStats(data);
-            }
+            setStats(data);
         } catch (error) {
             setError(error instanceof Error ? error.message : 'Failed to load dashboard');
         } finally {
             setLoading(false);
         }
-    };
+    }, [makeAuthenticatedRequest]);
 
     useEffect(() => {
         loadDashboardStats();
-    }, []);
+    }, [loadDashboardStats]);
+
+    interface StatCard {
+        title: string;
+        value: string | number;
+        change: string;
+        changeType: 'positive' | 'negative';
+        icon: React.ComponentType<{ className?: string }>;
+    }
 
     const StatCard = ({
         title,
@@ -94,7 +100,7 @@ export default function AdminDashboard() {
     }: {
         title: string;
         value: number | string;
-        icon: any;
+        icon: React.ComponentType<{ className?: string }>;
         change?: string | null;
     }) => (
         <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200/80">
@@ -118,13 +124,20 @@ export default function AdminDashboard() {
         </div>
     );
 
+    interface QuickAction {
+        title: string;
+        description: string;
+        href: string;
+        icon: React.ComponentType<{ className?: string }>;
+    }
+
     const QuickAction = ({
         title,
         icon: Icon,
         onClick,
     }: {
         title: string;
-        icon: any;
+        icon: React.ComponentType<{ className?: string }>;
         onClick: () => void;
     }) => (
         <button
@@ -280,7 +293,7 @@ export default function AdminDashboard() {
                                 </div>
                                 <div className="flex-1">
                                     <p className="text-sm font-medium text-gray-800">New comment received</p>
-                                    <p className="text-sm text-gray-500">On "Real Estate Market Trends"</p>
+                                    <p className="text-sm text-gray-500">On &quot;Real Estate Market Trends&quot;</p>
                                 </div>
                                 <div className="text-sm text-gray-400">2d ago</div>
                             </div>

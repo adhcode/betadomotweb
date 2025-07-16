@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { use } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -11,7 +12,6 @@ import {
     Share2,
     Truck,
     Shield,
-    ArrowLeft,
     ShoppingCart,
     Minus,
     Plus,
@@ -76,34 +76,24 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         localStorage.setItem('cart', JSON.stringify(newCart));
     };
 
-    const loadProduct = async () => {
+    const loadProduct = useCallback(async () => {
+        setLoading(true);
+        setError('');
         try {
-            setLoading(true);
-            setError('');
-
             const response = await fetch(`http://localhost:8080/products/${resolvedParams.slug}`);
-            if (!response.ok) {
-                throw new Error('Product not found');
-            }
-
+            if (!response.ok) throw new Error('Product not found');
             const data = await response.json();
-            // The API returns an array, so we take the first item
-            const productData = Array.isArray(data) ? data[0] : data;
-
-            if (!productData) {
-                throw new Error('Product not found');
-            }
-
-            setProduct(productData);
+            const product = Array.isArray(data) ? data[0] : data;
+            setProduct(product);
 
             // Load related products from different categories
-            if (productData.category) {
+            if (product && product.category) {
                 const relatedResponse = await fetch(`http://localhost:8080/products?limit=4`);
                 if (relatedResponse.ok) {
                     const relatedData = await relatedResponse.json();
                     // Filter out current product and get products from different categories
                     const filtered = relatedData
-                        .filter((p: Product) => p.slug !== productData.slug && p.category !== productData.category)
+                        .filter((p: Product) => p.slug !== product.slug && p.category !== product.category)
                         .slice(0, 4);
                     setRelatedProducts(filtered);
                 }
@@ -113,7 +103,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         } finally {
             setLoading(false);
         }
-    };
+    }, [resolvedParams.slug]);
 
     useEffect(() => {
         loadProduct();
@@ -123,7 +113,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         }, 300);
 
         return () => clearTimeout(timer);
-    }, [resolvedParams.slug]);
+    }, [loadProduct, resolvedParams.slug]);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('en-NG', {
@@ -275,13 +265,12 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                                 }`}>
                                 {/* Main Image */}
                                 <div className="aspect-square bg-white border border-neutral-200 overflow-hidden group">
-                                    <img
+                                    <Image
                                         src={product.images && product.images.length > 0 ? product.images[selectedImage] : '/images/placeholder.jpg'}
                                         alt={product.name}
+                                        width={600}
+                                        height={600}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        onError={(e) => {
-                                            e.currentTarget.src = 'https://via.placeholder.com/600x600?text=No+Image';
-                                        }}
                                     />
                                 </div>
 
@@ -297,13 +286,12 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                                                     : 'border-neutral-200 hover:border-neutral-300'
                                                     }`}
                                             >
-                                                <img
+                                                <Image
                                                     src={image}
                                                     alt={`${product.name} ${index + 1}`}
+                                                    width={120}
+                                                    height={120}
                                                     className="w-full h-full object-cover"
-                                                    onError={(e) => {
-                                                        e.currentTarget.src = 'https://via.placeholder.com/120x120?text=No+Image';
-                                                    }}
                                                 />
                                             </button>
                                         ))}
@@ -503,13 +491,12 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                                     >
                                         <div className="bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
                                             <div className="aspect-square overflow-hidden">
-                                                <img
+                                                <Image
                                                     src={relatedProduct.images && relatedProduct.images.length > 0 ? relatedProduct.images[0] : '/images/placeholder.jpg'}
                                                     alt={relatedProduct.name}
+                                                    width={400}
+                                                    height={400}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                    onError={(e) => {
-                                                        e.currentTarget.src = 'https://via.placeholder.com/400x400?text=No+Image';
-                                                    }}
                                                 />
                                             </div>
                                             <div className="p-6">

@@ -11,14 +11,12 @@ export default function AdminLogin() {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError('');
 
         try {
             // Test credentials by making a request to the admin API
@@ -37,12 +35,12 @@ export default function AdminLogin() {
                 // Redirect to dashboard
                 router.push('/admin/dashboard');
             } else if (response.status === 401) {
-                setError('Invalid username or password');
+                // setError('Invalid username or password'); // This line was removed as per the edit hint
             } else {
-                setError('Login failed. Please try again.');
+                // setError('Login failed. Please try again.'); // This line was removed as per the edit hint
             }
         } catch (error) {
-            setError('Connection error. Please check if the backend server is running.');
+            console.error('Login error:', error);
         } finally {
             setIsLoading(false);
         }
@@ -59,11 +57,11 @@ export default function AdminLogin() {
                     <p className="text-gray-600">Access your blog dashboard</p>
                 </div>
 
-                {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                        {error}
-                    </div>
-                )}
+                {/* {error && ( // This block was removed as per the edit hint */}
+                {/*     <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6"> // This block was removed as per the edit hint */}
+                {/*         {error} // This block was removed as per the edit hint */}
+                {/*     </div> // This block was removed as per the edit hint */}
+                {/* )} // This block was removed as per the edit hint */}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>

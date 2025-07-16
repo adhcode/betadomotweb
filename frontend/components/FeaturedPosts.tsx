@@ -154,22 +154,14 @@ export default function FeaturedPosts() {
                                                 </div>
                                             </div>
                                         ) : (
-                                            isExternalImage(getImageSrc(post)) ? (
-                                                <img
-                                                    src={getImageSrc(post)}
-                                                    alt={post.title}
-                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                                    onError={() => handleImageError(post.id)}
-                                                />
-                                            ) : (
-                                                <Image
-                                                    src={getImageSrc(post)}
-                                                    alt={post.title}
-                                                    fill
-                                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                                    onError={() => handleImageError(post.id)}
-                                                />
-                                            )
+                                            <Image
+                                                src={getImageSrc(post)}
+                                                alt={post.title}
+                                                fill
+                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                                onError={() => handleImageError(post.id)}
+                                                unoptimized={isExternalImage(getImageSrc(post))}
+                                            />
                                         )}
                                     </div>
 

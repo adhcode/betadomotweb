@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Upload, X, Image as ImageIcon } from 'lucide-react';
+import Image from 'next/image';
+import { Upload, X } from 'lucide-react';
 
 interface CloudinaryUploadProps {
     onUpload: (url: string) => void;
@@ -9,9 +10,26 @@ interface CloudinaryUploadProps {
     className?: string;
 }
 
+interface CloudinaryResult {
+    event: string;
+    info?: {
+        secure_url: string;
+        public_id: string;
+    };
+}
+
+interface CloudinaryError {
+    message: string;
+    code?: string;
+}
+
 declare global {
     interface Window {
-        cloudinary: any;
+        cloudinary: {
+            createUploadWidget: (options: Record<string, unknown>, callback: (error: CloudinaryError | null, result: CloudinaryResult | null) => void) => {
+                open: () => void;
+            };
+        };
     }
 }
 
@@ -59,16 +77,16 @@ export default function CloudinaryUpload({ onUpload, multiple = false, className
                     }
                 }
             },
-            (error: any, result: any) => {
+            (error: CloudinaryError | null, result: CloudinaryResult | null) => {
                 if (!error && result && result.event === 'success') {
-                    const imageUrl = result.info.secure_url;
+                    const imageUrl = result.info?.secure_url;
 
                     if (multiple) {
-                        setUploadedImages(prev => [...prev, imageUrl]);
-                        onUpload(imageUrl);
+                        setUploadedImages(prev => [...prev, imageUrl || '']);
+                        onUpload(imageUrl || '');
                     } else {
-                        setUploadedImages([imageUrl]);
-                        onUpload(imageUrl);
+                        setUploadedImages([imageUrl || '']);
+                        onUpload(imageUrl || '');
                     }
                 }
 
@@ -116,9 +134,11 @@ export default function CloudinaryUpload({ onUpload, multiple = false, className
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {uploadedImages.map((imageUrl, index) => (
                         <div key={index} className="relative group">
-                            <img
+                            <Image
                                 src={imageUrl}
                                 alt={`Uploaded ${index + 1}`}
+                                width={100}
+                                height={50}
                                 className="w-full h-24 object-cover rounded-lg border border-gray-200"
                             />
                             <button

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
     Plus,
@@ -94,24 +94,20 @@ export default function PostsPage() {
         }
     };
 
-    const loadPosts = async () => {
+    const loadPosts = useCallback(async () => {
+        setLoading(true);
+        setError('');
         try {
-            setLoading(true);
-            setError('');
-            console.log('📥 Loading posts...');
-            const data = await makeAuthenticatedRequest('/admin/posts');
-            console.log('📥 Received posts data:', data);
-            if (data) {
-                setPosts(data);
-                console.log('✅ Posts state updated with', data.length, 'posts');
-            }
-        } catch (error) {
-            console.error('❌ Load posts error:', error);
-            setError(error instanceof Error ? error.message : 'Failed to load posts');
+            const response = await fetch('http://localhost:8080/admin/posts');
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            const data = await response.json();
+            setPosts(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load posts');
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     const generateSlug = (title: string) => {
         return title
@@ -274,7 +270,7 @@ export default function PostsPage() {
         if (searchParams.get('action') === 'create') {
             setShowCreateForm(true);
         }
-    }, []);
+    }, [loadPosts, searchParams]);
 
     return (
         <div className="p-6 space-y-6">

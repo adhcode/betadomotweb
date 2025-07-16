@@ -1,7 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     RefreshCw,
@@ -73,22 +72,20 @@ export default function CommentsPage() {
         }
     };
 
-    const loadComments = async () => {
+    const loadComments = useCallback(async () => {
+        setLoading(true);
+        setError('');
         try {
-            setLoading(true);
-            setError('');
-            const data = await makeAuthenticatedRequest('/admin/comments');
-            if (data) {
-                setComments(data);
-            }
+            const response = await fetch('http://localhost:8080/admin/comments');
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            const data = await response.json();
+            setComments(data);
         } catch (err) {
-            setError(
-                err instanceof Error ? err.message : 'Failed to load comments.'
-            );
+            setError(err instanceof Error ? err.message : 'Failed to load comments.');
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     const handleDelete = async (id: string) => {
         if (!confirm('Delete this comment?')) return;
@@ -107,9 +104,9 @@ export default function CommentsPage() {
 
     useEffect(() => {
         loadComments();
-    }, []);
+    }, [loadComments]);
 
-    const safe = (val: any) => (typeof val === 'string' ? val.toLowerCase() : '');
+    const safe = (val: unknown) => (typeof val === 'string' ? val.toLowerCase() : '');
     const filtered = comments.filter(c =>
         safe(c.content).includes(searchTerm.toLowerCase()) ||
         safe(c.author).includes(searchTerm.toLowerCase()) ||
@@ -150,7 +147,7 @@ export default function CommentsPage() {
                     <input
                         type="text"
                         value={searchTerm}
-                        onChange={e => setSearchTerm(e.target.value)}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(event.target.value)}
                         placeholder="Search comments by text, author or slug..."
                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />

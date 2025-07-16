@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface Comment {
     id: string;
@@ -24,12 +24,7 @@ export default function Comments({ postSlug }: CommentsProps) {
         body: ''
     });
 
-    // Fetch comments
-    useEffect(() => {
-        fetchComments();
-    }, [postSlug]);
-
-    const fetchComments = async () => {
+    const fetchComments = useCallback(async () => {
         try {
             const response = await fetch(`http://localhost:8080/posts/${postSlug}/comments`);
             if (response.ok) {
@@ -41,7 +36,11 @@ export default function Comments({ postSlug }: CommentsProps) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [postSlug]);
+
+    useEffect(() => {
+        fetchComments();
+    }, [postSlug, fetchComments]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

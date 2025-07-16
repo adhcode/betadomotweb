@@ -46,7 +46,7 @@ export default function AdminLayout({
         try {
             const credentials = JSON.parse(savedCredentials);
             setUser(credentials);
-        } catch (error) {
+        } catch {
             router.push('/admin/login');
         }
     }, [router]);

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {
@@ -13,9 +14,7 @@ import {
     ArrowRight,
     Package,
     Truck,
-    Shield,
-    Check,
-    X
+    Shield
 } from 'lucide-react';
 
 interface Product {
@@ -174,7 +173,7 @@ export default function CartPage() {
                                 Your cart is empty
                             </h1>
                             <p className="font-body font-light text-neutral-600 text-lg mb-12 max-w-2xl mx-auto">
-                                Looks like you haven't added anything to your cart yet. Start shopping to fill it up!
+                                Looks like you haven&apos;t added anything to your cart yet. Start shopping to fill it up!
                             </p>
                             <button
                                 onClick={() => router.push('/products')}
@@ -242,13 +241,12 @@ export default function CartPage() {
                                                     {/* Product Image */}
                                                     <div className="flex-shrink-0">
                                                         <div className="w-24 h-24 bg-neutral-100 rounded-sm overflow-hidden">
-                                                            <img
+                                                            <Image
                                                                 src={item.product.images && item.product.images.length > 0 ? item.product.images[0] : '/images/placeholder.jpg'}
                                                                 alt={item.product.name}
+                                                                width={96}
+                                                                height={96}
                                                                 className="w-full h-full object-cover"
-                                                                onError={(e) => {
-                                                                    e.currentTarget.src = 'https://via.placeholder.com/96x96?text=No+Image';
-                                                                }}
                                                             />
                                                         </div>
                                                     </div>

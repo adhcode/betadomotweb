@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-    Star,
     ShoppingCart,
     Heart,
     Eye,
     ArrowRight
 } from 'lucide-react';
+import Image from 'next/image';
 
 interface Product {
     id: string;
@@ -128,13 +128,12 @@ export default function FeaturedProducts() {
                             <div className="bg-white border border-neutral-200 overflow-hidden hover:border-primary-900 transition-all duration-500 hover:shadow-lg hover:shadow-black/5">
                                 {/* Product Image */}
                                 <div className="relative aspect-square bg-neutral-50 overflow-hidden">
-                                    <img
+                                    <Image
                                         src={product.images && product.images.length > 0 ? product.images[0] : '/images/placeholder.jpg'}
                                         alt={product.name}
+                                        layout="fill"
+                                        objectFit="cover"
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                        onError={(e) => {
-                                            e.currentTarget.src = 'https://via.placeholder.com/400x400?text=No+Image';
-                                        }}
                                     />
                                     {product.sale_price && product.sale_price > 0 && (
                                         <div className="absolute top-4 left-4 bg-primary-900 text-white px-3 py-1 text-xs font-light tracking-wide">

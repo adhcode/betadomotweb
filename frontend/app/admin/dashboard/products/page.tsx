@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
     Plus,
     Edit3,
@@ -118,20 +119,20 @@ export default function ProductsPage() {
         }
     };
 
-    const loadProducts = async () => {
+    const loadProducts = useCallback(async () => {
+        setLoading(true);
+        setError('');
         try {
-            setLoading(true);
-            setError('');
-            const data = await makeAuthenticatedRequest('/admin/products');
-            if (data) {
-                setProducts(data);
-            }
-        } catch (error) {
-            setError(error instanceof Error ? error.message : 'Failed to load products');
+            const response = await fetch('http://localhost:8080/admin/products');
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            const data = await response.json();
+            setProducts(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load products');
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     const handleCreateProduct = async () => {
         if (!formData.name || formData.price <= 0) {
@@ -298,7 +299,7 @@ export default function ProductsPage() {
 
     useEffect(() => {
         loadProducts();
-    }, []);
+    }, [loadProducts]);
 
     return (
         <div className="space-y-8">
@@ -498,9 +499,11 @@ export default function ProductsPage() {
                                         <h4 className="text-sm font-medium text-gray-700">Uploaded Images:</h4>
                                         {formData.images.filter(img => img.trim()).map((image, index) => (
                                             <div key={index} className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg">
-                                                <img
+                                                <Image
                                                     src={image}
                                                     alt={`Product ${index + 1}`}
+                                                    width={64}
+                                                    height={64}
                                                     className="w-16 h-16 object-cover rounded border"
                                                     onError={(e) => {
                                                         e.currentTarget.src = 'https://via.placeholder.com/64x64?text=Error';
@@ -648,9 +651,11 @@ export default function ProductsPage() {
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-start space-x-4">
                                         {product.images && product.images.length > 0 && (
-                                            <img
+                                            <Image
                                                 src={product.images[0]}
                                                 alt={product.name}
+                                                width={64}
+                                                height={64}
                                                 className="w-16 h-16 object-cover rounded-lg"
                                                 onError={(e) => {
                                                     e.currentTarget.src = 'https://via.placeholder.com/64x64?text=No+Image';

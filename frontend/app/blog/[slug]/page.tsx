@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, use } from "react";
-import { ArrowLeft, Calendar, Clock, Eye, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Eye, Facebook, Twitter, Linkedin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Comments from "@/components/Comments";
@@ -239,7 +239,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                 <main className="min-h-screen bg-white pt-20">
                     <div className="max-w-4xl mx-auto px-6 sm:px-8 py-16 text-center">
                         <h1 className="text-2xl font-gilroy text-black mb-4">Post Not Found</h1>
-                        <p className="text-black mb-8">The blog post you're looking for doesn't exist.</p>
+                        <p className="text-black mb-8">The blog post you&apos;re looking for doesn&apos;t exist.</p>
                         <Link
                             href="/blog"
                             className="inline-flex items-center text-black hover:text-[#236b7c] transition-colors duration-300 font-gilroy tracking-wide"
@@ -346,24 +346,16 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                     {/* Featured Image */}
                     {post.featured_image && !imageError && (
                         <div className={`mb-12 transition-all duration-700 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                            {isExternalImage(post.featured_image) ? (
-                                <img
-                                    src={post.featured_image}
-                                    alt={post.title}
-                                    className="w-full h-auto object-cover rounded-lg shadow-lg"
-                                    onError={handleImageError}
-                                />
-                            ) : (
-                                <Image
-                                    src={post.featured_image}
-                                    alt={post.title}
-                                    width={800}
-                                    height={450}
-                                    className="w-full h-auto object-cover rounded-lg shadow-lg"
-                                    onError={handleImageError}
-                                    priority
-                                />
-                            )}
+                            <Image
+                                src={post.featured_image}
+                                alt={post.title}
+                                width={800}
+                                height={450}
+                                className="w-full h-auto object-cover rounded-lg shadow-lg"
+                                onError={handleImageError}
+                                priority
+                                unoptimized={isExternalImage(post.featured_image)}
+                            />
                         </div>
                     )}
 

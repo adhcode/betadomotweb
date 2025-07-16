@@ -1,20 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {
     Search,
     Grid,
     List,
-    Star,
     ShoppingCart,
     Heart,
     Eye,
-    ArrowRight,
-    Filter,
-    SlidersHorizontal
+    ArrowRight
 } from 'lucide-react';
 
 interface Product {
@@ -37,6 +35,15 @@ interface Product {
     updated_at: string;
 }
 
+interface CartItem {
+    product_id: string;
+    product_slug: string;
+    name: string;
+    price: number;
+    image: string;
+    quantity: number;
+}
+
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
@@ -46,40 +53,23 @@ export default function ProductsPage() {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [sortBy, setSortBy] = useState('newest');
     const [isVisible, setIsVisible] = useState(false);
-    const [showFilters, setShowFilters] = useState(false);
 
     const router = useRouter();
 
-    const loadProducts = async () => {
+    const loadProducts = useCallback(async () => {
+        setLoading(true);
+        setError('');
         try {
-            setLoading(true);
-            setError('');
-
-            let url = 'http://localhost:8080/products';
-            const params = new URLSearchParams();
-
-            if (selectedCategory) {
-                params.append('category', selectedCategory);
-            }
-
-            if (params.toString()) {
-                url += `?${params.toString()}`;
-            }
-
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error('Failed to fetch products');
-            }
-
+            const response = await fetch('http://localhost:8080/products');
+            if (!response.ok) throw new Error('Failed to fetch products');
             const data = await response.json();
-            setProducts(Array.isArray(data) ? data : []);
+            setProducts(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');
-            setProducts([]);
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         loadProducts();
@@ -89,7 +79,7 @@ export default function ProductsPage() {
         }, 300);
 
         return () => clearTimeout(timer);
-    }, [selectedCategory]);
+    }, [loadProducts]);
 
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -115,7 +105,7 @@ export default function ProductsPage() {
 
     const addToCart = (product: Product) => {
         const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existingItem = cartItems.find((item: any) => item.product_id === product.id);
+        const existingItem = cartItems.find((item: CartItem) => item.product_id === product.id);
 
         if (existingItem) {
             existingItem.quantity += 1;
@@ -155,9 +145,11 @@ export default function ProductsPage() {
             <div className="bg-white border border-neutral-200 overflow-hidden hover:border-[#dca744] transition-all duration-500 hover:shadow-xl hover:shadow-black/10 transform hover:-translate-y-1">
                 {/* Product Image */}
                 <div className="relative aspect-square overflow-hidden bg-neutral-50">
-                    <img
+                    <Image
                         src={product.images[0] || '/placeholder-product.jpg'}
                         alt={product.name}
+                        layout="fill"
+                        objectFit="cover"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
 

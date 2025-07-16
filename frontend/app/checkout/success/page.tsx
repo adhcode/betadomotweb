@@ -81,7 +81,7 @@ export default function CheckoutSuccessPage() {
                 <section className="py-16 sm:py-20 md:py-24 bg-neutral-50">
                     <div className="max-w-6xl mx-auto px-6 sm:px-8">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {/* What's Next */}
+                            {/* What&apos;s Next */}
                             <div className={`bg-white p-8 rounded-sm text-center transition-all duration-1200 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                                 }`}>
                                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -91,7 +91,7 @@ export default function CheckoutSuccessPage() {
                                     Order Confirmation
                                 </h3>
                                 <p className="font-body font-light text-neutral-600 text-sm leading-relaxed">
-                                    You'll receive an email confirmation with your order details and tracking information.
+                                    You&apos;ll receive an email confirmation with your order details and tracking information.
                                 </p>
                             </div>
 

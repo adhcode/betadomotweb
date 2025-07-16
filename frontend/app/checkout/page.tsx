@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import {
-    CreditCard,
     MapPin,
     User,
     Mail,
@@ -293,8 +293,8 @@ export default function CheckoutPage() {
                                 {[1, 2, 3].map((step) => (
                                     <div key={step} className="flex items-center gap-3">
                                         <div className={`w-8 h-8 rounded-full flex items-center justify-center font-body font-light text-sm transition-colors duration-300 ${step <= currentStep
-                                                ? 'bg-primary-900 text-white'
-                                                : 'bg-neutral-200 text-neutral-500'
+                                            ? 'bg-primary-900 text-white'
+                                            : 'bg-neutral-200 text-neutral-500'
                                             }`}>
                                             {step < currentStep ? <Check className="w-4 h-4" /> : step}
                                         </div>
@@ -669,10 +669,11 @@ export default function CheckoutPage() {
                                         {cart.map((item) => (
                                             <div key={item.product.id} className="flex items-center gap-4">
                                                 <div className="w-16 h-16 bg-white rounded-sm overflow-hidden">
-                                                    <img
+                                                    <Image
                                                         src={item.product.images && item.product.images.length > 0 ? item.product.images[0] : '/images/placeholder.jpg'}
                                                         alt={item.product.name}
-                                                        className="w-full h-full object-cover"
+                                                        width={64}
+                                                        height={64}
                                                         onError={(e) => {
                                                             e.currentTarget.src = 'https://via.placeholder.com/64x64?text=No+Image';
                                                         }}

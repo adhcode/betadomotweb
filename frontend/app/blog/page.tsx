@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -78,12 +78,6 @@ export default function BlogPage() {
         }
         console.log('✅ Using featured image for post:', post.id, 'URL:', post.featured_image);
         return post.featured_image;
-    };
-
-    const isExternalImage = (src: string) => {
-        const isExternal = src.startsWith('http://') || src.startsWith('https://');
-        console.log('🌐 Checking if external image:', src, 'Result:', isExternal);
-        return isExternal;
     };
 
     if (loading) {
@@ -209,9 +203,11 @@ export default function BlogPage() {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <img
+                                                <Image
                                                     src={getImageSrc(featuredPost)}
                                                     alt={featuredPost.title}
+                                                    width={600}
+                                                    height={450}
                                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                                     onError={() => handleImageError(featuredPost.id)}
                                                 />
@@ -229,7 +225,7 @@ export default function BlogPage() {
                     <section className="py-16">
                         <div className="max-w-7xl mx-auto px-6 sm:px-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
-                                {otherPosts.map((post, index) => (
+                                {otherPosts.map((post) => (
                                     <article key={post.id} className="group">
                                         <Link href={`/blog/${post.slug}`} className="block">
                                             <div className="space-y-6">
@@ -244,9 +240,11 @@ export default function BlogPage() {
                                                             </div>
                                                         </div>
                                                     ) : (
-                                                        <img
+                                                        <Image
                                                             src={getImageSrc(post)}
                                                             alt={post.title}
+                                                            width={400}
+                                                            height={300}
                                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                             onError={() => handleImageError(post.id)}
                                                         />
