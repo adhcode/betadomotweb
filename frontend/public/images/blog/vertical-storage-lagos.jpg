@@ -1,0 +1,79 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wallGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F8F8F0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F3F3E0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shelfGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D98958;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B8734A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Room background -->
+  <rect width="800" height="600" fill="url(#wallGradient)"/>
+  
+  <!-- Floor -->
+  <rect x="0" y="550" width="800" height="50" fill="#E8E8E0"/>
+  
+  <!-- Floor-to-ceiling shelving unit -->
+  <rect x="100" y="50" width="150" height="500" fill="url(#shelfGradient)" stroke="#A0673D" stroke-width="2"/>
+  
+  <!-- Individual shelves -->
+  <rect x="110" y="80" width="130" height="8" fill="#A0673D"/>
+  <rect x="110" y="140" width="130" height="8" fill="#A0673D"/>
+  <rect x="110" y="200" width="130" height="8" fill="#A0673D"/>
+  <rect x="110" y="260" width="130" height="8" fill="#A0673D"/>
+  <rect x="110" y="320" width="130" height="8" fill="#A0673D"/>
+  <rect x="110" y="380" width="130" height="8" fill="#A0673D"/>
+  <rect x="110" y="440" width="130" height="8" fill="#A0673D"/>
+  <rect x="110" y="500" width="130" height="8" fill="#A0673D"/>
+  
+  <!-- Items on shelves -->
+  <!-- Books -->
+  <rect x="115" y="90" width="8" height="40" fill="#236B7C"/>
+  <rect x="125" y="90" width="8" height="40" fill="#D98958"/>
+  <rect x="135" y="90" width="8" height="40" fill="#228B22"/>
+  <rect x="145" y="90" width="8" height="40" fill="#8B4513"/>
+  
+  <!-- Storage boxes -->
+  <rect x="160" y="100" width="70" height="30" fill="#C0C0C0" stroke="#A0A0A0" stroke-width="1"/>
+  <rect x="115" y="150" width="50" height="40" fill="#F0E68C" stroke="#DAA520" stroke-width="1"/>
+  <rect x="175" y="160" width="60" height="30" fill="#DDA0DD" stroke="#9370DB" stroke-width="1"/>
+  
+  <!-- Decorative items -->
+  <circle cx="130" cy="240" r="15" fill="#228B22"/>
+  <rect x="180" y="230" width="20" height="25" fill="#D2691E"/>
+  
+  <!-- Wall-mounted TV -->
+  <rect x="350" y="200" width="200" height="120" fill="#2F2F2F" stroke="#1A1A1A" stroke-width="3"/>
+  <rect x="360" y="210" width="180" height="100" fill="#000000"/>
+  
+  <!-- Floating shelves around TV -->
+  <rect x="300" y="150" width="80" height="8" fill="url(#shelfGradient)"/>
+  <rect x="570" y="150" width="80" height="8" fill="url(#shelfGradient)"/>
+  <rect x="300" y="350" width="80" height="8" fill="url(#shelfGradient)"/>
+  <rect x="570" y="350" width="80" height="8" fill="url(#shelfGradient)"/>
+  
+  <!-- Items on floating shelves -->
+  <rect x="310" y="140" width="15" height="20" fill="#D98958"/>
+  <circle cx="340" cy="145" r="8" fill="#236B7C"/>
+  <rect x="580" y="140" width="20" height="15" fill="#228B22"/>
+  <circle cx="620" cy="145" r="6" fill="#D98958"/>
+  
+  <!-- Above-door storage -->
+  <rect x="650" y="80" width="120" height="40" fill="#F0E68C" stroke="#DAA520" stroke-width="2"/>
+  <text x="710" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#8B4513">STORAGE</text>
+  
+  <!-- Door frame -->
+  <rect x="680" y="120" width="60" height="200" fill="none" stroke="#8B4513" stroke-width="3"/>
+  <circle cx="720" cy="220" r="3" fill="#FFD700"/>
+  
+  <!-- Vertical lines showing height -->
+  <line x1="80" y1="50" x2="80" y2="550" stroke="#FF6347" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="70" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#FF6347" transform="rotate(-90 70 300)">FLOOR TO CEILING</text>
+  
+  <!-- Text overlay -->
+  <text x="400" y="580" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#236B7C">Vertical Storage Solutions</text>
+  <text x="400" y="595" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">Maximize every inch from floor to ceiling</text>
+</svg> 

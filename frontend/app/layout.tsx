@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Cutive } from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -16,6 +16,13 @@ const inter = Inter({
   display: "swap",
 });
 
+const cutive = Cutive({
+  subsets: ["latin"],
+  variable: "--font-cutive",
+  weight: ["400"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "BetaDomot - Your Home, Your Story",
   description: "Your guide to creating beautiful, functional homes that tell your unique story. Fresh ideas and practical advice for modern Nigerian living.",
@@ -28,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${playfair.variable} ${inter.variable} font-body antialiased bg-white text-gray-900`}>
+      <body className={`${playfair.variable} ${inter.variable} ${cutive.variable} font-body antialiased bg-white text-gray-900`}>
         {children}
       </body>
     </html>

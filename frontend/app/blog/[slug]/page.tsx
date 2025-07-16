@@ -1,235 +1,424 @@
 "use client";
 
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { blogPosts } from "@/lib/blog-data";
-import ReactMarkdown from "react-markdown";
+import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect, use } from "react";
+import { ArrowLeft, Calendar, Clock, Eye, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Comments from "@/components/Comments";
 import NewsletterForm from "@/components/NewsletterForm";
-import { use } from "react";
-import React from "react";
+
+interface BlogPost {
+    id: string;
+    slug: string;
+    title: string;
+    excerpt: string;
+    content: string;
+    published_at: string;
+    read_time: string;
+    featured_image: string;
+    tags: string[];
+    views: number;
+}
 
 interface BlogPostPageProps {
-    params: Promise<{
-        slug: string;
-    }>;
+    params: Promise<{ slug: string }>;
 }
 
 export default function BlogPostPage({ params }: BlogPostPageProps) {
-    const { slug } = use(params);
-    const post = blogPosts.find((p) => p.id === slug);
+    // Unwrap the params Promise using React.use()
+    const resolvedParams = use(params);
+    const [post, setPost] = useState<BlogPost | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [isVisible, setIsVisible] = useState(false);
+    const [imageError, setImageError] = useState(false);
 
-    if (!post) {
-        notFound();
-    }
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                console.log('Fetching post with slug:', resolvedParams.slug);
+                const response = await fetch(`http://localhost:8080/posts/${resolvedParams.slug}`);
+                console.log('Response status:', response.status);
 
-    const markdownComponents = {
-        h1: (props: React.ComponentProps<'h1'>) => (
-            <h1 {...props} className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-gray-900 mt-8 sm:mt-12 mb-4 sm:mb-6 leading-tight">
-                {props.children}
-            </h1>
-        ),
-        h2: (props: React.ComponentProps<'h2'>) => (
-            <h2 {...props} className="font-heading font-bold text-xl sm:text-2xl md:text-3xl text-gray-900 mt-6 sm:mt-10 mb-3 sm:mb-5 leading-tight">
-                {props.children}
-            </h2>
-        ),
-        h3: (props: React.ComponentProps<'h3'>) => (
-            <h3 {...props} className="font-heading font-semibold text-lg sm:text-xl md:text-2xl text-gray-900 mt-5 sm:mt-8 mb-3 sm:mb-4 leading-tight">
-                {props.children}
-            </h3>
-        ),
-        p: (props: React.ComponentProps<'p'>) => {
-            return (
-                <p {...props} className="font-body text-base sm:text-lg text-gray-700 leading-relaxed mb-4 sm:mb-6">
-                    {props.children}
-                </p>
-            );
-        },
-        img: (props: React.ComponentProps<'img'>) => (
-            <Image
-                src={typeof props.src === 'string' ? props.src : ''}
-                alt={props.alt || ''}
-                width={800}
-                height={600}
-                className="w-full h-auto rounded-lg shadow-lg object-cover my-4"
-                style={{ aspectRatio: '4/3' }}
-            />
-        ),
-        em: (props: React.ComponentProps<'em'>) => {
-            // Check if this is likely a caption (italic text after an image)
-            const text = props.children?.toString() || '';
-            if (text.length > 20) { // Likely a caption
-                return (
-                    <span className="block text-center mt-2 mb-6 text-sm text-gray-600 italic leading-relaxed">
-                        {props.children}
-                    </span>
-                );
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.log('Post not found');
+                        notFound();
+                        return;
+                    }
+                    throw new Error(`Failed to fetch post: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Fetched post data:', data);
+                setPost(data);
+            } catch (err) {
+                console.error('Error fetching post:', err);
+                setError(err instanceof Error ? err.message : 'Failed to fetch post');
+            } finally {
+                setLoading(false);
             }
-            return (
-                <em {...props} className="italic text-gray-800">
-                    {props.children}
-                </em>
-            );
-        },
-        ul: (props: React.ComponentProps<'ul'>) => (
-            <ul {...props} className="font-body text-base sm:text-lg text-gray-700 leading-relaxed mb-4 sm:mb-6 pl-4 sm:pl-6 space-y-1 sm:space-y-2">
-                {props.children}
-            </ul>
-        ),
-        ol: (props: React.ComponentProps<'ol'>) => (
-            <ol {...props} className="font-body text-base sm:text-lg text-gray-700 leading-relaxed mb-4 sm:mb-6 pl-4 sm:pl-6 space-y-1 sm:space-y-2">
-                {props.children}
-            </ol>
-        ),
-        li: (props: React.ComponentProps<'li'>) => (
-            <li {...props} className="list-disc">
-                {props.children}
-            </li>
-        ),
-        strong: (props: React.ComponentProps<'strong'>) => (
-            <strong {...props} className="font-bold text-gray-900">
-                {props.children}
-            </strong>
-        ),
-        blockquote: (props: React.ComponentProps<'blockquote'>) => (
-            <blockquote {...props} className="border-l-4 border-brand-teal pl-4 sm:pl-6 my-6 sm:my-8 italic font-body text-base sm:text-lg text-gray-600">
-                {props.children}
-            </blockquote>
-        ),
-        code: (props: React.ComponentProps<'code'>) => (
-            <code {...props} className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800">
-                {props.children}
-            </code>
-        ),
+        };
+
+        fetchPost();
+
+        const timer = setTimeout(() => {
+            setIsVisible(true);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [resolvedParams.slug]);
+
+    const formatDate = (dateString: string) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
     };
 
-    // Process content to handle newsletter signups
-    const processContent = (content: string) => {
-        const parts = content.split('<NewsletterSignup />');
-        const elements: React.ReactNode[] = [];
+    const formatContent = (content: string) => {
+        if (!content) return '';
 
-        parts.forEach((part, index) => {
-            if (part.trim()) {
-                elements.push(
-                    <ReactMarkdown
-                        key={`content-${index}`}
-                        components={markdownComponents}
-                    >
-                        {part}
-                    </ReactMarkdown>
-                );
+        let html = content;
+
+        // Split content into paragraphs and process each one
+        const paragraphs = html.split(/\n\s*\n/);
+
+        html = paragraphs.map(paragraph => {
+            paragraph = paragraph.trim();
+            if (!paragraph) return '';
+
+            // Convert headings
+            if (paragraph.startsWith('### ')) {
+                return `<h3 class="text-2xl font-bold text-black mb-4 mt-8">${paragraph.substring(4)}</h3>`;
+            }
+            if (paragraph.startsWith('## ')) {
+                return `<h2 class="text-3xl font-bold text-black mb-6 mt-10 border-b border-neutral-200 pb-3">${paragraph.substring(3)}</h2>`;
+            }
+            if (paragraph.startsWith('# ')) {
+                return `<h1 class="text-4xl font-bold text-black mb-6 mt-8">${paragraph.substring(2)}</h1>`;
             }
 
-            // Add newsletter signup between parts (except after the last part)
-            if (index < parts.length - 1) {
-                elements.push(
-                    <div key={`newsletter-${index}`} className="bg-gradient-to-r from-brand-teal-50 to-brand-orange-50 rounded-2xl p-6 sm:p-8 my-8 sm:my-12 border border-brand-teal-100">
-                        <div className="max-w-2xl mx-auto text-center">
-                            <h3 className="font-heading font-bold text-xl sm:text-2xl text-brand-teal-600 mb-2 sm:mb-3">
-                                🏠 Want More Lagos Living Tips?
-                            </h3>
-                            <p className="font-body text-sm sm:text-base text-brand-teal-700 leading-relaxed mb-4 sm:mb-6">
-                                Get practical home design advice and space-saving hacks delivered to your inbox weekly.
-                            </p>
-                            <NewsletterForm variant="inline" />
+            // Convert bullet points
+            if (paragraph.includes('- ')) {
+                const lines = paragraph.split('\n');
+                const listItems = lines
+                    .filter(line => line.trim().startsWith('- '))
+                    .map(line => `<li class="mb-2 text-black text-lg leading-relaxed">${line.trim().substring(2)}</li>`)
+                    .join('');
+                const nonListContent = lines
+                    .filter(line => !line.trim().startsWith('- '))
+                    .join(' ')
+                    .trim();
+
+                let result = '';
+                if (nonListContent) {
+                    result += `<p class="text-lg leading-relaxed text-black mb-6">${nonListContent}</p>`;
+                }
+                if (listItems) {
+                    result += `<ul class="list-disc pl-6 mb-6 space-y-2">${listItems}</ul>`;
+                }
+                return result;
+            }
+
+            // Convert numbered lists
+            if (/\d+\./.test(paragraph)) {
+                const lines = paragraph.split('\n');
+                const listItems = lines
+                    .filter(line => /^\d+\./.test(line.trim()))
+                    .map(line => `<li class="mb-2 text-black text-lg leading-relaxed">${line.trim().replace(/^\d+\.\s*/, '')}</li>`)
+                    .join('');
+                const nonListContent = lines
+                    .filter(line => !/^\d+\./.test(line.trim()))
+                    .join(' ')
+                    .trim();
+
+                let result = '';
+                if (nonListContent) {
+                    result += `<p class="text-lg leading-relaxed text-black mb-6">${nonListContent}</p>`;
+                }
+                if (listItems) {
+                    result += `<ol class="list-decimal pl-6 mb-6 space-y-2">${listItems}</ol>`;
+                }
+                return result;
+            }
+
+            // Convert code blocks
+            if (paragraph.includes('```')) {
+                return `<pre class="bg-neutral-900 text-white p-6 rounded-lg overflow-x-auto mb-6 text-sm"><code>${paragraph.replace(/```[\w]*\n?/, '').replace(/```$/, '')}</code></pre>`;
+            }
+
+            // Convert inline code
+            paragraph = paragraph.replace(/`([^`]+)`/g, '<code class="bg-neutral-100 px-2 py-1 rounded text-[#236b7c] text-base">$1</code>');
+
+            // Convert bold text
+            paragraph = paragraph.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-[#236b7c]">$1</strong>');
+
+            // Convert italic text
+            paragraph = paragraph.replace(/\*([^*]+)\*/g, '<em class="italic text-[#dca744]">$1</em>');
+
+            // Convert links
+            paragraph = paragraph.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-[#dca744] hover:text-[#236b7c] transition-colors duration-300 underline">$1</a>');
+
+            // Convert blockquotes
+            if (paragraph.startsWith('> ')) {
+                return `<blockquote class="border-l-4 border-[#236b7c] pl-6 py-4 my-6 bg-neutral-50 rounded-r-lg italic text-lg text-black">${paragraph.substring(2)}</blockquote>`;
+            }
+
+            // Regular paragraph
+            return `<p class="text-lg leading-relaxed text-black mb-6">${paragraph}</p>`;
+        }).join('');
+
+        return html;
+    };
+
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const shareTitle = post?.title || '';
+
+    const handleImageError = () => {
+        setImageError(true);
+    };
+
+    const isExternalImage = (src: string) => {
+        return src.startsWith('http://') || src.startsWith('https://');
+    };
+
+    if (loading) {
+        return (
+            <>
+                <Header />
+                <main className="min-h-screen bg-white pt-20">
+                    <div className="max-w-4xl mx-auto px-6 sm:px-8 py-16">
+                        <div className="animate-pulse">
+                            <div className="h-4 bg-neutral-200 rounded w-24 mb-8"></div>
+                            <div className="h-12 bg-neutral-200 rounded w-full mb-6"></div>
+                            <div className="h-6 bg-neutral-200 rounded w-3/4 mb-8"></div>
+                            <div className="aspect-[16/9] bg-neutral-200 rounded mb-12"></div>
+                            <div className="space-y-4">
+                                {[1, 2, 3, 4, 5].map((i) => (
+                                    <div key={i} className="h-4 bg-neutral-200 rounded w-full"></div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                );
-            }
-        });
+                </main>
+                <Footer />
+            </>
+        );
+    }
 
-        return elements;
-    };
+    if (error) {
+        return (
+            <>
+                <Header />
+                <main className="min-h-screen bg-white pt-20">
+                    <div className="max-w-4xl mx-auto px-6 sm:px-8 py-16 text-center">
+                        <h1 className="text-2xl font-gilroy text-black mb-4">Error Loading Post</h1>
+                        <p className="text-black mb-8">{error}</p>
+                        <Link
+                            href="/blog"
+                            className="inline-flex items-center text-black hover:text-[#236b7c] transition-colors duration-300 font-gilroy tracking-wide"
+                        >
+                            <ArrowLeft className="w-4 h-4 mr-2" />
+                            Back to Blog
+                        </Link>
+                    </div>
+                </main>
+                <Footer />
+            </>
+        );
+    }
+
+    if (!post) {
+        return (
+            <>
+                <Header />
+                <main className="min-h-screen bg-white pt-20">
+                    <div className="max-w-4xl mx-auto px-6 sm:px-8 py-16 text-center">
+                        <h1 className="text-2xl font-gilroy text-black mb-4">Post Not Found</h1>
+                        <p className="text-black mb-8">The blog post you're looking for doesn't exist.</p>
+                        <Link
+                            href="/blog"
+                            className="inline-flex items-center text-black hover:text-[#236b7c] transition-colors duration-300 font-gilroy tracking-wide"
+                        >
+                            <ArrowLeft className="w-4 h-4 mr-2" />
+                            Back to Blog
+                        </Link>
+                    </div>
+                </main>
+                <Footer />
+            </>
+        );
+    }
 
     return (
         <>
             <Header />
-            <main className="bg-white min-h-screen">
-                <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-                    {/* Back Link */}
-                    <div className="mb-8 sm:mb-12">
+            <main className="min-h-screen bg-white">
+                {/* Back to Blog Button */}
+                <div className="pt-24 pb-8">
+                    <div className="max-w-4xl mx-auto px-6 sm:px-8">
                         <Link
                             href="/blog"
-                            className="inline-flex items-center font-body text-gray-600 hover:text-brand-teal transition-colors"
+                            className={`inline-flex items-center text-black hover:text-[#236b7c] transition-all duration-300 font-gilroy tracking-wide group ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                         >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Back to Journal
+                            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
+                            Back to Blog
                         </Link>
                     </div>
+                </div>
 
-                    {/* Post Header */}
-                    <header className="mb-8 sm:mb-12">
-                        <div className="flex items-center text-sm text-gray-500 font-body mb-4 sm:mb-6">
-                            <time>{post.date}</time>
-                            <span className="mx-2">·</span>
-                            <span>{post.readTime}</span>
+                <article className="max-w-4xl mx-auto px-6 sm:px-8 pb-16">
+                    {/* Article Meta */}
+                    <div className={`flex flex-wrap items-center gap-6 text-sm mb-8 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                        <div className="flex items-center text-black">
+                            <Calendar className="w-4 h-4 mr-2" />
+                            <span className="font-gilroy tracking-wide">{formatDate(post.published_at)}</span>
                         </div>
+                        <div className="flex items-center text-black">
+                            <Clock className="w-4 h-4 mr-2" />
+                            <span className="font-gilroy tracking-wide">{post.read_time}</span>
+                        </div>
+                        <div className="flex items-center text-black">
+                            <Eye className="w-4 h-4 mr-2" />
+                            <span className="font-gilroy tracking-wide">{post.views} views</span>
+                        </div>
+                    </div>
 
-                        <h1 className="font-heading font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-6 sm:mb-8 leading-tight">
-                            {post.title}
-                        </h1>
+                    {/* Article Title */}
+                    <h1 className={`font-gilroy font-extra-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-black leading-tight tracking-tight mb-8 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                        {post.title}
+                    </h1>
 
-                        <p className="font-body text-lg sm:text-xl text-gray-600 leading-relaxed mb-8 sm:mb-10">
+                    {/* Article Excerpt */}
+                    <div className={`font-gilroy font-light text-xl text-black leading-relaxed mb-8 transition-all duration-700 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                        <p className="text-xl leading-relaxed italic border-l-4 border-[#dca744] pl-6 py-4 bg-neutral-50 rounded-r-lg">
                             {post.excerpt}
                         </p>
+                    </div>
 
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2 mb-8 sm:mb-12">
-                            {post.tags.map((tag) => (
-                                <span
-                                    key={tag}
-                                    className="px-3 py-1 bg-gray-100 text-gray-700 font-body text-sm rounded-full"
-                                >
-                                    {tag}
-                                </span>
-                            ))}
+                    {/* Tags */}
+                    <div className={`flex flex-wrap gap-2 mb-8 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                        {post.tags.map((tag) => (
+                            <span
+                                key={tag}
+                                className="px-4 py-2 bg-neutral-100 text-neutral-700 text-sm font-gilroy tracking-wide rounded-full hover:bg-[#dca744] hover:text-white transition-colors duration-300"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+
+                    {/* Share Buttons */}
+                    <div className={`flex items-center gap-4 mb-12 pb-8 border-b border-neutral-200 transition-all duration-700 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                        <span className="font-gilroy text-sm text-black tracking-wide">Share:</span>
+                        <div className="flex gap-3">
+                            <a
+                                href={`https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 text-black hover:text-[#236b7c] transition-colors duration-300"
+                            >
+                                <Facebook className="w-5 h-5" />
+                            </a>
+                            <a
+                                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 text-black hover:text-[#236b7c] transition-colors duration-300"
+                            >
+                                <Twitter className="w-5 h-5" />
+                            </a>
+                            <a
+                                href={`https://linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2 text-black hover:text-[#236b7c] transition-colors duration-300"
+                            >
+                                <Linkedin className="w-5 h-5" />
+                            </a>
                         </div>
-                    </header>
+                    </div>
 
                     {/* Featured Image */}
-                    <div className="relative aspect-[16/9] mb-8 sm:mb-12 overflow-hidden rounded-lg bg-gray-100">
-                        <Image
-                            src={post.featuredImage}
-                            alt={post.title}
-                            fill
-                            className="object-cover"
-                            priority
+                    {post.featured_image && !imageError && (
+                        <div className={`mb-12 transition-all duration-700 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                            {isExternalImage(post.featured_image) ? (
+                                <img
+                                    src={post.featured_image}
+                                    alt={post.title}
+                                    className="w-full h-auto object-cover rounded-lg shadow-lg"
+                                    onError={handleImageError}
+                                />
+                            ) : (
+                                <Image
+                                    src={post.featured_image}
+                                    alt={post.title}
+                                    width={800}
+                                    height={450}
+                                    className="w-full h-auto object-cover rounded-lg shadow-lg"
+                                    onError={handleImageError}
+                                    priority
+                                />
+                            )}
+                        </div>
+                    )}
+
+                    {/* Fallback when image fails to load */}
+                    {(imageError || !post.featured_image) && (
+                        <div className={`mb-12 transition-all duration-700 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                            <div className="w-full aspect-[16/9] bg-gradient-to-br from-neutral-100 to-neutral-200 rounded-lg flex items-center justify-center">
+                                <div className="text-center text-neutral-500">
+                                    <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <p className="font-gilroy text-sm">Image not available</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Article Content */}
+                    <div className={`transition-all duration-700 delay-800 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                        <div
+                            className="blog-content font-gilroy"
+                            style={{ lineHeight: '1.8' }}
+                            dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
                         />
                     </div>
 
-                    {/* Post Content */}
-                    <div className="prose prose-lg max-w-none">
-                        {processContent(post.content)}
-                    </div>
-
-                    {/* Related Posts Navigation */}
-                    <div className="border-t border-gray-200 pt-8 sm:pt-12 mt-12 sm:mt-16">
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-                            <Link
-                                href="/blog"
-                                className="inline-flex items-center font-body font-medium text-brand-teal hover:text-brand-teal/80 transition-colors"
-                            >
-                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                </svg>
-                                All Articles
-                            </Link>
-
-                            <div className="flex space-x-4">
-                                <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-                                    </svg>
-                                </button>
+                    {/* Reading Progress Indicator */}
+                    <div className="mt-16 pt-8 border-t border-neutral-200">
+                        <div className="flex items-center justify-between text-sm text-neutral-600">
+                            <div className="flex items-center gap-4">
+                                <div className="flex items-center">
+                                    <Clock className="w-4 h-4 mr-2" />
+                                    <span>{post.read_time}</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <Eye className="w-4 h-4 mr-2" />
+                                    <span>{post.views} views</span>
+                                </div>
+                            </div>
+                            <div className="text-neutral-400">
+                                Published {formatDate(post.published_at)}
                             </div>
                         </div>
                     </div>
                 </article>
+
+                {/* Newsletter Subscription Section */}
+                <div className="max-w-4xl mx-auto px-6 sm:px-8">
+                    <NewsletterForm variant="blog-post" />
+                </div>
+
+                {/* Comments Section */}
+                <div className="max-w-4xl mx-auto px-6 sm:px-8 pb-16">
+                    <Comments postSlug={post.slug} />
+                </div>
             </main>
             <Footer />
         </>
