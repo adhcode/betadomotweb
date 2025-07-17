@@ -6,8 +6,16 @@ WORKDIR /app
 # Copy the entire repository
 COPY . .
 
+# List files to debug
+RUN ls -la
+RUN ls -la backend
+
 # Change to the backend directory and build
 WORKDIR /app/backend
+
+# List files to debug
+RUN ls -la
+RUN ls -la *.go || echo "No Go files found"
 
 # Download dependencies
 RUN go mod download
