@@ -9,7 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Comments from "@/components/Comments";
 import NewsletterForm from "@/components/NewsletterForm";
-import { API_BASE_URL } from "@/lib/config";
+import { fetchPost } from "@/lib/api-client";
 
 interface BlogPost {
     id: string;
@@ -38,21 +38,17 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     const [imageError, setImageError] = useState(false);
 
     useEffect(() => {
-        const fetchPost = async () => {
+        const loadPost = async () => {
             try {
                 console.log('Fetching post with slug:', resolvedParams.slug);
-                const response = await fetch(`${API_BASE_URL}/posts/${resolvedParams.slug}`);
-                console.log('Response status:', response.status);
-
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        console.log('Post not found');
-                        notFound();
-                        return;
-                    }
-                    throw new Error(`Failed to fetch post: ${response.status}`);
+                const data = await fetchPost(resolvedParams.slug);
+                
+                if (!data) {
+                    console.log('Post not found');
+                    notFound();
+                    return;
                 }
-                const data = await response.json();
+                
                 console.log('Fetched post data:', data);
                 setPost(data);
             } catch (err) {
@@ -63,7 +59,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             }
         };
 
-        fetchPost();
+        loadPost();
 
         const timer = setTimeout(() => {
             setIsVisible(true);

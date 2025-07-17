@@ -17,7 +17,7 @@ import {
     Save,
     X
 } from 'lucide-react';
-import { API_BASE_URL } from '@/lib/config';
+import { fetchAdminPosts, createPost, updatePost, deletePost } from '@/lib/api-client';
 
 interface Post {
     id: string;
@@ -55,7 +55,7 @@ export default function PostsPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const makeAuthenticatedRequest = async (endpoint: string, options: RequestInit = {}) => {
+    const getAuthHeader = () => {
         const credentials = JSON.parse(
             localStorage.getItem('adminCredentials') ||
             sessionStorage.getItem('adminCredentials') ||
@@ -67,48 +67,24 @@ export default function PostsPage() {
             return null;
         }
 
-        const authHeader = 'Basic ' + btoa(`${credentials.username}:${credentials.password}`);
-
-        try {
-            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-                ...options,
-                headers: {
-                    'Authorization': authHeader,
-                    'Content-Type': 'application/json',
-                    ...options.headers,
-                },
-            });
-
-            if (response.status === 401) {
-                router.push('/admin/login');
-                return null;
-            }
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error('API Error:', error);
-            throw error;
-        }
+        return 'Basic ' + btoa(`${credentials.username}:${credentials.password}`);
     };
 
     const loadPosts = useCallback(async () => {
         setLoading(true);
         setError('');
         try {
-            const response = await fetch(`${API_BASE_URL}/admin/posts`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            const data = await response.json();
+            const authHeader = getAuthHeader();
+            if (!authHeader) return;
+            
+            const data = await fetchAdminPosts(authHeader);
             setPosts(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to load posts');
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [router]);
 
     const generateSlug = (title: string) => {
         return title
@@ -135,6 +111,9 @@ export default function PostsPage() {
             setError('');
             setSuccess('');
 
+            const authHeader = getAuthHeader();
+            if (!authHeader) return;
+
             const postData = {
                 title: formData.title,
                 excerpt: formData.excerpt,
@@ -146,10 +125,7 @@ export default function PostsPage() {
                 views: 0
             };
 
-            const response = await makeAuthenticatedRequest('/posts', {
-                method: 'POST',
-                body: JSON.stringify(postData)
-            });
+            const response = await createPost(postData, authHeader);
 
             if (response) {
                 setSuccess('Post created successfully!');
@@ -181,6 +157,9 @@ export default function PostsPage() {
             setError('');
             setSuccess('');
 
+            const authHeader = getAuthHeader();
+            if (!authHeader) return;
+
             const postData = {
                 title: formData.title,
                 excerpt: formData.excerpt,
@@ -190,10 +169,7 @@ export default function PostsPage() {
                 tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean)
             };
 
-            const response = await makeAuthenticatedRequest(`/admin/posts/${editingPost.slug}`, {
-                method: 'PUT',
-                body: JSON.stringify(postData)
-            });
+            const response = await updatePost(editingPost.slug, postData, authHeader);
 
             if (response) {
                 setSuccess('Post updated successfully!');
@@ -226,9 +202,10 @@ export default function PostsPage() {
 
             console.log('🗑️ Attempting to delete post:', post.title, 'with slug:', post.slug);
 
-            const response = await makeAuthenticatedRequest(`/admin/posts/${post.slug}`, {
-                method: 'DELETE'
-            });
+            const authHeader = getAuthHeader();
+            if (!authHeader) return;
+
+            const response = await deletePost(post.slug, authHeader);
 
             console.log('✅ Delete response:', response);
 
