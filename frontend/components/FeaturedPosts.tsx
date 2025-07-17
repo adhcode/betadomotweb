@@ -29,7 +29,7 @@ export default function FeaturedPosts() {
 
         const fetchPosts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/posts?limit=3');
+                const response = await fetch(`${process.env.NODE_ENV === 'production' ? 'https://betadomotweb-production.up.railway.app' : 'http://localhost:8080'}/posts?limit=3`);
                 if (response.ok) {
                     const data = await response.json();
                     setPosts(data);

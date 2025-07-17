@@ -39,7 +39,7 @@ export default function FeaturedProducts() {
     useEffect(() => {
         const loadFeaturedProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/products?featured=true&limit=4');
+                const response = await fetch(`${process.env.NODE_ENV === 'production' ? 'https://betadomotweb-production.up.railway.app' : 'http://localhost:8080'}/products?featured=true&limit=4`);
                 if (response.ok) {
                     const data = await response.json();
                     setProducts(data);
