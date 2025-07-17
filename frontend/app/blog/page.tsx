@@ -6,6 +6,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { API_BASE_URL } from "@/lib/config";
 
 interface BlogPost {
     id: string;
@@ -34,7 +35,7 @@ export default function BlogPage() {
 
         const fetchPosts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/posts');
+                const response = await fetch(`${API_BASE_URL}/posts`);
 
                 if (!response.ok) {
                     throw new Error(`Failed to fetch posts: ${response.status}`);

@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Comments from "@/components/Comments";
 import NewsletterForm from "@/components/NewsletterForm";
+import { API_BASE_URL } from "@/lib/config";
 
 interface BlogPost {
     id: string;
@@ -40,7 +41,7 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         const fetchPost = async () => {
             try {
                 console.log('Fetching post with slug:', resolvedParams.slug);
-                const response = await fetch(`http://localhost:8080/posts/${resolvedParams.slug}`);
+                const response = await fetch(`${API_BASE_URL}/posts/${resolvedParams.slug}`);
                 console.log('Response status:', response.status);
 
                 if (!response.ok) {

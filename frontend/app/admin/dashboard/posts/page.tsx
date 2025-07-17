@@ -17,6 +17,7 @@ import {
     Save,
     X
 } from 'lucide-react';
+import { API_BASE_URL } from '@/lib/config';
 
 interface Post {
     id: string;
@@ -69,7 +70,7 @@ export default function PostsPage() {
         const authHeader = 'Basic ' + btoa(`${credentials.username}:${credentials.password}`);
 
         try {
-            const response = await fetch(`http://localhost:8080${endpoint}`, {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
                 ...options,
                 headers: {
                     'Authorization': authHeader,
@@ -98,7 +99,7 @@ export default function PostsPage() {
         setLoading(true);
         setError('');
         try {
-            const response = await fetch('http://localhost:8080/admin/posts');
+            const response = await fetch(`${API_BASE_URL}/admin/posts`);
             if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             const data = await response.json();
             setPosts(data);
