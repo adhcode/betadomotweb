@@ -1,0 +1,8 @@
+# Railway ignore file
+.git
+.env
+.env.local
+*.log
+node_modules
+.DS_Store
+nixpacks.toml

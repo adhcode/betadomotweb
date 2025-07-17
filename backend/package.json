@@ -1,0 +1,11 @@
+{
+  "name": "betadomot-backend",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "go build -o main .",
+    "start": "./main"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}

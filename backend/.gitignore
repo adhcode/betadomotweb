@@ -1,0 +1,40 @@
+# Binaries
+main
+*.exe
+*.out
+*.test
+
+# Vendor & dependencies
+/vendor/
+Gopkg.lock
+Gopkg.toml
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+server.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Railway/Cloud files
+railway/
+
+# Build artifacts
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/

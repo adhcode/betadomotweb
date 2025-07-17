@@ -1,0 +1,10 @@
+# Docker ignore file
+.git
+.env
+.env.local
+.env.example
+*.log
+.DS_Store
+README.md
+nixpacks.toml
+railway.toml

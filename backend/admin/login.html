@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Blog Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .login-title {
+            font-size: 28px;
+            color: #2d5a87;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .login-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d5a87;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #fcc;
+            display: none;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #cfc;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff40;
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .features {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .features h3 {
+            color: #2d5a87;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .feature-list {
+            text-align: left;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .feature-list li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .remember-me label {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            
+            .login-title {
+                font-size: 24px;
+            }
+            
+            .logo {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">🔐</div>
+        <h1 class="login-title">Admin Login</h1>
+        <p class="login-subtitle">Access your blog dashboard</p>
+
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
+            </div>
+
+            <div class="remember-me">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember me</label>
+            </div>
+
+            <button type="submit" class="login-btn" id="login-btn">
+                <span id="login-text">Sign In</span>
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <span>Signing in...</span>
+                </div>
+            </button>
+        </form>
+
+        <div class="features">
+            <h3>Dashboard Features</h3>
+            <ul class="feature-list">
+                <li>Manage blog posts and content</li>
+                <li>Moderate comments and discussions</li>
+                <li>Track newsletter subscribers</li>
+                <li>View analytics and statistics</li>
+                <li>Export data and reports</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Check if already logged in
+        const savedCredentials = localStorage.getItem('adminCredentials');
+        if (savedCredentials) {
+            // Test if credentials are still valid
+            testCredentials(JSON.parse(savedCredentials));
+        }
+
+        // Form submission
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+            
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+            
+            await login(username, password, remember);
+        });
+
+        async function login(username, password, remember) {
+            const loginBtn = document.getElementById('login-btn');
+            const loginText = document.getElementById('login-text');
+            const loading = document.getElementById('loading');
+            
+            // Show loading state
+            loginBtn.disabled = true;
+            loginText.style.display = 'none';
+            loading.style.display = 'flex';
+            
+            try {
+                // Test credentials
+                const authHeader = 'Basic ' + btoa(username + ':' + password);
+                const response = await fetch('/admin/dashboard', {
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+                
+                if (response.ok) {
+                    // Success
+                    const credentials = { username, password };
+                    
+                    // Save credentials if remember me is checked
+                    if (remember) {
+                        localStorage.setItem('adminCredentials', JSON.stringify(credentials));
+                    } else {
+                        sessionStorage.setItem('adminCredentials', JSON.stringify(credentials));
+                    }
+                    
+                    showSuccess('Login successful! Redirecting...');
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/admin-dashboard';
+                    }, 1500);
+                    
+                } else if (response.status === 401) {
+                    showError('Invalid username or password');
+                } else {
+                    showError('Login failed. Please try again.');
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Connection error. Please check your network and try again.');
+            } finally {
+                // Reset button state
+                loginBtn.disabled = false;
+                loginText.style.display = 'inline';
+                loading.style.display = 'none';
+            }
+        }
+
+        async function testCredentials(credentials) {
+            try {
+                const authHeader = 'Basic ' + btoa(credentials.username + ':' + credentials.password);
+                const response = await fetch('/admin/dashboard', {
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+                
+                if (response.ok) {
+                    // Still valid, redirect to dashboard
+                    window.location.href = '/admin-dashboard';
+                }
+            } catch (error) {
+                // Credentials invalid, clear them
+                localStorage.removeItem('adminCredentials');
+                sessionStorage.removeItem('adminCredentials');
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+            
+            successDiv.style.display = 'none';
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+            
+            errorDiv.style.display = 'none';
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        // Auto-focus username field
+        document.getElementById('username').focus();
+    </script>
+</body>
+</html> 
