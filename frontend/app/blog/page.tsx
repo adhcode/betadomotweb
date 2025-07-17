@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { fetchPosts } from "@/lib/api-client";
+import DebugInfo from "@/components/DebugInfo";
 
 interface BlogPost {
     id: string;
@@ -295,6 +296,7 @@ export default function BlogPage() {
                 </section>
             </main>
             <Footer />
+            <DebugInfo />
         </>
     );
 } 
