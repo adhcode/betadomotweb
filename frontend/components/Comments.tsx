@@ -26,7 +26,7 @@ export default function Comments({ postSlug }: CommentsProps) {
 
     const fetchComments = useCallback(async () => {
         try {
-            const response = await fetch(`http://localhost:8080/posts/${postSlug}/comments`);
+            const response = await fetch(`${process.env.NODE_ENV === 'production' ? 'https://betadomotweb-production.up.railway.app' : 'http://localhost:8080'}/posts/${postSlug}/comments`);
             if (response.ok) {
                 const data = await response.json();
                 setComments(data);
@@ -47,7 +47,7 @@ export default function Comments({ postSlug }: CommentsProps) {
         setSubmitting(true);
 
         try {
-            const response = await fetch(`http://localhost:8080/posts/${postSlug}/comments`, {
+            const response = await fetch(`${process.env.NODE_ENV === 'production' ? 'https://betadomotweb-production.up.railway.app' : 'http://localhost:8080'}/posts/${postSlug}/comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

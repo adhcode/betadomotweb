@@ -60,7 +60,7 @@ export default function ProductsPage() {
         setLoading(true);
         setError('');
         try {
-            const response = await fetch('http://localhost:8080/products');
+            const response = await fetch(`${process.env.NODE_ENV === 'production' ? 'https://betadomotweb-production.up.railway.app' : 'http://localhost:8080'}/products`);
             if (!response.ok) throw new Error('Failed to fetch products');
             const data = await response.json();
             setProducts(data);

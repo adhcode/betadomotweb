@@ -80,7 +80,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         setLoading(true);
         setError('');
         try {
-            const response = await fetch(`http://localhost:8080/products/${resolvedParams.slug}`);
+            const response = await fetch(`${process.env.NODE_ENV === 'production' ? 'https://betadomotweb-production.up.railway.app' : 'http://localhost:8080'}/products/${resolvedParams.slug}`);
             if (!response.ok) throw new Error('Product not found');
             const data = await response.json();
             const product = Array.isArray(data) ? data[0] : data;
@@ -88,7 +88,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
             // Load related products from different categories
             if (product && product.category) {
-                const relatedResponse = await fetch(`http://localhost:8080/products?limit=4`);
+                const relatedResponse = await fetch(`${process.env.NODE_ENV === 'production' ? 'https://betadomotweb-production.up.railway.app' : 'http://localhost:8080'}/products?limit=4`);
                 if (relatedResponse.ok) {
                     const relatedData = await relatedResponse.json();
                     // Filter out current product and get products from different categories
