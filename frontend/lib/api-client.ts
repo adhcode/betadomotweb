@@ -43,7 +43,7 @@ export async function fetchAdminPosts(authHeader: string) {
   return await response.json();
 }
 
-export async function createPost(postData: any, authHeader: string) {
+export async function createPost(postData: Record<string, unknown>, authHeader: string) {
   console.log('Creating post at:', `${API_BASE_URL}/posts`);
   const response = await fetch(`${API_BASE_URL}/posts`, {
     method: 'POST',
@@ -59,7 +59,7 @@ export async function createPost(postData: any, authHeader: string) {
   return await response.json();
 }
 
-export async function updatePost(slug: string, postData: any, authHeader: string) {
+export async function updatePost(slug: string, postData: Record<string, unknown>, authHeader: string) {
   console.log('Updating post at:', `${API_BASE_URL}/admin/posts/${slug}`);
   const response = await fetch(`${API_BASE_URL}/admin/posts/${slug}`, {
     method: 'PUT',
