@@ -1,9 +1,15 @@
 // API Client for making requests to the backend
 
-// Use the environment variable if available, otherwise use the Railway URL directly
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://betadomotweb-production.up.railway.app';
+// ALWAYS use the Railway URL in production, only use localhost in development
+const API_BASE_URL = 
+  process.env.NODE_ENV === 'production' 
+    ? 'https://betadomotweb-production.up.railway.app'
+    : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080');
+
+console.log('Using API URL:', API_BASE_URL);
 
 export async function fetchPosts() {
+  console.log('Fetching posts from:', `${API_BASE_URL}/posts`);
   const response = await fetch(`${API_BASE_URL}/posts`);
   if (!response.ok) {
     throw new Error(`Failed to fetch posts: ${response.status}`);
@@ -12,6 +18,7 @@ export async function fetchPosts() {
 }
 
 export async function fetchPost(slug: string) {
+  console.log('Fetching post from:', `${API_BASE_URL}/posts/${slug}`);
   const response = await fetch(`${API_BASE_URL}/posts/${slug}`);
   if (!response.ok) {
     if (response.status === 404) {
@@ -23,6 +30,7 @@ export async function fetchPost(slug: string) {
 }
 
 export async function fetchAdminPosts(authHeader: string) {
+  console.log('Fetching admin posts from:', `${API_BASE_URL}/admin/posts`);
   const response = await fetch(`${API_BASE_URL}/admin/posts`, {
     headers: {
       'Authorization': authHeader,
@@ -36,6 +44,7 @@ export async function fetchAdminPosts(authHeader: string) {
 }
 
 export async function createPost(postData: any, authHeader: string) {
+  console.log('Creating post at:', `${API_BASE_URL}/posts`);
   const response = await fetch(`${API_BASE_URL}/posts`, {
     method: 'POST',
     headers: {
@@ -51,6 +60,7 @@ export async function createPost(postData: any, authHeader: string) {
 }
 
 export async function updatePost(slug: string, postData: any, authHeader: string) {
+  console.log('Updating post at:', `${API_BASE_URL}/admin/posts/${slug}`);
   const response = await fetch(`${API_BASE_URL}/admin/posts/${slug}`, {
     method: 'PUT',
     headers: {
@@ -66,6 +76,7 @@ export async function updatePost(slug: string, postData: any, authHeader: string
 }
 
 export async function deletePost(slug: string, authHeader: string) {
+  console.log('Deleting post at:', `${API_BASE_URL}/admin/posts/${slug}`);
   const response = await fetch(`${API_BASE_URL}/admin/posts/${slug}`, {
     method: 'DELETE',
     headers: {
