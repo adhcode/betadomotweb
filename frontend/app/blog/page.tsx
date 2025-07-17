@@ -113,7 +113,7 @@ export default function BlogPage() {
                         <h1 className="font-gilroy font-extra-bold text-4xl text-black mb-8">Unable to Load Posts</h1>
                         <p className="font-gilroy text-lg text-black mb-8">{error}</p>
                         <p className="font-gilroy text-sm text-black mb-8">
-                            Please make sure the backend server is running on localhost:8080
+                            Unable to connect to the backend API. Please check your connection.
                         </p>
                         <Link
                             href="/"
