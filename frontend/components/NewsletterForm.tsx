@@ -23,7 +23,7 @@ export default function NewsletterForm({
         setError("");
 
         try {
-            const response = await fetch("http://localhost:8080/newsletter/subscribe", {
+            const response = await fetch(`${process.env.NODE_ENV === 'production' ? 'https://betadomotweb-production.up.railway.app' : 'http://localhost:8080'}/newsletter/subscribe`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -94,7 +94,7 @@ export default function NewsletterForm({
                         Loved this post? Get more like it.
                     </h3>
                     <p className="font-gilroy font-light text-lg text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-                        Join thousands of readers getting weekly design insights, home tips, and exclusive content delivered straight to their inbox.
+                        Join thousands of readers getting weekly design insights, home tips, and exclusive content delivered straight to their inbox. You also get notified first when we discover cool new finds for your home.
                     </p>
                 </div>
             )}
