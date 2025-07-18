@@ -166,32 +166,82 @@ func (e *EmailService) getWelcomeEmailHTML() string {
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Welcome!</title>
+		<title>Welcome to BetaDomot!</title>
+		<style>
+			@media only screen and (max-width: 600px) {
+				.container { width: 100% !important; padding: 10px !important; }
+				.content { padding: 20px !important; }
+				.button { padding: 12px 20px !important; font-size: 16px !important; }
+			}
+		</style>
 	</head>
-	<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-		<div style="text-align: center; margin-bottom: 30px;">
-			<h1 style="color: #2d5a87; margin-bottom: 10px;">🎉 Welcome to Our Newsletter!</h1>
-			<p style="font-size: 18px; color: #666;">Thanks for joining our community of home design enthusiasts!</p>
-		</div>
-		
-		<div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
-			<h2 style="color: #2d5a87; margin-top: 0;">What to expect:</h2>
-			<ul style="padding-left: 20px;">
-				<li>📖 Weekly home design tips and inspiration</li>
-				<li>🛋️ Budget-friendly decorating ideas</li>
-				<li>🏠 Small space solutions</li>
-				<li>✨ Before & after transformations</li>
-				<li>🛍️ Product recommendations and deals</li>
-			</ul>
-		</div>
-		
-		<div style="text-align: center; margin: 30px 0;">
-			<a href="` + e.websiteURL + `/blog" style="background: #ff6b35; color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: bold;">Browse Our Latest Posts</a>
-		</div>
-		
-		<div style="border-top: 1px solid #eee; padding-top: 20px; text-align: center; color: #888; font-size: 14px;">
-			<p>Have questions? Just reply to this email - we'd love to hear from you!</p>
-			<p>Follow us: <a href="#" style="color: #ff6b35;">Instagram</a> | <a href="#" style="color: #ff6b35;">Pinterest</a></p>
+	<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f5f6fa;">
+		<div class="container" style="max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+			
+			<!-- Header -->
+			<div style="background: linear-gradient(135deg, #236b7c 0%, #dca744 100%); padding: 40px 30px; text-align: center;">
+				<h1 style="color: white; margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -0.5px;">🏠 Welcome to BetaDomot!</h1>
+				<p style="color: rgba(255,255,255,0.95); margin: 15px 0 0 0; font-size: 18px; font-weight: 300;">Your Home, Your Story</p>
+			</div>
+			
+			<!-- Content -->
+			<div class="content" style="padding: 40px 30px;">
+				<div style="text-align: center; margin-bottom: 35px;">
+					<h2 style="color: #236b7c; margin: 0 0 15px 0; font-size: 24px; font-weight: 600;">Thanks for joining our community! 🎉</h2>
+					<p style="font-size: 18px; color: #666; margin: 0; line-height: 1.5;">You're now part of a growing community of home design enthusiasts who believe every space has a story to tell.</p>
+				</div>
+				
+				<div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 30px; border-radius: 15px; margin-bottom: 30px; border-left: 5px solid #dca744;">
+					<h3 style="color: #236b7c; margin: 0 0 20px 0; font-size: 20px; font-weight: 600;">Here's what you can expect:</h3>
+					<ul style="padding-left: 0; list-style: none; margin: 0;">
+						<li style="margin-bottom: 12px; padding-left: 30px; position: relative;">
+							<span style="position: absolute; left: 0; color: #dca744; font-size: 18px;">📖</span>
+							<strong>Weekly design insights</strong> and practical living wisdom
+						</li>
+						<li style="margin-bottom: 12px; padding-left: 30px; position: relative;">
+							<span style="position: absolute; left: 0; color: #dca744; font-size: 18px;">🛍️</span>
+							<strong>First access to cool new finds</strong> for your home before anyone else
+						</li>
+						<li style="margin-bottom: 12px; padding-left: 30px; position: relative;">
+							<span style="position: absolute; left: 0; color: #dca744; font-size: 18px;">💡</span>
+							<strong>Budget-friendly tips</strong> to transform your space
+						</li>
+						<li style="margin-bottom: 12px; padding-left: 30px; position: relative;">
+							<span style="position: absolute; left: 0; color: #dca744; font-size: 18px;">✨</span>
+							<strong>Exclusive content</strong> and behind-the-scenes stories
+						</li>
+						<li style="margin-bottom: 0; padding-left: 30px; position: relative;">
+							<span style="position: absolute; left: 0; color: #dca744; font-size: 18px;">🏠</span>
+							<strong>Small space solutions</strong> that actually work
+						</li>
+					</ul>
+				</div>
+				
+				<div style="background: #236b7c; color: white; padding: 25px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
+					<h3 style="margin: 0 0 10px 0; font-size: 18px; font-weight: 600;">🎁 Special Welcome Gift</h3>
+					<p style="margin: 0; font-size: 16px; opacity: 0.95;">As a new subscriber, you'll be the first to know about our curated home finds and exclusive deals. Keep an eye on your inbox!</p>
+				</div>
+				
+				<div style="text-align: center; margin: 35px 0;">
+					<a href="` + e.websiteURL + `/blog" class="button" style="background: linear-gradient(135deg, #dca744 0%, #236b7c 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 30px; font-weight: 600; font-size: 18px; display: inline-block; box-shadow: 0 4px 15px rgba(220, 167, 68, 0.3); transition: all 0.3s ease;">Start Reading Our Stories</a>
+				</div>
+				
+				<div style="text-align: center; padding: 25px 0; border-top: 1px solid #eee;">
+					<p style="margin: 0 0 15px 0; color: #666; font-size: 16px;">Have questions or ideas? We'd love to hear from you!</p>
+					<p style="margin: 0; color: #888; font-size: 14px;">Just reply to this email - we read every message 💌</p>
+				</div>
+			</div>
+			
+			<!-- Footer -->
+			<div style="background: #f8f9fa; padding: 25px 30px; text-align: center; border-top: 1px solid #eee;">
+				<p style="margin: 0 0 10px 0; color: #666; font-size: 14px; font-weight: 500;">
+					Welcome to the BetaDomot family! 🏡
+				</p>
+				<p style="margin: 0; color: #999; font-size: 12px;">
+					<a href="` + e.websiteURL + `" style="color: #236b7c; text-decoration: none;">Visit BetaDomot</a> | 
+					<a href="` + e.websiteURL + `/blog" style="color: #236b7c; text-decoration: none;">Read Our Blog</a>
+				</p>
+			</div>
 		</div>
 	</body>
 	</html>`
