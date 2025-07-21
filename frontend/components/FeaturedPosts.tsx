@@ -74,7 +74,7 @@ export default function FeaturedPosts() {
 
     if (loading) {
         return (
-            <section className="py-20 sm:py-24 md:py-32 bg-white border-t border-neutral-200 relative overflow-hidden">
+            <section className="pt-0 pb-16 sm:pt-6 sm:pb-16 md:pt-8 md:pb-20 bg-white relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-6 sm:px-8">
                     <div className="text-center mb-16 sm:mb-20">
                         <div className="animate-pulse">
@@ -105,7 +105,7 @@ export default function FeaturedPosts() {
     }
 
     return (
-        <section className="py-20 sm:py-24 md:py-32 bg-white border-t border-neutral-200 relative overflow-hidden">
+        <section className="pt-0 pb-16 sm:pt-6 sm:pb-16 md:pt-8 md:pb-20 bg-white relative overflow-hidden">
             {/* Subtle background pattern */}
             <div className="absolute inset-0 opacity-[0.015]">
                 <div className="absolute inset-0" style={{
@@ -120,14 +120,13 @@ export default function FeaturedPosts() {
                     <div className={`transition-all duration-1200 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                         }`}>
                         <span className="font-body font-light text-xs tracking-[0.2em] uppercase text-neutral-500 mb-6 block">
-                            Latest Stories
+                            BLOG INSPIRATION
                         </span>
                         <h2 className="font-cutive font-normal text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-primary-900 mb-8 leading-tight tracking-tight">
                             From the Journal
                         </h2>
                         <p className="font-body font-light text-lg text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-                            Thoughtful perspectives on home design, practical living wisdom, and stories that inspire beautiful spaces
-                        </p>
+Thoughtful perspectives on home design, pratical living wisdom, and stories that inspire beautiful spaces                        </p>
                     </div>
                 </div>
 

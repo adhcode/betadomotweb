@@ -14,14 +14,14 @@ export default function Home() {
             <main className="bg-white">
                 {/* Hero Section */}
                 <Hero />
-
+                <FeaturedPosts />
                 {/* Featured Products Section */}
                 <div id="featured-products">
                     <FeaturedProducts />
                 </div>
 
                 {/* Featured Posts Section */}
-                <FeaturedPosts />
+               
 
                 {/* Newsletter Section */}
                 <section id="newsletter" className="bg-white py-16 sm:py-20 md:py-24 border-t border-neutral-200">

@@ -27,7 +27,7 @@ export default function Hero() {
             </div>
 
             {/* Main Content */}
-            <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-8 pt-32 pb-16">
+            <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-8 pt-32 pb-4">
                 <div className="text-center">
 
                     {/* Main Heading */}

@@ -19,14 +19,31 @@ export async function fetchPosts() {
 
 export async function fetchPost(slug: string) {
   console.log('Fetching post from:', `${API_BASE_URL}/posts/${slug}`);
-  const response = await fetch(`${API_BASE_URL}/posts/${slug}`);
-  if (!response.ok) {
-    if (response.status === 404) {
-      return null;
+  console.log('Using API_BASE_URL:', API_BASE_URL);
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${slug}`);
+    console.log('Response status:', response.status);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.log('Post not found (404)');
+        return null;
+      }
+      const errorText = await response.text();
+      console.error('Error response body:', errorText);
+      throw new Error(`Failed to fetch post: ${response.status} - ${errorText}`);
     }
-    throw new Error(`Failed to fetch post: ${response.status}`);
+    
+    const data = await response.json();
+    console.log('Successfully fetched post:', data.title);
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
   }
-  return await response.json();
 }
 
 export async function fetchAdminPosts(authHeader: string) {
