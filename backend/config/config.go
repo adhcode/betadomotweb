@@ -33,7 +33,7 @@ func Load() *Config {
 		AdminUsername: getEnv("ADMIN_USERNAME", "admin"),
 		AdminPassword: getEnv("ADMIN_PASSWORD", "password"),
 		Port:          getEnv("PORT", "8080"),
-		FromEmail:     getEnv("FROM_EMAIL", "hello@yourdomain.com"),
+		FromEmail:     getEnv("FROM_EMAIL", "onboarding@resend.dev"),
 		WebsiteURL:    getEnv("WEBSITE_URL", "https://yourdomain.com"),
 	}
 

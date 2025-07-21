@@ -43,20 +43,39 @@ func (e *EmailService) SendWelcomeEmail(email string) error {
 		return nil
 	}
 
-	emailRequest := &resend.SendEmailRequest{
-		From:    fmt.Sprintf("BetaDomot <%s>", e.fromEmail),
-		To:      []string{email},
-		Subject: "Welcome to BetaDomot! 🏠",
-		Html:    e.getWelcomeEmailHTML(),
+	// Format the from field properly
+	fromField := e.fromEmail
+	if e.fromName != "" {
+		fromField = fmt.Sprintf("%s <%s>", e.fromName, e.fromEmail)
 	}
 
-	_, err := e.client.Emails.Send(emailRequest)
+	emailRequest := &resend.SendEmailRequest{
+		From:    fromField,
+		To:      []string{email},
+		Subject: "Welcome to Betadomot",
+		Html:    e.getWelcomeEmailHTML(),
+		Text:    e.getWelcomeEmailText(), // Add plain text version
+		Headers: map[string]string{
+			"List-Unsubscribe":       fmt.Sprintf("<%s/newsletter/unsubscribe>", e.websiteURL),
+			"List-Unsubscribe-Post":  "List-Unsubscribe=One-Click",
+			"X-Entity-Ref-ID":        "welcome-email",
+			"X-Priority":             "3",
+			"X-MSMail-Priority":      "Normal",
+			"Importance":             "Normal",
+			"X-Mailer":               "Betadomot Newsletter System",
+			"Reply-To":               e.fromEmail,
+			"Return-Path":            e.fromEmail,
+		},
+	}
+
+	response, err := e.client.Emails.Send(emailRequest)
 	if err != nil {
 		log.Printf("Failed to send welcome email to %s: %v", email, err)
+		log.Printf("Email request details: From=%s, To=%s, Subject=%s", emailRequest.From, emailRequest.To, emailRequest.Subject)
 		return err
 	}
-
-	log.Printf("✅ Welcome email sent to %s", email)
+	
+	log.Printf("✅ Welcome email sent to %s (ID: %s)", email, response.Id)
 	return nil
 }
 
@@ -166,93 +185,78 @@ func (e *EmailService) getWelcomeEmailHTML() string {
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Welcome to BetaDomot</title>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+		<title>From our home to yours, welcome 🤎</title>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 		<style>
 			@media only screen and (max-width: 600px) {
 				.container { width: 100% !important; margin: 0 !important; }
-				.content { padding: 40px 20px !important; }
-				.header { padding: 60px 20px !important; }
-				.button { padding: 16px 24px !important; font-size: 16px !important; }
-				h1 { font-size: 28px !important; }
-				h2 { font-size: 22px !important; }
+				.content { padding: 30px 20px !important; }
+				.header { padding: 50px 20px 30px 20px !important; }
+				.logo { height: 35px !important; }
+				.greeting { font-size: 18px !important; }
+				.main-text { font-size: 16px !important; }
+				.signature { font-size: 15px !important; }
 			}
 		</style>
 	</head>
-	<body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 0; background-color: #ffffff; color: #0a0a0a; line-height: 1.6; -webkit-font-smoothing: antialiased;">
+	<body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 0; background-color: #ffffff; color: #000000; line-height: 1.7; -webkit-font-smoothing: antialiased;">
 		
-		<div class="container" style="max-width: 600px; margin: 0 auto; background: #ffffff;">
+		<div class="container" style="max-width: 580px; margin: 0 auto; background: #ffffff;">
 			
-			<!-- Header -->
-			<div class="header" style="padding: 80px 40px; text-align: center; background: #ffffff;">
-				<!-- Logo -->
-				<div style="margin-bottom: 32px;">
-					<img src="` + e.websiteURL + `/logo.png" alt="BetaDomot" style="height: 40px; width: auto;" />
+			<!-- Header with Logo -->
+			<div class="header" style="padding: 60px 40px 40px 40px; text-align: center; background: #ffffff;">
+				<div style="margin-bottom: 0;">
+					<img src="` + e.websiteURL + `/images/blog/beta-logo2.png" alt="BetaDomot" class="logo" style="height: 40px; width: auto;" />
 				</div>
-				
-				<h1 style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 32px; color: #0a0a0a; margin: 0 0 16px 0; letter-spacing: -0.02em; line-height: 1.2;">
-					Welcome to BetaDomot
-				</h1>
-				<p style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 18px; color: #0a0a0a; margin: 0; line-height: 1.5; letter-spacing: -0.01em;">
-					Home finds and inspiration that feels like you
-				</p>
 			</div>
 			
-			<!-- Content -->
-			<div class="content" style="padding: 0 40px 60px 40px;">
+			<!-- Main Content -->
+			<div class="content" style="padding: 0 40px 50px 40px;">
 				
-				<!-- Welcome Message -->
-				<div style="margin-bottom: 60px; text-align: center;">
-					<p style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 18px; color: #0a0a0a; margin: 0; line-height: 1.8;">
-						Thanks for joining our community of home design enthusiasts.
+				<!-- Greeting -->
+				<div style="margin-bottom: 40px;">
+					<p class="greeting" style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 20px; color: #000000; margin: 0; line-height: 1.6;">
+						Hey there,
 					</p>
 				</div>
 				
-				<!-- What to Expect -->
-				<div style="margin-bottom: 60px;">
-					<h2 style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 24px; color: #0a0a0a; margin: 0 0 32px 0; letter-spacing: -0.01em; line-height: 1.3;">
-						What to expect
-					</h2>
-					
-					<div style="margin-bottom: 24px;">
-						<p style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 16px; color: #0a0a0a; margin: 0; line-height: 1.8;">
-							Weekly design insights and practical living wisdom
-						</p>
-					</div>
-					
-					<div style="margin-bottom: 24px;">
-						<p style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 16px; color: #0a0a0a; margin: 0; line-height: 1.8;">
-							First access to cool new finds for your home
-						</p>
-					</div>
-					
-					<div style="margin-bottom: 24px;">
-						<p style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 16px; color: #0a0a0a; margin: 0; line-height: 1.8;">
-							Stories that inspire beautiful spaces
-						</p>
-					</div>
-					
-					<div>
-						<p style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 16px; color: #0a0a0a; margin: 0; line-height: 1.8;">
-							Exclusive content delivered to your inbox
-						</p>
-					</div>
-				</div>
-				
-				<!-- CTA Button -->
-				<div style="text-align: center; margin-bottom: 60px;">
-					<a href="` + e.websiteURL + `/blog" class="button" style="font-family: 'Inter', sans-serif; display: inline-block; background-color: #236b7c; color: #ffffff; padding: 18px 32px; text-decoration: none; font-weight: 600; font-size: 16px; letter-spacing: -0.01em; border-radius: 0; transition: all 0.3s ease;">
-						Read Our Stories
-					</a>
-				</div>
-				
-				<!-- Footer Message -->
-				<div style="text-align: center; padding-top: 40px; border-top: 1px solid #f0f0f0;">
-					<p style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 16px; color: #0a0a0a; margin: 0 0 16px 0; line-height: 1.8;">
-						Have questions? Just reply to this email.
+				<!-- Main Message -->
+				<div style="margin-bottom: 40px;">
+					<p class="main-text" style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 17px; color: #000000; margin: 0 0 24px 0; line-height: 1.7;">
+						Welcome to Betadomot! We're truly glad you're here.
 					</p>
-					<p style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 14px; color: #666666; margin: 0; line-height: 1.6;">
-						<a href="` + e.websiteURL + `" style="color: #236b7c; text-decoration: none;">Visit BetaDomot</a>
+					
+					<p class="main-text" style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 17px; color: #000000; margin: 0 0 24px 0; line-height: 1.7;">
+						This isn't just a home platform. It's a growing space created to help people like you live more intentionally, comfortably, and beautifully , one day at a time.
+					</p>
+					
+					<p class="main-text" style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 17px; color: #000000; margin: 0 0 24px 0; line-height: 1.7;">
+						Over the coming days, we'll be sharing tips, tools, and simple ideas to help make daily life at home a little easier, calmer, and smarter.
+					</p>
+					
+					<p class="main-text" style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 17px; color: #000000; margin: 0 0 24px 0; line-height: 1.7;">
+						No pressure. No clutter. Just good things for good living.
+					</p>
+					
+					<p class="main-text" style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 17px; color: #000000; margin: 0; line-height: 1.7;">
+						We're always here if you have any questions or thoughts, just reply to this email, and you'll reach a real human.
+					</p>
+				</div>
+				
+				<!-- Signature -->
+				<div style="margin-bottom: 50px;">
+					<p class="signature" style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 17px; color: #000000; margin: 0 0 8px 0; line-height: 1.7;">
+						With warmth,
+					</p>
+					<p class="signature" style="font-family: 'Inter', sans-serif; font-weight: 500; font-size: 17px; color: #000000; margin: 0; line-height: 1.7;">
+						The Betadomot Team
+					</p>
+				</div>
+				
+				<!-- Subtle Footer -->
+				<div style="text-align: center; padding-top: 40px; border-top: 1px solid #f5f5f5;">
+					<p style="font-family: 'Inter', sans-serif; font-weight: 300; font-size: 14px; color: #888888; margin: 0; line-height: 1.6;">
+						<a href="` + e.websiteURL + `" style="color: #000000; text-decoration: none;">betadomot.blog</a>
 					</p>
 				</div>
 				
@@ -354,4 +358,25 @@ func (e *EmailService) formatContentForHTML(content string) string {
 	}
 
 	return html
+}
+
+// getWelcomeEmailText returns the plain text version of the welcome email
+func (e *EmailService) getWelcomeEmailText() string {
+	return fmt.Sprintf(`Hey there,
+
+Welcome to Betadomot — we're truly glad you're here.
+
+This isn't just a home platform. It's a growing space created to help people like you live more intentionally, comfortably, and beautifully — one day at a time.
+
+Over the coming days, we'll be sharing tips, tools, and simple ideas to help make daily life at home a little easier, calmer, and smarter.
+
+No pressure. No clutter. Just good things for good living.
+
+We're always here if you have any questions or thoughts — just reply to this email, and you'll reach a real human.
+
+With warmth,
+The Betadomot Team
+
+---
+%s`, e.websiteURL)
 }
