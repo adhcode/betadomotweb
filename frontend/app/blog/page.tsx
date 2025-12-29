@@ -4,10 +4,14 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { fetchPosts } from "@/lib/api-client";
+import { H1, H2, H3, Body, Container, Section, Grid, MinimalCard, PrimaryButton, FadeInUp } from "@/components/ui/DesignSystem";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { fetchPosts } from "@/lib/api-client";
 import DebugInfo from "@/components/DebugInfo";
+import NewsletterSticky from "@/components/home/NewsletterSticky";
+import NewsletterForm from "@/components/NewsletterForm";
+import CompactNewsletter from "@/components/CompactNewsletter";
 
 interface BlogPost {
     id: string;
@@ -20,24 +24,41 @@ interface BlogPost {
     featured_image: string;
     tags: string[];
     views: number;
+    category?: string;
 }
 
 export default function BlogPage() {
-    const [isVisible, setIsVisible] = useState(false);
     const [posts, setPosts] = useState<BlogPost[]>([]);
+    const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({});
+    const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsVisible(true);
-        }, 300);
+        const urlParams = new URLSearchParams(window.location.search);
+        const tagFilter = urlParams.get('tag');
+        const categoryFilter = urlParams.get('category');
+
+        if (tagFilter) {
+            setActiveFilter(`tag:${tagFilter}`);
+        } else if (categoryFilter) {
+            setActiveFilter(`category:${categoryFilter}`);
+        }
 
         const loadPosts = async () => {
             try {
                 const data = await fetchPosts();
-                setPosts(data);
+                setAllPosts(data);
+
+                let filteredData = data;
+                if (tagFilter) {
+                    filteredData = data.filter((post: any) => post.tags?.includes(tagFilter));
+                } else if (categoryFilter) {
+                    filteredData = data.filter((post: any) => post.category === categoryFilter);
+                }
+
+                setPosts(filteredData);
             } catch (err) {
                 console.error('Error fetching posts:', err);
                 setError(err instanceof Error ? err.message : 'Failed to fetch posts');
@@ -47,8 +68,6 @@ export default function BlogPage() {
         };
 
         loadPosts();
-
-        return () => clearTimeout(timer);
     }, []);
 
     const formatDate = (dateString: string) => {
@@ -60,7 +79,6 @@ export default function BlogPage() {
     };
 
     const handleImageError = (postId: string) => {
-        console.log('❌ Image failed to load for post:', postId);
         setImageErrors(prev => ({
             ...prev,
             [postId]: true
@@ -68,12 +86,9 @@ export default function BlogPage() {
     };
 
     const getImageSrc = (post: BlogPost) => {
-        console.log('🔍 Getting image src for post:', post.id, 'featured_image:', post.featured_image);
         if (imageErrors[post.id] || !post.featured_image) {
-            console.log('⚠️ Using fallback image for post:', post.id);
-            return '/images/blog/image1.jpg'; // Default fallback
+            return '/images/blog/image1.jpg';
         }
-        console.log('✅ Using featured image for post:', post.id, 'URL:', post.featured_image);
         return post.featured_image;
     };
 
@@ -85,15 +100,15 @@ export default function BlogPage() {
                     <div className="max-w-7xl mx-auto px-6 sm:px-8 py-16">
                         <div className="animate-pulse">
                             <div className="text-center mb-16">
-                                <div className="h-12 bg-neutral-200 rounded w-64 mx-auto mb-8"></div>
-                                <div className="h-6 bg-neutral-200 rounded w-96 mx-auto"></div>
+                                <div className="h-12 bg-gray-200 rounded w-64 mx-auto mb-8"></div>
+                                <div className="h-6 bg-gray-200 rounded w-96 mx-auto"></div>
                             </div>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-16">
-                                <div className="h-96 bg-neutral-200 rounded"></div>
+                                <div className="h-96 bg-gray-200 rounded"></div>
                                 <div className="space-y-6">
-                                    <div className="h-8 bg-neutral-200 rounded"></div>
-                                    <div className="h-4 bg-neutral-200 rounded w-3/4"></div>
-                                    <div className="h-20 bg-neutral-200 rounded"></div>
+                                    <div className="h-8 bg-gray-200 rounded"></div>
+                                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                                    <div className="h-20 bg-gray-200 rounded"></div>
                                 </div>
                             </div>
                         </div>
@@ -110,14 +125,14 @@ export default function BlogPage() {
                 <Header />
                 <main className="min-h-screen bg-white pt-20">
                     <div className="max-w-7xl mx-auto px-6 sm:px-8 py-16 text-center">
-                        <h1 className="font-gilroy font-extra-bold text-4xl text-black mb-8">Unable to Load Posts</h1>
-                        <p className="font-gilroy text-lg text-black mb-8">{error}</p>
-                        <p className="font-gilroy text-sm text-black mb-8">
+                        <H1 className="mb-8">Unable to Load Posts</H1>
+                        <Body className="text-lg mb-8">{error}</Body>
+                        <Body className="text-sm mb-8">
                             Unable to connect to the backend API. Please check your connection.
-                        </p>
+                        </Body>
                         <Link
                             href="/"
-                            className="inline-flex items-center text-black hover:text-[#236b7c] transition-colors duration-300 font-gilroy tracking-wide"
+                            className="inline-flex items-center text-gray-900 hover:text-[#236b7c] transition-colors duration-300 tracking-wide"
                         >
                             Back to Home
                         </Link>
@@ -128,7 +143,6 @@ export default function BlogPage() {
         );
     }
 
-    // Rest of the component remains the same but with updated font classes
     const featuredPost = posts[0];
     const otherPosts = posts.slice(1);
 
@@ -136,167 +150,246 @@ export default function BlogPage() {
         <>
             <Header />
             <main className="min-h-screen bg-white">
-                {/* Page Header */}
-                <section className="pt-24 pb-16">
-                    <div className="max-w-7xl mx-auto px-6 sm:px-8 text-center">
-                        <div className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                            <span className="font-gilroy font-light text-xs tracking-[0.2em] uppercase text-neutral-500 mb-6 block">
+                <Section className="pt-24 pb-16">
+                    <Container className="text-center">
+                        <FadeInUp>
+                            <Body className="text-xs tracking-[0.2em] uppercase text-gray-500 mb-6 block">
                                 Latest Stories
-                            </span>
-                            <h1 className="font-gilroy font-extra-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-black mb-8 leading-tight tracking-tight">
-                                The Journal
-                            </h1>
-                            <p className="font-gilroy font-light text-lg text-black max-w-2xl mx-auto leading-relaxed">
-                                Thoughtful perspectives on design, practical living wisdom, and stories that inspire beautiful spaces.
-                            </p>
-                        </div>
-                    </div>
-                </section>
+                            </Body>
+                            <H1 className="mb-4">
+                                Stories & Guides
+                            </H1>
+                            <div className="h-0.5 w-16 bg-[#dca744] mx-auto mb-6"></div>
+                            <Body className="text-lg max-w-2xl mx-auto">
+                                Warm, useful ideas for Nigerian homes—design tips, everyday systems, and stories that feel like home.
+                            </Body>
+                        </FadeInUp>
+                    </Container>
+                </Section>
 
-                {/* Featured Post */}
-                {featuredPost && (
-                    <section className="pb-16">
-                        <div className="max-w-7xl mx-auto px-6 sm:px-8">
-                            <Link
-                                href={`/blog/${featuredPost.slug}`}
-                                className="group block bg-white hover:shadow-2xl transition-all duration-700 hover:-translate-y-2"
-                            >
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                                    <div className="order-2 lg:order-1">
-                                        <span className="font-gilroy font-light text-xs tracking-[0.2em] uppercase text-neutral-500 mb-8 block">
-                                            Featured Story
-                                        </span>
-
-                                        <div className="flex items-center gap-6 text-sm mb-6">
-                                            <span className="font-gilroy font-light text-neutral-500 tracking-[0.1em] uppercase">
-                                                {formatDate(featuredPost.published_at)}
-                                            </span>
-                                            <span className="font-gilroy font-light text-neutral-500 tracking-[0.1em] uppercase">
-                                                {featuredPost.read_time}
-                                            </span>
-                                        </div>
-
-                                        <h2 className="font-gilroy font-extra-bold text-3xl sm:text-4xl lg:text-5xl text-black leading-tight tracking-tight group-hover:text-[#236b7c] transition-colors duration-300">
-                                            {featuredPost.title}
-                                        </h2>
-                                        <p className="font-gilroy font-light text-lg text-black leading-relaxed">
-                                            {featuredPost.excerpt}
-                                        </p>
-                                        <div className="flex items-center text-[#dca744] font-gilroy tracking-wide group-hover:text-[#236b7c] transition-colors duration-300">
-                                            <span>Read Full Story</span>
-                                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                                        </div>
-                                    </div>
-
-                                    <div className="order-1 lg:order-2">
-                                        <div className="aspect-[4/3] relative overflow-hidden">
-                                            {imageErrors[featuredPost.id] || !featuredPost.featured_image ? (
-                                                <div className="w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
-                                                    <div className="text-center text-neutral-400">
-                                                        <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                        </svg>
-                                                        <p className="font-gilroy text-sm">Image not available</p>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <Image
-                                                    src={getImageSrc(featuredPost)}
-                                                    alt={featuredPost.title}
-                                                    width={600}
-                                                    height={450}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                                    onError={() => handleImageError(featuredPost.id)}
-                                                />
-                                            )}
-                                        </div>
-                                    </div>
+                {activeFilter && (
+                    <Section className="pb-8">
+                        <Container>
+                            <div className="flex items-center justify-center gap-4">
+                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#dca744]/10 border border-[#dca744]/30 rounded-full">
+                                    <Body className="text-sm text-[#dca744] font-medium">
+                                        {activeFilter.startsWith('tag:')
+                                            ? `Tag: ${activeFilter.replace('tag:', '')}`
+                                            : `Category: ${activeFilter.replace('category:', '')}`
+                                        }
+                                    </Body>
                                 </div>
-                            </Link>
-                        </div>
-                    </section>
+                                <button
+                                    onClick={() => {
+                                        setActiveFilter(null);
+                                        setPosts(allPosts);
+                                        window.history.pushState({}, '', '/blog');
+                                    }}
+                                    className="text-sm text-gray-600 hover:text-[#dca744] transition-colors"
+                                >
+                                    Clear filter
+                                </button>
+                            </div>
+                        </Container>
+                    </Section>
                 )}
 
-                {/* Other Posts */}
+                {featuredPost && (
+                    <Section className="pb-16">
+                        <Container>
+                            <MinimalCard className="hover:border-[#dca744]">
+                                <Link href={`/blog/${featuredPost.slug}`} className="group block">
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                                        <div className="order-2 lg:order-1">
+                                            <Body className="text-xs tracking-[0.2em] uppercase text-gray-500 mb-8 block">
+                                                Featured Story
+                                            </Body>
+
+                                            <div className="flex items-center gap-6 text-sm mb-6">
+                                                <Body className="text-gray-500 tracking-[0.1em] uppercase">
+                                                    {formatDate(featuredPost.published_at)}
+                                                </Body>
+                                                <Body className="text-gray-500 tracking-[0.1em] uppercase">
+                                                    {featuredPost.read_time}
+                                                </Body>
+                                            </div>
+
+                                            <H2 className="mb-4 group-hover:text-[#236b7c] transition-colors duration-300">
+                                                {featuredPost.title}
+                                            </H2>
+                                            <Body className="text-lg mb-6">
+                                                {featuredPost.excerpt}
+                                            </Body>
+                                            <div className="inline-flex items-center text-[#dca744] tracking-wide group-hover:text-[#236b7c] transition-colors duration-300">
+                                                <span>Read Full Story</span>
+                                                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                                            </div>
+                                        </div>
+
+                                        <div className="order-1 lg:order-2">
+                                            <div className="aspect-[4/3] relative overflow-hidden rounded-md">
+                                                {imageErrors[featuredPost.id] || !featuredPost.featured_image ? (
+                                                    <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                                        <div className="text-center text-gray-400">
+                                                            <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                            <Body className="text-sm">Image not available</Body>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <Image
+                                                        src={getImageSrc(featuredPost)}
+                                                        alt={featuredPost.title}
+                                                        width={600}
+                                                        height={450}
+                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                                        onError={() => handleImageError(featuredPost.id)}
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </MinimalCard>
+                        </Container>
+                    </Section>
+                )}
+
                 {otherPosts.length > 0 && (
-                    <section className="py-16">
-                        <div className="max-w-7xl mx-auto px-6 sm:px-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
-                                {otherPosts.map((post) => (
-                                    <article key={post.id} className="group">
-                                        <Link href={`/blog/${post.slug}`} className="block">
-                                            <div className="space-y-6">
-                                                <div className="aspect-[4/3] relative overflow-hidden">
-                                                    {imageErrors[post.id] || !post.featured_image ? (
-                                                        <div className="w-full h-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center">
-                                                            <div className="text-center text-neutral-400">
-                                                                <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                                </svg>
-                                                                <p className="text-xs font-light">No image</p>
+                    <Section className="py-16">
+                        <Container>
+                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 sm:gap-12">
+                                <div className="lg:col-span-3">
+                                    <Grid className="grid-cols-1 md:grid-cols-2">
+                                        {otherPosts.map((post) => (
+                                            <MinimalCard key={post.id} className="h-full hover:border-[#dca744]">
+                                                <Link href={`/blog/${post.slug}`} className="block h-full group">
+                                                    <div className="space-y-6 flex flex-col h-full">
+                                                        <div className="aspect-[4/3] relative overflow-hidden rounded-md">
+                                                            {imageErrors[post.id] || !post.featured_image ? (
+                                                                <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                                                    <div className="text-center text-gray-400">
+                                                                        <svg className="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                        </svg>
+                                                                        <Body className="text-xs">No image</Body>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <Image
+                                                                    src={getImageSrc(post)}
+                                                                    alt={post.title}
+                                                                    width={400}
+                                                                    height={300}
+                                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                                                    onError={() => handleImageError(post.id)}
+                                                                />
+                                                            )}
+                                                        </div>
+
+                                                        <div className="space-y-4 flex-1 flex flex-col">
+                                                            <div className="flex items-center gap-4 text-sm">
+                                                                <Body className="text-gray-500 tracking-[0.1em] uppercase">
+                                                                    {formatDate(post.published_at)}
+                                                                </Body>
+                                                                <Body className="text-gray-500 tracking-[0.1em] uppercase">
+                                                                    {post.read_time}
+                                                                </Body>
+                                                            </div>
+
+                                                            <H3 className="group-hover:text-[#236b7c] transition-colors duration-300 line-clamp-2">
+                                                                {post.title}
+                                                            </H3>
+
+                                                            <Body className="line-clamp-2 flex-1">
+                                                                {post.excerpt}
+                                                            </Body>
+
+                                                            <PrimaryButton className="mt-auto w-full flex items-center justify-center gap-2 py-2">
+                                                                <span>Read More</span>
+                                                                <ArrowRight className="w-4 h-4 transform transition-transform duration-300" />
+                                                            </PrimaryButton>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </MinimalCard>
+                                        ))}
+                                    </Grid>
+                                </div>
+
+                                <div className="lg:col-span-1 space-y-8">
+                                    <MinimalCard>
+                                        <H3 className="mb-6">
+                                            Trending Reads
+                                        </H3>
+                                        <div className="space-y-4">
+                                            {allPosts.slice(0, 5).map((post, index) => (
+                                                <div key={post.id} className="group">
+                                                    <Link href={`/blog/${post.slug}`} className="block">
+                                                        <div className="flex gap-3">
+                                                            <span className="font-light text-2xl text-gray-300 group-hover:text-[#dca744] transition-colors">
+                                                                {index + 1}.
+                                                            </span>
+                                                            <div className="flex-1">
+                                                                <Body className="text-sm group-hover:text-[#236b7c] transition-colors line-clamp-2 leading-tight">
+                                                                    {post.title}
+                                                                </Body>
+                                                                <Body className="text-xs text-gray-500 mt-1">
+                                                                    {post.read_time}
+                                                                </Body>
                                                             </div>
                                                         </div>
-                                                    ) : (
-                                                        <Image
-                                                            src={getImageSrc(post)}
-                                                            alt={post.title}
-                                                            width={400}
-                                                            height={300}
-                                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                                            onError={() => handleImageError(post.id)}
-                                                        />
-                                                    )}
+                                                    </Link>
                                                 </div>
+                                            ))}
+                                        </div>
+                                    </MinimalCard>
 
-                                                <div className="space-y-4">
-                                                    <div className="flex items-center gap-4 text-sm">
-                                                        <span className="font-gilroy font-light text-neutral-500 tracking-[0.1em] uppercase">
-                                                            {formatDate(post.published_at)}
-                                                        </span>
-                                                        <span className="font-gilroy font-light text-neutral-500 tracking-[0.1em] uppercase">
-                                                            {post.read_time}
-                                                        </span>
-                                                    </div>
+                                    <CompactNewsletter />
 
-                                                    <h3 className="font-gilroy font-extra-bold text-xl sm:text-2xl text-black leading-tight tracking-tight group-hover:text-[#236b7c] transition-colors duration-300">
-                                                        {post.title}
-                                                    </h3>
-
-                                                    <p className="font-gilroy font-light text-black leading-relaxed line-clamp-2">
-                                                        {post.excerpt}
-                                                    </p>
-
-                                                    <button className="w-full text-[#dca744] hover:text-[#236b7c] transition-colors duration-300 flex items-center justify-center gap-2 font-medium py-2 group">
-                                                        <span>Read More</span>
-                                                        <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </article>
-                                ))}
+                                    <MinimalCard className="bg-gray-50">
+                                        <H3 className="mb-4">
+                                            Categories
+                                        </H3>
+                                        <div className="space-y-2">
+                                            {['Cleaning', 'Organization', 'Life', 'Decorating', 'Energy Savings', 'Security & Safety', 'Smart & Tech', 'Home Projects'].map((category) => (
+                                                <Link
+                                                    key={category}
+                                                    href={`/blog?category=${encodeURIComponent(category)}`}
+                                                    className="block text-sm text-gray-600 hover:text-[#236b7c] transition-colors py-1"
+                                                >
+                                                    {category}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </MinimalCard>
+                                </div>
                             </div>
-                        </div>
-                    </section>
+                        </Container>
+                    </Section>
                 )}
 
-                {/* Newsletter CTA Section */}
-                <section className="py-16 bg-neutral-50">
-                    <div className="max-w-4xl mx-auto px-6 sm:px-8 text-center">
-                        <span className="font-gilroy font-light text-xs tracking-[0.2em] uppercase text-neutral-500 mb-6 block">
+                <Section className="py-16 bg-neutral-50">
+                    <Container className="text-center">
+                        <Body className="text-xs tracking-[0.2em] uppercase text-neutral-500 mb-6 block">
                             Stay Updated
-                        </span>
-                        <h2 className="font-gilroy font-extra-bold text-3xl sm:text-4xl text-black mb-4">
-                            Design Newsletter
-                        </h2>
-                        <p className="font-gilroy font-light text-lg text-black max-w-lg mx-auto">
-                            Get the latest interior design trends and tips delivered to your inbox.
-                        </p>
-                    </div>
-                </section>
+                        </Body>
+                        <H2 className="mb-4">
+                            We'll send you beautiful, useful finds for your home
+                        </H2>
+                        <Body className="text-lg max-w-xl mx-auto mb-6">
+                            One thoughtful email a week—smart tips, weekend projects, and curated finds made for Nigerian homes.
+                        </Body>
+                        <div className="max-w-xl mx-auto">
+                            <NewsletterForm variant="inline" source="blog_main" />
+                        </div>
+                    </Container>
+                </Section>
             </main>
+            <NewsletterSticky />
             <Footer />
             <DebugInfo />
         </>
     );
-} 
+}

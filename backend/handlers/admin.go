@@ -113,9 +113,12 @@ func (h *AdminHandler) UpdatePost(w http.ResponseWriter, r *http.Request) {
 
 	var req models.CreatePostRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		println("❌ Error decoding update request:", err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	println("📝 Updating post:", slug)
 
 	client := h.db.GetClient()
 	updateData := map[string]any{
@@ -126,17 +129,43 @@ func (h *AdminHandler) UpdatePost(w http.ResponseWriter, r *http.Request) {
 		"featured_image": req.FeaturedImage,
 		"tags":           req.Tags,
 		"images_json":    req.Images,
+		"category":       req.Category,
+		"featured":       req.Featured,
+		"featured_hero":  req.FeaturedHero,
 	}
 
+	// Only add optional fields if they have values
+	if req.HomepageSection != "" {
+		updateData["homepage_section"] = req.HomepageSection
+	}
+	if req.HomepageOrder > 0 {
+		updateData["homepage_order"] = req.HomepageOrder
+	}
+	if len(req.CalloutPoints) > 0 {
+		updateData["callout_points"] = req.CalloutPoints
+	}
+	if req.CalloutCTA != "" {
+		updateData["callout_cta"] = req.CalloutCTA
+	}
+	if req.CalloutSidebarTitle != "" {
+		updateData["callout_sidebar_title"] = req.CalloutSidebarTitle
+	}
+	if req.CalloutSidebarContent != "" {
+		updateData["callout_sidebar_content"] = req.CalloutSidebarContent
+	}
+
+	println("📤 Updating post in database...")
 	_, _, err := client.From("posts").
 		Update(updateData, "minimal", "").
 		Eq("slug", slug).
 		Execute()
 	if err != nil {
+		println("❌ Error updating post:", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	println("✅ Post updated successfully:", slug)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "updated"})
 }

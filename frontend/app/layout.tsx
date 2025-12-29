@@ -1,31 +1,75 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Cutive } from "next/font/google";
+import { Cormorant_Garamond, Proza_Libre } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from "@/hooks/useToast";
+import { WishlistProvider } from "@/hooks/useWishlist";
+import { generateOrganizationStructuredData } from "@/components/SEO";
+import CartDrawer from '@/components/CartDrawer';
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-playfair",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-cormorant",
+  weight: ["400", "500", "700"],
   display: "swap",
 });
 
-const inter = Inter({
+const prozaLibre = Proza_Libre({
   subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["400", "500", "600", "700", "800", "900"],
-  display: "swap",
-});
-
-const cutive = Cutive({
-  subsets: ["latin"],
-  variable: "--font-cutive",
-  weight: ["400"],
+  variable: "--font-proza",
+  weight: ["400", "500", "700"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "BetaDomot - Your Home, Your Story",
-  description: "Your guide to creating beautiful, functional homes that tell your unique story. Fresh ideas and practical advice for modern Nigerian living.",
+  metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://betadomot.blog' : 'http://localhost:3000'),
+  title: "BetaDomot - Everything for a Better Home",
+  description: "Your guide to a beautiful and happy home.",
+  keywords: "home decor, interior design, Nigerian homes, furniture, home inspiration, lifestyle",
+  authors: [{ name: "BetaDomot" }],
+  creator: "BetaDomot",
+  publisher: "BetaDomot",
+  openGraph: {
+    type: 'website',
+    title: "BetaDomot - Everything for a Better Home",
+    description: "Your guide to a beautiful and happy home.",
+    url: process.env.NODE_ENV === 'production' ? 'https://betadomot.blog' : 'http://localhost:3000',
+    siteName: 'BetaDomot',
+    images: [
+      {
+        url: '/images/og-default.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'BetaDomot - Everything for a Better Home',
+      },
+    ],
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "BetaDomot - Everything for a Better Home",
+    description: "Your guide to a beautiful and happy home.",
+    images: ['/images/og-default.jpg'],
+    creator: '@betadomot',
+    site: '@betadomot',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -35,8 +79,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${playfair.variable} ${inter.variable} ${cutive.variable} font-body antialiased bg-white text-gray-900`}>
-        {children}
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(generateOrganizationStructuredData()),
+          }}
+        />
+      </head>
+      <body className={`${cormorant.variable} ${prozaLibre.variable} font-body antialiased bg-white text-gray-900`}>
+        <ToastProvider>
+          <WishlistProvider>
+            <CartDrawer />
+            {children}
+          </WishlistProvider>
+        </ToastProvider>
       </body>
     </html>
   );

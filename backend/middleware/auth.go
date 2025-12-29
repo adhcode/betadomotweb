@@ -3,26 +3,13 @@ package middleware
 import (
 	"encoding/base64"
 	"net/http"
-	"os"
 	"strings"
 )
 
 // BasicAuth returns a middleware that requires HTTP Basic Authentication
-func BasicAuth() func(http.Handler) http.Handler {
+func BasicAuth(adminUsername, adminPassword string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// Get admin credentials from environment
-			adminUsername := os.Getenv("ADMIN_USERNAME")
-			adminPassword := os.Getenv("ADMIN_PASSWORD")
-
-			// Default credentials if not set (NOT for production!)
-			if adminUsername == "" {
-				adminUsername = "admin"
-			}
-			if adminPassword == "" {
-				adminPassword = "password"
-			}
-
 			// Get Authorization header
 			auth := r.Header.Get("Authorization")
 			if !strings.HasPrefix(auth, "Basic ") {

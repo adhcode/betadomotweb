@@ -75,10 +75,12 @@ export default {
       },
       fontFamily: {
         'sans': ['Gilroy', 'Arial', 'sans-serif'],
-        'heading': ['Gilroy', 'Arial', 'sans-serif'],
-        'body': ['Gilroy', 'Arial', 'sans-serif'],
-        'cutive': ['Gilroy', 'Arial', 'sans-serif'],
-        'gilroy': ['Gilroy', 'Arial', 'sans-serif'],
+        'gilroy': ['var(--font-gilroy)', 'Gilroy', 'Arial', 'sans-serif'],
+        'cormorant': ['var(--font-cormorant)', 'Georgia', 'serif'],
+        'proza': ['var(--font-proza)', 'Helvetica', 'sans-serif'],
+        // Aliases for backward compatibility
+        'heading': ['var(--font-cormorant)', 'Georgia', 'serif'],
+        'body': ['var(--font-proza)', 'Helvetica', 'sans-serif'],
       },
       fontSize: {
         'display': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '800' }],

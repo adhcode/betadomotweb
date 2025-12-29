@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { adminAPI } from '@/lib/admin-api';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
@@ -123,9 +124,7 @@ export default function ProductsPage() {
         setLoading(true);
         setError('');
         try {
-            const response = await fetch('http://localhost:8080/admin/products');
-            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            const data = await response.json();
+            const data = await adminAPI.getProducts();
             setProducts(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to load products');

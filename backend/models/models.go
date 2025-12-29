@@ -2,28 +2,43 @@ package models
 
 // Post represents a blog post
 type Post struct {
-	ID            string   `json:"id"`
-	Slug          string   `json:"slug"`
-	Title         string   `json:"title"`
-	Excerpt       string   `json:"excerpt"`
-	Content       string   `json:"content"`
-	PublishedAt   string   `json:"published_at"`
-	ReadTime      string   `json:"read_time"`
-	FeaturedImage string   `json:"featured_image"`
-	Tags          []string `json:"tags"`
-	ImagesJSON    any      `json:"images_json"`
-	Views         int      `json:"views"`
+	ID              string   `json:"id"`
+	Slug            string   `json:"slug"`
+	Title           string   `json:"title"`
+	Excerpt         string   `json:"excerpt"`
+	Content         string   `json:"content"`
+	PublishedAt     string   `json:"published_at"`
+	ReadTime        string   `json:"read_time"`
+	FeaturedImage   string   `json:"featured_image"`
+	Tags            []string `json:"tags"`
+	ImagesJSON      any      `json:"images_json"`
+	Views           int      `json:"views"`
+	Category        string   `json:"category"`
+	Topics          []string `json:"topics"`          // Array of topics under the category
+	RelatedProducts []string `json:"related_products"` // Array of product IDs/slugs
+	FeaturedHero    bool     `json:"featured_hero"`
 }
 
 // CreatePostRequest represents the payload for creating a new post
 type CreatePostRequest struct {
-	Title         string   `json:"title"`
-	Excerpt       string   `json:"excerpt"`
-	Content       string   `json:"content"`
-	ReadTime      string   `json:"readTime"`
-	FeaturedImage string   `json:"featuredImage"`
-	Tags          []string `json:"tags"`
-	Images        any      `json:"images"`
+	Title                 string   `json:"title"`
+	Excerpt               string   `json:"excerpt"`
+	Content               string   `json:"content"`
+	ReadTime              string   `json:"readTime"`
+	FeaturedImage         string   `json:"featuredImage"`
+	Tags                  []string `json:"tags"`
+	Images                any      `json:"images"`
+	Category              string   `json:"category"`
+	Topics                []string `json:"topics"`
+	Featured              bool     `json:"featured"`
+	FeaturedHero          bool     `json:"featured_hero"`
+	HomepageSection       string   `json:"homepage_section"`
+	HomepageOrder         int      `json:"homepage_order"`
+	CalloutPoints         []string `json:"callout_points"`
+	CalloutCTA            string   `json:"callout_cta"`
+	CalloutSidebarTitle   string   `json:"callout_sidebar_title"`
+	CalloutSidebarContent string   `json:"callout_sidebar_content"`
+	RelatedProducts       []string `json:"related_products"` // Array of product IDs/slugs
 }
 
 // Comment represents a blog comment
@@ -214,4 +229,48 @@ type Cart struct {
 	ID    string     `json:"id"`
 	Items []CartItem `json:"items"`
 	Total float64    `json:"total"`
+}
+
+// BlogCategory represents a simple blog category
+type BlogCategory struct {
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Slug        string `json:"slug"`
+	Description string `json:"description"`
+	Color       string `json:"color"`
+	Icon        string `json:"icon"`
+	DisplayOrder int   `json:"display_order"`
+	CreatedAt   string `json:"created_at"`
+}
+
+// Guide represents a comprehensive guide
+type Guide struct {
+	ID          string `json:"id"`
+	Slug        string `json:"slug"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Content     string `json:"content"`
+	Category    string `json:"category"`
+	Tags        []string `json:"tags"`
+	FeaturedImage string `json:"featured_image"`
+	ReadTime    string `json:"read_time"`
+	Views       int    `json:"views"`
+	Featured    bool   `json:"featured"`
+	FeaturedHero bool  `json:"featured_hero"`
+	PublishedAt string `json:"published_at"`
+	CreatedAt   string `json:"created_at"`
+	UpdatedAt   string `json:"updated_at"`
+}
+
+// CreateGuideRequest represents the payload for creating a new guide
+type CreateGuideRequest struct {
+	Title         string   `json:"title"`
+	Description   string   `json:"description"`
+	Content       string   `json:"content"`
+	Category      string   `json:"category"`
+	Tags          []string `json:"tags"`
+	FeaturedImage string   `json:"featured_image"`
+	ReadTime      string   `json:"read_time"`
+	Featured      bool     `json:"featured"`
+	FeaturedHero  bool     `json:"featured_hero"`
 }
