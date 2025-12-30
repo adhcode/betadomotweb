@@ -3,13 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Calendar, Clock, Eye, Share, MessageCircle, ArrowUpRight, Link2 } from "lucide-react";
+import { ArrowLeft, Share, MessageCircle, ArrowUpRight, Link2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Comments from "@/components/Comments";
-import BlogPostNewsletter from "@/components/BlogPostNewsletter";
-import { H1, H2, H3, Body, MonoText, Container, Section, GhostButton, FadeInUp } from "@/components/ui/DesignSystem";
-import { error } from "console";
+import { H1, Body, MonoText, Container, Section, FadeInUp } from "@/components/ui/DesignSystem";
 
 // Clap icon using the SVG from public folder
 function ClapIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -40,10 +38,7 @@ interface BlogPostPageClientProps {
 }
 
 export default function BlogPostPageClient({ initialPost }: BlogPostPageClientProps) {
-    const [post, setPost] = useState<BlogPost>(initialPost);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [isVisible, setIsVisible] = useState(false);
+    const [post] = useState<BlogPost>(initialPost);
     const [imageError, setImageError] = useState(false);
     const [userClaps, setUserClaps] = useState<number>(0);
     const [totalClaps, setTotalClaps] = useState<number>(0);
@@ -78,12 +73,6 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
         };
 
         loadEngagementData();
-
-        const timer = setTimeout(() => {
-            setIsVisible(true);
-        }, 300);
-
-        return () => clearTimeout(timer);
     }, [initialPost.slug]);
 
     // Load user claps from localStorage
@@ -247,74 +236,6 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
         return src.startsWith('http://') || src.startsWith('https://');
     };
 
-    if (loading) {
-        return (
-            <>
-                <Header />
-                <main className="min-h-screen bg-white pt-20">
-                    <div className="max-w-4xl mx-auto px-6 sm:px-8 py-16">
-                        <div className="animate-pulse">
-                            <div className="h-4 bg-neutral-200 rounded w-24 mb-8"></div>
-                            <div className="h-12 bg-neutral-200 rounded w-full mb-6"></div>
-                            <div className="h-6 bg-neutral-200 rounded w-3/4 mb-8"></div>
-                            <div className="aspect-[16/9] bg-neutral-200 rounded mb-12"></div>
-                            <div className="space-y-4">
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <div key={i} className="h-4 bg-neutral-200 rounded w-full"></div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </main>
-                <Footer />
-            </>
-        );
-    }
-
-    if (error) {
-        return (
-            <>
-                <Header />
-                <main className="min-h-screen bg-white pt-20">
-                    <div className="max-w-4xl mx-auto px-6 sm:px-8 py-16 text-center">
-                        <h1 className="text-2xl font-gilroy text-black mb-4">Error Loading Post</h1>
-                        <p className="text-black mb-8">{error}</p>
-                        <Link
-                            href="/blog"
-                            className="inline-flex items-center text-black hover:text-[#236b7c] transition-colors duration-300 font-gilroy tracking-wide"
-                        >
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Back to Blog
-                        </Link>
-                    </div>
-                </main>
-                <Footer />
-            </>
-        );
-    }
-
-    if (!post) {
-        return (
-            <>
-                <Header />
-                <main className="min-h-screen bg-white pt-20">
-                    <div className="max-w-4xl mx-auto px-6 sm:px-8 py-16 text-center">
-                        <h1 className="text-2xl font-gilroy text-black mb-4">Post Not Found</h1>
-                        <p className="text-black mb-8">The blog post you&apos;re looking for doesn&apos;t exist.</p>
-                        <Link
-                            href="/blog"
-                            className="inline-flex items-center text-black hover:text-[#236b7c] transition-colors duration-300 font-gilroy tracking-wide"
-                        >
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Back to Blog
-                        </Link>
-                    </div>
-                </main>
-                <Footer />
-            </>
-        );
-    }
-
     return (
         <>
             <Header />
@@ -324,11 +245,11 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
                     <Container>
                         <FadeInUp>
                             <Link
-                                href="/blog"
+                                href="/"
                                 className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors mb-4 group"
                             >
                                 <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
-                                <MonoText className="text-sm">Back to Blog</MonoText>
+                                <MonoText className="text-sm">Home</MonoText>
                             </Link>
                         </FadeInUp>
 
