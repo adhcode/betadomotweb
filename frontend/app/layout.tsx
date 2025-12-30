@@ -28,6 +28,15 @@ export const metadata: Metadata = {
   authors: [{ name: "BetaDomot" }],
   creator: "BetaDomot",
   publisher: "BetaDomot",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/images/logo.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/images/logo.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     type: 'website',
     title: "BetaDomot - Everything for a Better Home",
@@ -36,7 +45,7 @@ export const metadata: Metadata = {
     siteName: 'BetaDomot',
     images: [
       {
-        url: '/images/og-default.jpg',
+        url: '/images/logo.png',
         width: 1200,
         height: 630,
         alt: 'BetaDomot - Everything for a Better Home',
@@ -48,7 +57,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "BetaDomot - Everything for a Better Home",
     description: "Your guide to a beautiful and happy home.",
-    images: ['/images/og-default.jpg'],
+    images: ['/images/logo.png'],
     creator: '@betadomot',
     site: '@betadomot',
   },
