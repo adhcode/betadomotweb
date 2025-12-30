@@ -42,9 +42,25 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             : 'http://localhost:3000';
         
         const guideUrl = `${baseUrl}/guides/${guide.slug}`;
-        const imageUrl = guide.featured_image 
-            ? (guide.featured_image.startsWith('http') ? guide.featured_image : `${baseUrl}${guide.featured_image}`)
-            : `${baseUrl}/images/og-default.jpg`;
+        
+        // Construct absolute image URL
+        let imageUrl = `${baseUrl}/images/og-default.jpg`; // fallback
+        
+        if (guide.featured_image) {
+            if (guide.featured_image.startsWith('http://') || guide.featured_image.startsWith('https://')) {
+                // Already absolute URL
+                imageUrl = guide.featured_image;
+            } else if (guide.featured_image.startsWith('/')) {
+                // Relative path with leading slash
+                imageUrl = `${baseUrl}${guide.featured_image}`;
+            } else {
+                // Relative path without leading slash
+                imageUrl = `${baseUrl}/${guide.featured_image}`;
+            }
+        }
+        
+        // Log for debugging (will show in server logs)
+        console.log('🖼️ OG Image URL for guide', guide.slug, ':', imageUrl);
 
         return {
             title: `${guide.title} | BetaDomot Guides`,
@@ -62,6 +78,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
                         width: 1200,
                         height: 630,
                         alt: guide.title,
+                        type: 'image/jpeg',
                     },
                 ],
                 publishedTime: guide.published_at,
