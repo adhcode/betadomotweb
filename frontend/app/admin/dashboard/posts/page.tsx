@@ -513,21 +513,21 @@ export default function PostsPage() {
                         {filteredPosts.map((post) => (
                             <div
                                 key={post.id}
-                                className={`p-6 hover:bg-gray-50 transition-colors ${
+                                className={`p-4 sm:p-6 hover:bg-gray-50 transition-colors ${
                                     post.featured_hero ? 'bg-yellow-50/50' : ''
                                 }`}
                             >
-                                <div className="flex gap-4">
+                                <div className="flex flex-col sm:flex-row gap-4">
                                     {/* Thumbnail */}
-                                    <div className="flex-shrink-0">
+                                    <div className="flex-shrink-0 w-full sm:w-24">
                                         {post.featured_image ? (
                                             <img
                                                 src={post.featured_image}
                                                 alt={post.title}
-                                                className="w-24 h-24 object-cover rounded-lg"
+                                                className="w-full sm:w-24 h-48 sm:h-24 object-cover rounded-lg"
                                             />
                                         ) : (
-                                            <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center">
+                                            <div className="w-full sm:w-24 h-48 sm:h-24 bg-gray-100 rounded-lg flex items-center justify-center">
                                                 <ImageIcon className="w-8 h-8 text-gray-400" />
                                             </div>
                                         )}
@@ -535,10 +535,10 @@ export default function PostsPage() {
 
                                     {/* Content */}
                                     <div className="flex-1 min-w-0">
-                                        <div className="flex items-start justify-between gap-4">
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <h3 className="text-lg font-semibold text-gray-900 truncate">
+                                        <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                                            <div className="flex-1 w-full">
+                                                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                                    <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                                                         {post.title}
                                                     </h3>
                                                     {post.featured_hero && (
@@ -551,14 +551,15 @@ export default function PostsPage() {
                                                 <p className="text-sm text-gray-600 mb-3 line-clamp-2">
                                                     {post.excerpt}
                                                 </p>
-                                                <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                                                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-gray-500">
                                                     <div className="flex items-center gap-1">
                                                         <Calendar className="w-3.5 h-3.5" />
-                                                        {new Date(post.published_at).toLocaleDateString()}
+                                                        <span className="hidden sm:inline">{new Date(post.published_at).toLocaleDateString()}</span>
+                                                        <span className="sm:hidden">{new Date(post.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                                     </div>
                                                     <div className="flex items-center gap-1">
                                                         <Eye className="w-3.5 h-3.5" />
-                                                        {post.views} views
+                                                        {post.views}
                                                     </div>
                                                     <div className="flex items-center gap-1">
                                                         <Clock className="w-3.5 h-3.5" />
@@ -591,7 +592,7 @@ export default function PostsPage() {
                                             </div>
 
                                             {/* Actions */}
-                                            <div className="flex items-center gap-2 flex-shrink-0">
+                                            <div className="flex sm:flex-col items-center gap-2 flex-shrink-0 w-full sm:w-auto justify-end">
                                                 <button
                                                     onClick={() => handleToggleFeaturedHero(post)}
                                                     className={`p-2 rounded-lg transition-colors ${

@@ -19,8 +19,12 @@ export default function AdminLogin() {
         setIsLoading(true);
 
         try {
+            const API_BASE_URL = process.env.NODE_ENV === 'production'
+                ? 'https://betadomotweb-production.up.railway.app'
+                : 'http://localhost:8080';
+            
             const authHeader = 'Basic ' + btoa(`${credentials.username}:${credentials.password}`);
-            const response = await fetch('http://localhost:8080/admin/dashboard', {
+            const response = await fetch(`${API_BASE_URL}/admin/dashboard`, {
                 headers: {
                     'Authorization': authHeader
                 }
