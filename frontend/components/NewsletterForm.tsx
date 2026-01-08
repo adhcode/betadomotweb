@@ -142,8 +142,8 @@ function getVariantStyles(variant: string) {
             container: "",
             form: "mb-0",
             inputGroup: "flex gap-3 justify-center",
-            input: "flex-1 min-w-[260px] px-4 py-3 text-primary-900 bg-white border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-[#236b7c] focus:border-[#236b7c] placeholder-neutral-400 transition-all duration-300",
-            button: "bg-[#236b7c] text-white hover:text-white px-6 py-3 font-medium text-sm tracking-wide hover:bg-[#1a5463] transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+            input: "flex-1 min-w-[260px] px-4 py-3 text-primary-900 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#236b7c] focus:border-transparent placeholder-gray-400 transition-all duration-300",
+            button: "font-gilroy font-bold uppercase px-6 py-3 bg-[#dca744] text-gray-900 rounded-lg hover:bg-[#e6b85c] transition-colors duration-200 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed",
             trustIndicators: "mt-2"
         },
         sidebar: {

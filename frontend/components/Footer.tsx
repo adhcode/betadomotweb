@@ -1,11 +1,40 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Body, Container, MinimalButton } from './ui/DesignSystem';
+import NewsletterForm from './NewsletterForm';
 
 export default function Footer() {
     return (
         <footer className="bg-white border-t border-gray-200 mt-12 sm:mt-16 md:mt-24">
             <Container className="py-16 sm:py-20">
+                {/* Newsletter Section */}
+                <div className="mb-16 pb-16 border-b border-gray-200">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                            <div className="md:col-span-1">
+                                <h3 className="text-base font-gilroy font-extrabold text-gray-900 mb-3" style={{ fontWeight: 800 }}>Newsletter</h3>
+                                <p className="text-gray-600 font-proza text-sm leading-relaxed">
+                                    Enjoy daily home tips, decoration hacks, home products, and more delivered straight to your inbox.
+                                </p>
+                            </div>
+                            <div className="md:col-span-2">
+                                <NewsletterForm variant="inline" source="footer" helperText={null} />
+                                <p className="text-xs text-gray-500 font-proza mt-3">
+                                    By subscribing, you acknowledge and agree to our{' '}
+                                    <Link href="/terms" className="text-[#236b7c] hover:underline">
+                                        Terms of Use
+                                    </Link>
+                                    {' '}and{' '}
+                                    <Link href="/privacy" className="text-[#236b7c] hover:underline">
+                                        Privacy Policy
+                                    </Link>
+                                    .
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Main Footer Content */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 mb-16">
                     {/* Brand Section */}
@@ -19,9 +48,7 @@ export default function Footer() {
                                 className="h-6 w-auto transition-transform duration-300 group-hover:scale-105"
                             />
                         </Link>
-                        <Body className="max-w-sm mb-6 text-gray-600 font-proza">
-                            Smart living, beautiful spaces, better homes. Practical guides and everyday systems for Nigerian homes.
-                        </Body>
+                    
 
                         {/* Social Links */}
                         <div className="flex items-center space-x-4">
@@ -113,7 +140,7 @@ export default function Footer() {
                 <div className="border-t border-gray-200 pt-8">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                         <Body className="text-gray-500 text-sm font-proza">
-                            © 2025 BetaDomot. We build content for homes that breathe, save, and belong.
+                            © 2025 BetaDomot.
                         </Body>
                         <div className="flex items-center space-x-8">
                             <Link href="/privacy">

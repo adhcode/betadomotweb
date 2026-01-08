@@ -165,7 +165,7 @@ export default function CategoryStories() {
             <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12">
                 <FadeInUp delay={0}>
                     <div className="mb-16">
-                        <h2 className="font-cormorant text-3xl md:text-4xl font-normal text-gray-800 leading-tight tracking-tight">
+                        <h2 className="font-gilroy text-3xl md:text-4xl font-medium text-gray-800 leading-tight tracking-tight">
                             Read by category
                         </h2>
                     </div>
@@ -177,12 +177,12 @@ export default function CategoryStories() {
                             <FadeInUp key={config.name} delay={index * 50}>
                                 <Link
                                     href={`/category/${config.slug}`}
-                                    className="group block p-6 bg-white border border-gray-200 rounded-xl hover:border-gray-300 hover:shadow-sm transition-all duration-300"
+                                    className="group block p-6 bg-white border border-gray-200 rounded-xl hover:border-gray-300 hover:shadow-sm transition-all duration-300 h-full"
                                 >
-                                    <div className="text-center">
+                                    <div className="flex flex-col items-center justify-center h-full">
                                         {/* Icon */}
                                         <div
-                                            className="w-20 h-20 mx-auto mb-4 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
+                                            className="w-20 h-20 mx-auto mb-4 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105 flex-shrink-0"
                                             style={{
                                                 backgroundColor: config.bgColor
                                             }}
@@ -205,7 +205,7 @@ export default function CategoryStories() {
                                         </div>
 
                                         {/* Category Name */}
-                                        <h3 className="font-gilroy font-semibold text-sm text-gray-700 group-hover:text-gray-900 transition-colors duration-300">
+                                        <h3 className="font-proza font-light text-xs text-gray-700 group-hover:text-gray-900 transition-colors duration-300 text-center">
                                             {config.name}
                                         </h3>
                                     </div>

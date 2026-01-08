@@ -109,7 +109,7 @@ export default function FeaturedPosts() {
             <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12">
                 <FadeInUp delay={0}>
                     <div className="mb-16 flex items-center justify-between">
-                        <h2 className="font-cormorant text-3xl md:text-4xl font-light text-gray-800 leading-tight tracking-tight">
+                        <h2 className="font-gilroy text-3xl md:text-4xl font-medium text-gray-800 leading-tight tracking-tight">
                             Latest Stories
                         </h2>
                         <Link
@@ -125,54 +125,56 @@ export default function FeaturedPosts() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
                     {posts.map((post, index) => (
                         <FadeInUp key={post.id} delay={index * 100}>
-                            <Link href={`/blog/${post.slug}`} className="group block">
-                                {/* Post Image */}
-                                <div className="relative aspect-[4/3] overflow-hidden bg-gray-50 mb-6 rounded-lg">
-                                    {imageErrors[post.id] || !post.featured_image ? (
-                                        <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                                            <span className="text-gray-300 text-4xl font-light">
-                                                {post.title.charAt(0)}
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <Image
-                                            src={getImageSrc(post)}
-                                            alt={post.title}
-                                            fill
-                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                            onError={() => handleImageError(post.id)}
-                                            unoptimized={isExternalImage(getImageSrc(post))}
-                                        />
-                                    )}
-                                    
-                                    {/* Subtle Overlay */}
-                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                                    
-                                    {/* Centered Arrow Button */}
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div className="w-14 h-14 rounded-full bg-[#dca744] flex items-center justify-center shadow-md">
-                                            <ArrowUpRight className="w-6 h-6 text-white" />
+                            <Link href={`/blog/${post.slug}`} className="group block h-full">
+                                <div className="flex flex-col h-full">
+                                    {/* Post Image */}
+                                    <div className="relative aspect-[4/3] overflow-hidden bg-gray-50 mb-6 rounded-lg flex-shrink-0">
+                                        {imageErrors[post.id] || !post.featured_image ? (
+                                            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                                <span className="text-gray-300 text-4xl font-light">
+                                                    {post.title.charAt(0)}
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <Image
+                                                src={getImageSrc(post)}
+                                                alt={post.title}
+                                                fill
+                                                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                                onError={() => handleImageError(post.id)}
+                                                unoptimized={isExternalImage(getImageSrc(post))}
+                                            />
+                                        )}
+                                        
+                                        {/* Subtle Overlay */}
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                                        
+                                        {/* Centered Arrow Button */}
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <div className="w-14 h-14 rounded-full bg-[#dca744] flex items-center justify-center shadow-md">
+                                                <ArrowUpRight className="w-6 h-6 text-white" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Post Content */}
-                                <div className="space-y-4">
-                                    {/* Category */}
-                                    {post.category && (
-                                        <span className="font-gilroy font-semibold inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs tracking-wide uppercase rounded-full">
-                                            {post.category}
-                                        </span>
-                                    )}
+                                    {/* Post Content */}
+                                    <div className="flex flex-col flex-grow">
+                                        {/* Category */}
+                                        {post.category && (
+                                            <span className="font-gilroy font-semibold inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs tracking-wide uppercase rounded-full mb-4 self-start">
+                                                {post.category}
+                                            </span>
+                                        )}
 
-                                    <h3 className="font-cormorant text-xl font-light text-gray-800 leading-tight group-hover:text-gray-600 transition-colors duration-300">
-                                        {post.title}
-                                    </h3>
+                                        <h3 className="font-gilroy text-xl font-normal text-gray-800 leading-tight group-hover:text-gray-600 transition-colors duration-300 mb-4 flex-grow">
+                                            {post.title}
+                                        </h3>
 
-                                    <div className="font-proza flex items-center gap-4 text-gray-400 text-sm font-light">
-                                        <span>{formatDate(post.published_at)}</span>
-                                        <span className="w-1 h-1 bg-gray-300 rounded-full" />
-                                        <span>{post.read_time}</span>
+                                        <div className="font-proza flex items-center gap-4 text-gray-400 text-sm font-light mt-auto">
+                                            <span>{formatDate(post.published_at)}</span>
+                                            <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                                            <span>{post.read_time}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </Link>

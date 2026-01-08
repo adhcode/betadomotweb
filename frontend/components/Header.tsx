@@ -133,7 +133,7 @@ export default function Header() {
                                     <button
                                         key={item.href}
                                         onClick={() => handleNavigation(item.href)}
-                                        className="px-4 py-3 text-gray-700 text-sm font-gilroy font-bold rounded-md hover:text-[#236b7c] transition-colors duration-200"
+                                        className="px-4 py-3 text-gray-700 text-sm font-proza font-normal rounded-md hover:text-[#236b7c] transition-colors duration-200"
                                         style={{
                                             background: 'none',
                                             border: 'none',
@@ -352,10 +352,11 @@ export default function Header() {
                     {/* Newsletter Section */}
                     <div style={{
                         marginTop: '32px',
-                        padding: '20px',
+                        padding: isMobile ? '20px' : '24px',
                         backgroundColor: '#f9fafb',
                         borderRadius: '12px',
-                        border: '1px solid #e5e7eb'
+                        border: '1px solid #e5e7eb',
+                        maxWidth: isMobile ? '100%' : '360px'
                     }}>
                         <h3 style={{
                             fontSize: '16px',
@@ -367,14 +368,14 @@ export default function Header() {
                             Stay Inspired
                         </h3>
                         <p style={{
-                            fontSize: '12px',
+                            fontSize: '13px',
                             fontFamily: 'var(--font-proza)',
                             fontWeight: '400',
                             color: '#6b7280',
                             marginBottom: '16px',
-                            lineHeight: '1.5'
+                            lineHeight: '1.6'
                         }}>
-                            Home ideas that inspire, products we actually love, and tips that work—all curated just for you.
+                            Get weekly home tips and design inspiration.
                         </p>
 
                         <form onSubmit={handleNewsletterSubmit}>
@@ -416,8 +417,8 @@ export default function Header() {
                                 disabled={newsletterStatus === 'loading' || !newsletterEmail}
                                 style={{
                                     width: '100%',
-                                    backgroundColor: '#236b7c',
-                                    color: '#ffffff',
+                                    backgroundColor: '#dca744',
+                                    color: '#1f2937',
                                     padding: '10px 24px',
                                     borderRadius: '8px',
                                     border: 'none',
@@ -425,11 +426,10 @@ export default function Header() {
                                     fontSize: '14px',
                                     fontFamily: 'var(--font-gilroy)',
                                     fontWeight: '600',
-                                    textTransform: 'uppercase',
                                     opacity: (newsletterStatus === 'loading' || !newsletterEmail) ? 0.5 : 1
                                 }}
                             >
-                                {newsletterStatus === 'loading' ? 'Subscribing...' : 'Subscribe Now'}
+                                {newsletterStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
                             </button>
 
                             {newsletterStatus === 'success' && (
@@ -464,13 +464,14 @@ export default function Header() {
 
                             <p style={{
                                 fontSize: '11px',
-                                color: '#6b7280',
+                                color: '#9ca3af',
                                 textAlign: 'center',
-                                marginTop: '8px',
+                                marginTop: '10px',
                                 fontFamily: 'var(--font-proza)',
-                                fontWeight: '400'
+                                fontWeight: '400',
+                                lineHeight: '1.4'
                             }}>
-                                We respect your inbox. Only the good stuff, promise.
+                                No spam. Unsubscribe anytime.
                             </p>
                         </form>
                     </div>

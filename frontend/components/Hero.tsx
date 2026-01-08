@@ -146,7 +146,7 @@ export default function Hero() {
                             {/* Minimal Headline with Read More */}
                             <Link href={featuredPost.type === 'guide' ? `/guides/${featuredPost.slug}` : `/blog/${featuredPost.slug}`}>
                                 <div className="group">
-                                    <h2 className="font-cormorant text-base md:text-lg lg:text-xl font-extralight text-gray-600 group-hover:text-gray-800 transition-colors duration-200 cursor-pointer leading-relaxed mb-3">
+                                    <h2 className="font-gilroy text-base md:text-lg lg:text-xl font-light text-gray-600 group-hover:text-gray-800 transition-colors duration-200 cursor-pointer leading-relaxed mb-3">
                                         {featuredPost.title}
                                     </h2>
                                     <div className="inline-flex items-center gap-2 text-sm text-gray-500 group-hover:text-[#236b7c] transition-colors duration-200">
@@ -169,15 +169,14 @@ export default function Hero() {
                         <div className="grid md:grid-cols-2 gap-12 items-center">
                             {/* Left side - Content */}
                             <div className="text-left">
-                                <h1 className="font-cormorant text-3xl md:text-4xl lg:text-5xl font-light text-gray-800 leading-tight mb-6">
-                                    <span className="block">your inspirations</span>
-                                    <span className="block text-gray-500">for a</span>
-                                    <span className="block text-[#dca744]">better home.</span>
+                                <h1 className="font-gilroy text-3xl md:text-4xl lg:text-5xl font-medium text-gray-800 leading-tight mb-6">
+                                    <span className="block">Better Homes,</span>
+                                    <span className="block text-gray-500">one email</span>
+                                    <span className="block text-[#dca744]">at a time.</span>
                                 </h1>
 
                                 <p className="font-proza text-lg text-gray-600 font-light mb-8 leading-relaxed">
-                                    Home ideas that inspire, products we actually love, and tips that work—all curated just for you.
-                                </p>
+                                    Curated tips, décor ideas, and smart home finds—delivered free.                                </p>
 
                                 {/* Newsletter Form */}
                                 {newsletterStatus === 'success' ? (
@@ -210,7 +209,7 @@ export default function Hero() {
                                             <button
                                                 type="submit"
                                                 disabled={newsletterStatus === 'loading'}
-                                                className="font-gilroy font-semibold uppercase px-6 py-3 bg-[#236b7c] text-white rounded-lg hover:bg-[#1d5766] transition-colors duration-200 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="font-gilroy font-bold uppercase px-6 py-3 bg-[#dca744] text-gray-900 rounded-lg hover:bg-[#e6b85c] transition-colors duration-200 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 {newsletterStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
                                             </button>
@@ -223,7 +222,6 @@ export default function Hero() {
                                         )}
 
                                         <p className="font-proza text-xs text-gray-500 font-light">
-                                            We respect your inbox. Only the good stuff, promise.
                                         </p>
                                     </>
                                 )}

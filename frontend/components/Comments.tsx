@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { H3, Body, MonoText, GhostButton } from '@/components/ui/DesignSystem';
+import { H3, Body, MonoText } from '@/components/ui/DesignSystem';
 
 interface Comment {
     id: string;
@@ -15,15 +15,25 @@ interface CommentsProps {
     postSlug: string;
 }
 
+const STORAGE_KEY = 'betadomot_commenter';
+
 export default function Comments({ postSlug }: CommentsProps) {
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
-    const [formData, setFormData] = useState({
-        author_name: '',
-        author_email: '',
-        body: ''
-    });
+    const [commentText, setCommentText] = useState('');
+    const [showNameField, setShowNameField] = useState(false);
+    const [userName, setUserName] = useState('');
+    const [savedName, setSavedName] = useState('');
+
+    // Load saved name from localStorage
+    useEffect(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            setSavedName(saved);
+            setUserName(saved);
+        }
+    }, []);
 
     const fetchComments = useCallback(async () => {
         try {
@@ -43,8 +53,23 @@ export default function Comments({ postSlug }: CommentsProps) {
         fetchComments();
     }, [postSlug, fetchComments]);
 
+    const handleCommentFocus = () => {
+        if (!savedName && !showNameField) {
+            setShowNameField(true);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!commentText.trim()) return;
+        
+        // If no saved name and name field not shown yet, show it
+        if (!savedName && !userName.trim()) {
+            setShowNameField(true);
+            return;
+        }
+
         setSubmitting(true);
 
         try {
@@ -53,18 +78,29 @@ export default function Comments({ postSlug }: CommentsProps) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    author_name: userName.trim() || 'Anonymous',
+                    author_email: '',
+                    body: commentText.trim()
+                }),
             });
 
             if (response.ok) {
-                setFormData({ author_name: '', author_email: '', body: '' });
-                await fetchComments(); // Refresh comments
+                // Save name to localStorage
+                if (userName.trim()) {
+                    localStorage.setItem(STORAGE_KEY, userName.trim());
+                    setSavedName(userName.trim());
+                }
+                
+                setCommentText('');
+                setShowNameField(false);
+                await fetchComments();
             } else {
-                alert('Error posting comment');
+                alert('Error posting comment. Please try again.');
             }
         } catch (error) {
             console.error('Error posting comment:', error);
-            alert('Error posting comment');
+            alert('Error posting comment. Please try again.');
         } finally {
             setSubmitting(false);
         }
@@ -74,107 +110,146 @@ export default function Comments({ postSlug }: CommentsProps) {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+            day: 'numeric'
         });
     };
 
     const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map(n => n[0]?.toUpperCase()).join('');
 
     return (
-        <div>
-            <div className="mb-8">
-                <H3 className="mb-4">Comments ({comments.length})</H3>
-                <Body className="text-gray-600 max-w-2xl">
-                    Share your thoughts, ask questions, or add your own tips. We love hearing from our community.
-                </Body>
+        <div className="max-w-3xl">
+            {/* Header */}
+            <div className="mb-6">
+                <h3 className="text-xl font-gilroy font-medium text-gray-900 mb-2">
+                    Share your thoughts
+                </h3>
+                <p className="font-proza text-sm text-gray-500">
+                    {comments.length === 0 
+                        ? "Be the first to share your perspective." 
+                        : `${comments.length} ${comments.length === 1 ? 'comment' : 'comments'}`
+                    }
+                </p>
             </div>
 
             {/* Comment Form */}
-            <div className="bg-gray-50 border border-gray-100 rounded-lg p-6 mb-12">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input
-                            type="text"
-                            placeholder="Your name *"
-                            required
-                            value={formData.author_name}
-                            onChange={(e) => setFormData({ ...formData, author_name: e.target.value })}
-                            className="w-full px-4 py-3 bg-white border border-gray-200 focus:outline-none focus:border-gray-900 transition-colors"
+            <form onSubmit={handleSubmit} className="mb-10">
+                <div className="space-y-3">
+                    {/* Comment Textarea */}
+                    <div className="relative">
+                        <textarea
+                            placeholder={savedName ? `What do you think, ${savedName.split(' ')[0]}?` : "Add your comment..."}
+                            rows={3}
+                            value={commentText}
+                            onChange={(e) => setCommentText(e.target.value)}
+                            onFocus={handleCommentFocus}
+                            className="w-full px-4 py-3 font-proza text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 transition-all duration-200 resize-none placeholder-gray-400"
+                            maxLength={500}
                         />
-                        <input
-                            type="email"
-                            placeholder="Email (optional)"
-                            value={formData.author_email}
-                            onChange={(e) => setFormData({ ...formData, author_email: e.target.value })}
-                            className="w-full px-4 py-3 bg-white border border-gray-200 focus:outline-none focus:border-gray-900 transition-colors"
-                        />
+                        <div className="absolute bottom-3 right-3 text-xs text-gray-400 font-proza">
+                            {commentText.length}/500
+                        </div>
                     </div>
-                    <textarea
-                        placeholder="Write your comment..."
-                        required
-                        rows={4}
-                        value={formData.body}
-                        onChange={(e) => setFormData({ ...formData, body: e.target.value })}
-                        className="w-full px-4 py-3 bg-white border border-gray-200 focus:outline-none focus:border-gray-900 transition-colors resize-none"
-                    />
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <MonoText className="text-xs text-gray-500">
-                            By commenting, you agree to our community guidelines.
-                        </MonoText>
-                        <GhostButton
+
+                    {/* Name Field - Shows after typing or if no saved name */}
+                    {showNameField && !savedName && (
+                        <div className="animate-fade-in-up">
+                            <label className="block mb-1.5">
+                                <span className="font-proza text-xs font-medium text-gray-600">
+                                    Your name (optional)
+                                </span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Name"
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                                className="w-full px-4 py-2.5 font-proza text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 transition-all duration-200 placeholder-gray-400"
+                                maxLength={50}
+                            />
+                            <p className="mt-1.5 text-xs text-gray-400 font-proza">
+                                We'll remember this for next time
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <div className="flex items-center justify-between pt-1">
+                        <p className="text-[11px] text-gray-400 font-proza">
+                            {savedName && (
+                                <span>
+                                    Posting as <span className="font-medium text-gray-500">{savedName}</span>
+                                    {' • '}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            localStorage.removeItem(STORAGE_KEY);
+                                            setSavedName('');
+                                            setUserName('');
+                                            setShowNameField(true);
+                                        }}
+                                        className="text-gray-400 hover:text-gray-600 underline"
+                                    >
+                                        change
+                                    </button>
+                                </span>
+                            )}
+                        </p>
+                        <button
                             type="submit"
-                            disabled={submitting}
-                            className="disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={submitting || !commentText.trim()}
+                            className="px-5 py-2 bg-black font-proza text-sm rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                            style={{ color: '#ffffff' }}
                         >
-                            {submitting ? 'Posting...' : 'Post Comment'}
-                        </GhostButton>
+                            {submitting ? 'Posting...' : 'Post'}
+                        </button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
 
             {/* Comments List */}
             {loading ? (
-                <div className="space-y-6">
+                <div className="space-y-5">
                     {[1, 2, 3].map(i => (
-                        <div key={i} className="flex gap-4 items-start">
-                            <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse" />
+                        <div key={i} className="flex gap-3 items-start">
+                            <div className="w-9 h-9 rounded-full bg-gray-200 animate-pulse flex-shrink-0" />
                             <div className="flex-1 space-y-2">
-                                <div className="w-32 h-3 bg-gray-200 rounded animate-pulse" />
-                                <div className="w-full h-3 bg-gray-200 rounded animate-pulse" />
-                                <div className="w-2/3 h-3 bg-gray-200 rounded animate-pulse" />
+                                <div className="w-28 h-3 bg-gray-200 rounded animate-pulse" />
+                                <div className="w-full h-2.5 bg-gray-200 rounded animate-pulse" />
+                                <div className="w-2/3 h-2.5 bg-gray-200 rounded animate-pulse" />
                             </div>
                         </div>
                     ))}
                 </div>
             ) : comments.length === 0 ? (
-                <div className="text-center py-12">
-                    <Body className="text-gray-500">No comments yet. Be the first to share your thoughts!</Body>
+                <div className="text-center py-12 border border-gray-200 rounded-lg bg-gray-50">
+                    <p className="font-proza text-sm text-gray-400">
+                        No comments yet
+                    </p>
                 </div>
             ) : (
                 <div className="space-y-6">
                     {comments.map((comment) => (
-                        <div key={comment.id} className="border-b border-gray-100 pb-6 last:border-b-0">
-                            <div className="flex items-start gap-4">
-                                <div className="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center flex-shrink-0">
-                                    <MonoText className="text-xs text-gray-600">
-                                        {initials(comment.author_name || 'Guest')}
-                                    </MonoText>
+                        <div key={comment.id} className="flex gap-3 items-start">
+                            {/* Avatar */}
+                            <div className="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center flex-shrink-0">
+                                <span className="font-gilroy font-medium text-gray-700 text-xs">
+                                    {initials(comment.author_name || 'A')}
+                                </span>
+                            </div>
+                            
+                            {/* Comment Content */}
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-baseline gap-2 mb-1">
+                                    <span className="font-gilroy font-medium text-sm text-gray-900">
+                                        {comment.author_name || 'Anonymous'}
+                                    </span>
+                                    <span className="text-xs text-gray-400 font-proza">
+                                        {formatDate(comment.created_at)}
+                                    </span>
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <Body className="font-medium text-gray-900">
-                                            {comment.author_name || 'Guest'}
-                                        </Body>
-                                        <MonoText className="text-xs text-gray-500">
-                                            {formatDate(comment.created_at)}
-                                        </MonoText>
-                                    </div>
-                                    <Body className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                                        {comment.body}
-                                    </Body>
-                                </div>
+                                <p className="font-proza text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+                                    {comment.body}
+                                </p>
                             </div>
                         </div>
                     ))}

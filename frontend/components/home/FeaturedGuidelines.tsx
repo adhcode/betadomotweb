@@ -77,7 +77,7 @@ export default function FeaturedGuidelines() {
                 <div className="mb-12 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         
-                        <h2 className="font-cormorant text-2xl md:text-3xl font-light text-gray-800 tracking-tight">
+                        <h2 className="font-gilroy text-2xl md:text-3xl font-medium text-gray-800 tracking-tight">
                             Essential Guides
                         </h2>
                     </div>
