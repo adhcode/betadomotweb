@@ -205,7 +205,7 @@ export default function CategoryStories() {
                                         </div>
 
                                         {/* Category Name */}
-                                        <h3 className="font-proza font-light text-xs text-gray-700 group-hover:text-gray-900 transition-colors duration-300 text-center">
+                                        <h3 className="font-proza font-light text-[4px] text-gray-700 group-hover:text-gray-900 transition-colors duration-300 text-center">
                                             {config.name}
                                         </h3>
                                     </div>

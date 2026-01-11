@@ -61,16 +61,13 @@ export default function Comments({ postSlug }: CommentsProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!commentText.trim()) return;
-        
-        // If no saved name and name field not shown yet, show it
-        if (!savedName && !userName.trim()) {
-            setShowNameField(true);
-            return;
-        }
 
         setSubmitting(true);
+
+        // Generate a unique BetaDomot guest name if no name provided
+        const finalName = userName.trim() || savedName || `BetaGuest${Math.floor(1000 + Math.random() * 9000)}`;
 
         try {
             const response = await fetch(`${process.env.NODE_ENV === 'production' ? 'https://betadomotweb-production.up.railway.app' : 'http://localhost:8080'}/posts/${postSlug}/comments`, {
@@ -79,19 +76,19 @@ export default function Comments({ postSlug }: CommentsProps) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    author_name: userName.trim() || 'Anonymous',
+                    author_name: finalName,
                     author_email: '',
                     body: commentText.trim()
                 }),
             });
 
             if (response.ok) {
-                // Save name to localStorage
+                // Save name to localStorage only if user provided one
                 if (userName.trim()) {
                     localStorage.setItem(STORAGE_KEY, userName.trim());
                     setSavedName(userName.trim());
                 }
-                
+
                 setCommentText('');
                 setShowNameField(false);
                 await fetchComments();
@@ -124,8 +121,8 @@ export default function Comments({ postSlug }: CommentsProps) {
                     Share your thoughts
                 </h3>
                 <p className="font-proza text-sm text-gray-500">
-                    {comments.length === 0 
-                        ? "Be the first to share your perspective." 
+                    {comments.length === 0
+                        ? "Be the first to share your perspective."
                         : `${comments.length} ${comments.length === 1 ? 'comment' : 'comments'}`
                     }
                 </p>
@@ -236,7 +233,7 @@ export default function Comments({ postSlug }: CommentsProps) {
                                     {initials(comment.author_name || 'A')}
                                 </span>
                             </div>
-                            
+
                             {/* Comment Content */}
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-baseline gap-2 mb-1">

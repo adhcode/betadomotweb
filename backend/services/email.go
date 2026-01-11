@@ -206,7 +206,13 @@ func (e *EmailService) getWelcomeEmailHTML() string {
 			<!-- Header with Logo -->
 			<div class="header" style="padding: 60px 40px 40px 40px; text-align: center; background: #ffffff;">
 				<div style="margin-bottom: 0;">
-					<img src="` + e.websiteURL + `/images/blog/beta-logo2.png" alt="BetaDomot" class="logo" style="height: 40px; width: auto;" />
+					<!-- Email-optimized logo -->
+					<img src="` + e.websiteURL + `/images/blog/beta-logo-email.png" alt="BetaDomot" class="logo" style="height: 40px; width: auto; display: block; margin: 0 auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+					
+					<!-- Fallback text logo (hidden by default) -->
+					<div style="display: none; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 24px; color: #000000; letter-spacing: -0.5px;">
+						BetaDomot
+					</div>
 				</div>
 			</div>
 			
