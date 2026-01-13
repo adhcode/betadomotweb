@@ -109,7 +109,7 @@ export default function FeaturedPosts() {
             <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12">
                 <FadeInUp delay={0}>
                     <div className="mb-16 flex items-center justify-between">
-                        <h2 className="font-gilroy text-3xl md:text-4xl font-medium text-gray-800 leading-tight tracking-tight">
+                        <h2 className="font-gilroy text-3xl md:text-4xl !font-semibold text-gray-800 leading-tight tracking-tight">
                             Latest Stories
                         </h2>
                         <Link
@@ -166,7 +166,7 @@ export default function FeaturedPosts() {
                                             </span>
                                         )}
 
-                                        <h3 className="font-gilroy text-xl font-normal text-gray-800 leading-tight group-hover:text-gray-600 transition-colors duration-300 mb-4 flex-grow">
+                                        <h3 className="font-gilroy text-xl !font-semibold text-gray-800 leading-tight group-hover:text-gray-600 transition-colors duration-300 mb-4 flex-grow">
                                             {post.title}
                                         </h3>
 

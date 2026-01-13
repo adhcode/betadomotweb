@@ -165,7 +165,7 @@ export default function CategoryStories() {
             <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-12">
                 <FadeInUp delay={0}>
                     <div className="mb-16">
-                        <h2 className="font-gilroy text-3xl md:text-4xl font-medium text-gray-800 leading-tight tracking-tight">
+                        <h2 className="font-gilroy text-3xl md:text-4xl !font-semibold text-gray-800 leading-tight tracking-tight">
                             Read by category
                         </h2>
                     </div>

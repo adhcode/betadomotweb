@@ -255,7 +255,7 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
 
                         <FadeInUp delay={100}>
                             <div className="mb-4">
-                                <H1 className="mb-2 text-3xl sm:text-4xl lg:text-5xl">{post.title}</H1>
+                                <H1 className="mb-2 text-3xl sm:text-4xl lg:text-5xl !font-semibold">{post.title}</H1>
 
                                 <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 mb-3">
                                     <MonoText className="text-xs">{formatDate(post.published_at)}</MonoText>

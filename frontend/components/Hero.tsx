@@ -137,7 +137,7 @@ export default function Hero() {
                             {/* Category Badge */}
                             {featuredPost.category && (
                                 <div className="mb-3">
-                                    <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium tracking-wide uppercase rounded-full">
+                                    <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold tracking-wide uppercase rounded-full">
                                         {featuredPost.category}
                                     </span>
                                 </div>
@@ -146,7 +146,7 @@ export default function Hero() {
                             {/* Minimal Headline with Read More */}
                             <Link href={featuredPost.type === 'guide' ? `/guides/${featuredPost.slug}` : `/blog/${featuredPost.slug}`}>
                                 <div className="group">
-                                    <h2 className="font-gilroy text-base md:text-lg lg:text-xl font-light text-gray-600 group-hover:text-gray-800 transition-colors duration-200 cursor-pointer leading-relaxed mb-3">
+                                    <h2 className="font-gilroy text-base md:text-lg lg:text-xl !font-semibold text-gray-600 group-hover:text-gray-800 transition-colors duration-200 cursor-pointer leading-relaxed mb-3">
                                         {featuredPost.title}
                                     </h2>
                                     <div className="inline-flex items-center gap-2 text-sm text-gray-500 group-hover:text-[#236b7c] transition-colors duration-200">
@@ -169,7 +169,7 @@ export default function Hero() {
                         <div className="grid md:grid-cols-2 gap-12 items-center">
                             {/* Left side - Content */}
                             <div className="text-left">
-                                <h1 className="font-gilroy text-3xl md:text-4xl lg:text-5xl font-medium text-gray-800 leading-tight mb-6">
+                                <h1 className="font-gilroy text-3xl md:text-4xl lg:text-5xl !font-semibold text-gray-800 leading-tight mb-6">
                                     <span className="block">Better Homes,</span>
                                     <span className="block text-gray-500">one email</span>
                                     <span className="block text-[#dca744]">at a time.</span>
