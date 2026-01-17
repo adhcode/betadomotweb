@@ -4,9 +4,10 @@ import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, ArrowUpRight, Leaf, Shield, Zap, Wrench, Heart } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Container } from '@/components/ui/DesignSystem';
 import { fetchPosts } from '@/lib/api-client';
 
 // Category configurations with brand colors and clean styling
@@ -92,7 +93,7 @@ const CATEGORY_CONFIG: Record<string, {
     },
     'energy-savings': {
         name: 'Energy Saving',
-        slug: 'Energy Saving',
+        slug: 'Energy Savings',
         color: '#236b7c',
         bgColor: '#f8f9fa',
         iconPath: '/icons/energy.png',
@@ -218,7 +219,7 @@ export default function CategoryPage() {
             <main className="min-h-screen bg-white">
                 {/* Hero Section - Minimalist with Split Layout */}
                 <section className="pt-24 pb-12">
-                    <div className="max-w-7xl mx-auto px-6">
+                    <Container>
                         <div className="grid lg:grid-cols-2 gap-0 items-center">
                             {/* Left: Text Content */}
                             <div className="py-12 lg:py-20 lg:pr-16">
@@ -247,7 +248,7 @@ export default function CategoryPage() {
                                     ) : null}
                                 </div>
 
-                                <h1 className="font-cormorant text-5xl lg:text-6xl font-bold mb-6 leading-tight text-black">
+                                <h1 className="font-gilroy text-5xl lg:text-6xl !font-semibold mb-6 leading-tight text-black">
                                     {config.name}
                                 </h1>
 
@@ -277,7 +278,7 @@ export default function CategoryPage() {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </Container>
                 </section>
 
                 {/* Featured Guides Section - Only show if there are real guides */}
@@ -286,7 +287,7 @@ export default function CategoryPage() {
                         className="py-8"
                         style={{ backgroundColor: config.color }}
                     >
-                        <div className="max-w-7xl mx-auto px-6">
+                        <Container>
                             <h2 className="font-cormorant text-2xl font-bold text-black mb-6">
                                 Our Top Guides
                             </h2>
@@ -310,12 +311,13 @@ export default function CategoryPage() {
                                     </Link>
                                 ))}
                             </div>
-                        </div>
+                        </Container>
                     </section>
                 )}
 
                 {/* Posts Grid */}
-                <section className="max-w-7xl mx-auto px-6 py-16">
+                <section className="py-16">
+                    <Container>
                     {loading ? (
                         <div className="text-center py-20">
                             <div
@@ -377,7 +379,7 @@ export default function CategoryPage() {
                                                     <span>{post.read_time}</span>
                                                 </div>
 
-                                                <h3 className="font-cormorant text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:underline">
+                                                <h3 className="font-gilroy text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:underline">
                                                     {post.title}
                                                 </h3>
 
@@ -399,6 +401,7 @@ export default function CategoryPage() {
                             </div>
                         </>
                     )}
+                    </Container>
                 </section>
             </main>
             <Footer />

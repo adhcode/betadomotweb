@@ -46,6 +46,26 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
     const [showShare, setShowShare] = useState<boolean>(false);
     const [commentsCount, setCommentsCount] = useState<number>(0);
 
+    // Category name to slug mapping
+    const categorySlugMap: Record<string, string> = {
+        'Cleaning': 'cleaning',
+        'Organizing': 'organization',
+        'Organization': 'organization',
+        'Life': 'life',
+        'Decorating': 'decorating',
+        'Energy Savings': 'energy-savings',
+        'Energy Saving': 'energy-savings',
+        'Security & Safety': 'security-safety',
+        'Home Tech': 'smart-tech',
+        'Smart & Tech': 'smart-tech',
+        'Home Projects': 'home-projects'
+    };
+
+    const getCategorySlug = () => {
+        if (!post.category) return null;
+        return categorySlugMap[post.category] || null;
+    };
+
     useEffect(() => {
         // Fetch engagement data for the post
         const loadEngagementData = async () => {
@@ -245,11 +265,11 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
                     <Container>
                         <FadeInUp>
                             <Link
-                                href="/"
+                                href={getCategorySlug() ? `/category/${getCategorySlug()}` : '/'}
                                 className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors mb-4 group"
                             >
                                 <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
-                                <MonoText className="text-sm">Home</MonoText>
+                                <MonoText className="text-sm">{post.category || 'Home'}</MonoText>
                             </Link>
                         </FadeInUp>
 

@@ -77,7 +77,7 @@ export default function FeaturedGuidelines() {
                 <div className="mb-12 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         
-                        <h2 className="font-gilroy text-2xl md:text-3xl font-medium text-gray-800 tracking-tight">
+                        <h2 className="font-gilroy text-2xl md:text-3xl !font-semibold text-gray-800 tracking-tight">
                             Essential Guides
                         </h2>
                     </div>
@@ -93,7 +93,7 @@ export default function FeaturedGuidelines() {
                 {guides.length === 0 ? (
                     <div className="text-center py-16 bg-white rounded-xl border border-gray-100">
                         <Lightbulb className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                        <h3 className="font-cormorant text-lg font-light text-gray-600 mb-1">No guides yet</h3>
+                        <h3 className="font-proza text-sm font-light text-gray-500 mb-1">No guides yet</h3>
                         <p className="font-proza text-sm text-gray-500">Check back soon for comprehensive guides!</p>
                     </div>
                 ) : (
