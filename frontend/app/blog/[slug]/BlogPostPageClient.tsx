@@ -187,6 +187,9 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
             // Convert inline code
             paragraph = paragraph.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-2 py-1 rounded text-gray-800 text-base font-mono">$1</code>');
 
+            // Convert images - ![alt text](url)
+            paragraph = paragraph.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="w-full rounded-lg my-8 shadow-sm" loading="lazy" />');
+
             // Convert bold text
             paragraph = paragraph.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-medium text-gray-900">$1</strong>');
 

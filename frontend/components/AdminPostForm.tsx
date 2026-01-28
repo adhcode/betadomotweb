@@ -310,6 +310,25 @@ export default function AdminPostForm({
                     {/* Content */}
                     <div>
                         <MonoText className="text-xs text-gray-700 mb-2">CONTENT</MonoText>
+                        
+                        {/* Markdown Help */}
+                        <details className="mb-3 bg-blue-50 border border-blue-200 rounded-lg">
+                            <summary className="cursor-pointer px-3 py-2 text-xs font-gilroy font-semibold text-blue-900">
+                                📝 Markdown Formatting Guide
+                            </summary>
+                            <div className="px-3 pb-3 pt-2 text-xs font-proza text-blue-900 space-y-2">
+                                <div><strong>Bold:</strong> **your text**</div>
+                                <div><strong>Italic:</strong> *your text*</div>
+                                <div><strong>Heading:</strong> ### Your Heading</div>
+                                <div><strong>Bullet List:</strong> - Item one</div>
+                                <div><strong>Link:</strong> [link text](https://url.com)</div>
+                                <div><strong>Image:</strong> ![description](https://image-url.com/image.jpg)</div>
+                                <div className="pt-2 border-t border-blue-200 mt-2">
+                                    <strong>💡 Tip:</strong> Upload images to Cloudinary first, then paste the URL in the image syntax
+                                </div>
+                            </div>
+                        </details>
+
                         <textarea
                             value={formData.content}
                             onChange={(e) => setFormData({ ...formData, content: e.target.value })}
@@ -318,7 +337,7 @@ export default function AdminPostForm({
                             placeholder="Write your post content here... Use **bold** and *italic* for formatting."
                         />
                         <MonoText className="text-xs text-gray-500 mt-2">
-                            Supports: **bold**, *italic*, ### headings, bullet points with -, code blocks with ```
+                            Supports: **bold**, *italic*, ### headings, bullet points with -, code blocks with ```, images with ![alt text](url)
                         </MonoText>
                     </div>
 
