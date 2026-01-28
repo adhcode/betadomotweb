@@ -115,6 +115,44 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
     const formatContent = (content: string) => {
         if (!content) return '';
 
+        // Helper function to transform Cloudinary URLs for consistent sizing and styling
+        const transformCloudinaryUrl = (url: string): string => {
+            // Check if it's a Cloudinary URL
+            if (url.includes('cloudinary.com')) {
+                // Extract the parts of the URL
+                const uploadIndex = url.indexOf('/upload/');
+                if (uploadIndex !== -1) {
+                    // Insert transformations after /upload/
+                    // w_1200: width 1200px
+                    // h_675: height 675px (16:9 aspect ratio)
+                    // c_fill: crop to fill the dimensions
+                    // g_auto: auto gravity (smart cropping)
+                    // q_auto: automatic quality
+                    // f_auto: automatic format (WebP when supported)
+                    const transformations = 'w_1200,h_675,c_fill,g_auto,q_auto,f_auto';
+                    return url.slice(0, uploadIndex + 8) + transformations + '/' + url.slice(uploadIndex + 8);
+                }
+            }
+            return url;
+        };
+
+        // Helper function to apply inline formatting (bold, italic, links, code)
+        const applyInlineFormatting = (text: string): string => {
+            // Convert inline code first (to avoid conflicts with bold/italic)
+            text = text.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-2 py-1 rounded text-gray-800 text-base font-mono">$1</code>');
+            
+            // Convert bold text
+            text = text.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-medium text-gray-900">$1</strong>');
+            
+            // Convert italic text
+            text = text.replace(/\*([^*]+)\*/g, '<em class="italic text-gray-600">$1</em>');
+            
+            // Convert links
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-gray-900 hover:text-gray-600 transition-colors duration-300 underline underline-offset-2">$1</a>');
+            
+            return text;
+        };
+
         let html = content;
 
         // Split content into paragraphs and process each one
@@ -124,15 +162,31 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
             paragraph = paragraph.trim();
             if (!paragraph) return '';
 
-            // Convert headings with design system styling
+            // Check if paragraph contains an image (process images first, before other formatting)
+            const imageMatch = paragraph.match(/!\[([^\]]*)\]\(([^)]+)\)/);
+            if (imageMatch) {
+                const alt = imageMatch[1].trim();
+                const url = transformCloudinaryUrl(imageMatch[2].trim());
+                // If the paragraph is ONLY an image, return just the image with consistent aspect ratio
+                if (paragraph === imageMatch[0]) {
+                    return `<div class="my-8"><img src="${url}" alt="${alt}" class="w-full aspect-video object-cover rounded-lg shadow-sm" loading="lazy" /></div>`;
+                }
+                // Otherwise, replace the image inline
+                paragraph = paragraph.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, url) => {
+                    const transformedUrl = transformCloudinaryUrl(url.trim());
+                    return `<img src="${transformedUrl}" alt="${alt.trim()}" class="w-full aspect-video object-cover rounded-lg my-4 shadow-sm" loading="lazy" />`;
+                });
+            }
+
+            // Convert headings with design system styling (apply inline formatting to heading text)
             if (paragraph.startsWith('### ')) {
-                return `<h3 class="text-2xl font-light text-gray-900 mb-6 mt-12 tracking-tight">${paragraph.substring(4)}</h3>`;
+                return `<h3 class="text-2xl font-light text-gray-900 mb-6 mt-12 tracking-tight">${applyInlineFormatting(paragraph.substring(4))}</h3>`;
             }
             if (paragraph.startsWith('## ')) {
-                return `<h2 class="text-3xl font-light text-gray-900 mb-8 mt-16 tracking-tight border-b border-gray-100 pb-4">${paragraph.substring(3)}</h2>`;
+                return `<h2 class="text-3xl font-light text-gray-900 mb-8 mt-16 tracking-tight border-b border-gray-100 pb-4">${applyInlineFormatting(paragraph.substring(3))}</h2>`;
             }
             if (paragraph.startsWith('# ')) {
-                return `<h1 class="text-4xl font-light text-gray-900 mb-8 mt-12 tracking-tight">${paragraph.substring(2)}</h1>`;
+                return `<h1 class="text-4xl font-light text-gray-900 mb-8 mt-12 tracking-tight">${applyInlineFormatting(paragraph.substring(2))}</h1>`;
             }
 
             // Convert bullet points
@@ -140,7 +194,7 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
                 const lines = paragraph.split('\n');
                 const listItems = lines
                     .filter(line => line.trim().startsWith('- '))
-                    .map(line => `<li class="mb-3 text-gray-700 text-lg leading-relaxed">${line.trim().substring(2)}</li>`)
+                    .map(line => `<li class="mb-3 text-gray-700 text-lg leading-relaxed">${applyInlineFormatting(line.trim().substring(2))}</li>`)
                     .join('');
                 const nonListContent = lines
                     .filter(line => !line.trim().startsWith('- '))
@@ -149,7 +203,7 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
 
                 let result = '';
                 if (nonListContent) {
-                    result += `<p class="text-lg leading-relaxed text-gray-700 mb-6">${nonListContent}</p>`;
+                    result += `<p class="text-lg leading-relaxed text-gray-700 mb-6">${applyInlineFormatting(nonListContent)}</p>`;
                 }
                 if (listItems) {
                     result += `<ul class="list-disc pl-6 mb-8 space-y-1">${listItems}</ul>`;
@@ -162,7 +216,7 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
                 const lines = paragraph.split('\n');
                 const listItems = lines
                     .filter(line => /^\d+\./.test(line.trim()))
-                    .map(line => `<li class="mb-3 text-gray-700 text-lg leading-relaxed">${line.trim().replace(/^\d+\.\s*/, '')}</li>`)
+                    .map(line => `<li class="mb-3 text-gray-700 text-lg leading-relaxed">${applyInlineFormatting(line.trim().replace(/^\d+\.\s*/, ''))}</li>`)
                     .join('');
                 const nonListContent = lines
                     .filter(line => !/^\d+\./.test(line.trim()))
@@ -171,7 +225,7 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
 
                 let result = '';
                 if (nonListContent) {
-                    result += `<p class="text-lg leading-relaxed text-gray-700 mb-6">${nonListContent}</p>`;
+                    result += `<p class="text-lg leading-relaxed text-gray-700 mb-6">${applyInlineFormatting(nonListContent)}</p>`;
                 }
                 if (listItems) {
                     result += `<ol class="list-decimal pl-6 mb-8 space-y-1">${listItems}</ol>`;
@@ -184,17 +238,11 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
                 return `<pre class="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto mb-8 text-sm font-mono"><code>${paragraph.replace(/```[\w]*\n?/, '').replace(/```$/, '')}</code></pre>`;
             }
 
-            // Convert inline code
-            paragraph = paragraph.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-2 py-1 rounded text-gray-800 text-base font-mono">$1</code>');
+            // Apply inline formatting to regular paragraphs
+            paragraph = applyInlineFormatting(paragraph);
 
-            // Convert images - ![alt text](url)
-            paragraph = paragraph.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="w-full rounded-lg my-8 shadow-sm" loading="lazy" />');
-
-            // Convert bold text
-            paragraph = paragraph.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-medium text-gray-900">$1</strong>');
-
-            // Convert italic text
-            paragraph = paragraph.replace(/\*([^*]+)\*/g, '<em class="italic text-gray-600">$1</em>');
+            // Apply inline formatting to regular paragraphs
+            paragraph = applyInlineFormatting(paragraph);
 
             // Convert links
             paragraph = paragraph.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-gray-900 hover:text-gray-600 transition-colors duration-300 underline underline-offset-2">$1</a>');
