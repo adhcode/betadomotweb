@@ -14,22 +14,23 @@ export default function Header() {
             <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12">
                     <div className="flex items-center justify-between h-16">
-                        {/* Logo */}
-                        <Link href="/">
+                        {/* Logo - Centered vertically */}
+                        <Link href="/" className="flex items-center">
                             <Image
                                 src="/images/blog/beta-logo2.png"
                                 alt="Betadomot"
                                 width={100}
                                 height={24}
-                                style={{ width: 'auto', height: '24px' }}
+                                className="h-6 w-auto"
                                 priority
                             />
                         </Link>
 
-                        {/* Menu Icon */}
+                        {/* Menu Icon - Centered vertically */}
                         <button
                             onClick={() => setIsMenuOpen(true)}
-                            className="p-2 text-gray-600 hover:text-gray-900 transition-colors"
+                            className="p-2 text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center"
+                            aria-label="Open menu"
                         >
                             <Menu size={20} strokeWidth={1.5} />
                         </button>

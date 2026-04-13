@@ -79,9 +79,9 @@ export default function Hero() {
             {/* Featured Hero Story - Shows when content is featured */}
             {!loading && featuredPost && (
                 <section className="relative">
-                    {/* Full-width Hero Image */}
+                    {/* Hero Image - Reduced height */}
                     <Link href={featuredPost.type === 'guide' ? `/guides/${featuredPost.slug}` : `/blog/${featuredPost.slug}`}>
-                        <div className="relative w-full h-screen group cursor-pointer">
+                        <div className="relative w-full h-[70vh] md:h-[80vh] group cursor-pointer">
                             {featuredPost.featured_image ? (
                                 <Image
                                     src={featuredPost.featured_image}
@@ -128,8 +128,8 @@ export default function Hero() {
             {/* Default Hero - Only shows when no featured post */}
             {!loading && !featuredPost && (
                 <section className="relative">
-                    {/* Full-width Hero Image */}
-                    <div className="relative w-full h-screen">
+                    {/* Hero Image - Reduced height */}
+                    <div className="relative w-full h-[70vh] md:h-[80vh]">
                         <Image
                             src="/images/blog/hero.png"
                             alt="Better Homes"

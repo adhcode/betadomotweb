@@ -52,40 +52,40 @@ export default function CategoryStories() {
     }
 
     return (
-        <section className="py-32 lg:py-40 bg-white border-t border-gray-100">
+        <section className="py-20 lg:py-32 bg-white border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-6 lg:px-12">
-                <div className="mb-20 lg:mb-32">
+                <div className="mb-12 lg:mb-20">
                     <p className="text-sm text-gray-500 font-light uppercase tracking-wider mb-4">
                         Explore
                     </p>
-                    <h2 className="text-4xl md:text-5xl font-light text-gray-900">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-900">
                         By category
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
                     {categoryConfigs.map((config) => (
                         <Link
                             key={config.name}
                             href={`/category/${config.slug}`}
-                            className="group block p-6 bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+                            className="group block p-4 md:p-6 bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
                         >
-                            <div className="flex flex-col items-center justify-center text-center space-y-3">
+                            <div className="flex flex-col items-center justify-center text-center space-y-2 md:space-y-3">
                                 {/* Icon */}
                                 {config.iconPath && (
-                                    <div className="w-12 h-12 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                                    <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                                         <Image
                                             src={config.iconPath}
                                             alt={config.name}
                                             width={40}
                                             height={40}
-                                            className="w-10 h-10 object-contain opacity-60 group-hover:opacity-100 transition-opacity"
+                                            className="w-8 h-8 md:w-10 md:h-10 object-contain opacity-60 group-hover:opacity-100 transition-opacity"
                                         />
                                     </div>
                                 )}
 
-                                {/* Category Name - Single line */}
-                                <h3 className="text-xs font-light text-gray-700 group-hover:text-gray-900 transition-colors duration-300 whitespace-nowrap">
+                                {/* Category Name - Responsive text size */}
+                                <h3 className="text-[10px] md:text-xs font-light text-gray-700 group-hover:text-gray-900 transition-colors duration-300 leading-tight px-1">
                                     {config.name}
                                 </h3>
                             </div>
