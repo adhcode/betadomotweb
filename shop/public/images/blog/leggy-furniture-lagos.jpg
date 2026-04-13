@@ -1,0 +1,114 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="roomGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F8F8F0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F3F3E0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="furnitureGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#236B7C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A5460;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="floorPattern" patternUnits="userSpaceOnUse" width="40" height="40">
+      <rect width="40" height="40" fill="#E8E8E0"/>
+      <rect width="38" height="38" x="1" y="1" fill="#F0F0E8"/>
+    </pattern>
+  </defs>
+  
+  <!-- Room background -->
+  <rect width="800" height="600" fill="url(#roomGradient)"/>
+  
+  <!-- Floor with pattern to show continuity -->
+  <rect x="0" y="450" width="800" height="150" fill="url(#floorPattern)"/>
+  
+  <!-- Sofa with visible legs -->
+  <rect x="150" y="300" width="200" height="80" rx="10" fill="url(#furnitureGradient)"/>
+  <!-- Sofa arms -->
+  <rect x="140" y="290" width="20" height="90" rx="10" fill="url(#furnitureGradient)"/>
+  <rect x="350" y="290" width="20" height="90" rx="10" fill="url(#furnitureGradient)"/>
+  <!-- Visible legs -->
+  <rect x="160" y="380" width="8" height="70" fill="#D98958"/>
+  <rect x="190" y="380" width="8" height="70" fill="#D98958"/>
+  <rect x="320" y="380" width="8" height="70" fill="#D98958"/>
+  <rect x="350" y="380" width="8" height="70" fill="#D98958"/>
+  
+  <!-- Floor space visible under sofa -->
+  <rect x="150" y="380" width="200" height="70" fill="url(#floorPattern)" opacity="0.8"/>
+  
+  <!-- Armchair with slim legs -->
+  <rect x="450" y="320" width="80" height="60" rx="8" fill="url(#furnitureGradient)"/>
+  <rect x="440" y="310" width="15" height="70" rx="8" fill="url(#furnitureGradient)"/>
+  <rect x="515" y="310" width="15" height="70" rx="8" fill="url(#furnitureGradient)"/>
+  <!-- Thin visible legs -->
+  <rect x="460" y="380" width="6" height="70" fill="#D98958"/>
+  <rect x="490" y="380" width="6" height="70" fill="#D98958"/>
+  <rect x="510" y="380" width="6" height="70" fill="#D98958"/>
+  <rect x="520" y="380" width="6" height="70" fill="#D98958"/>
+  
+  <!-- Coffee table with open base -->
+  <rect x="200" y="420" width="120" height="8" fill="#D98958"/>
+  <!-- Slim table legs -->
+  <rect x="210" y="420" width="4" height="30" fill="#B8734A"/>
+  <rect x="240" y="420" width="4" height="30" fill="#B8734A"/>
+  <rect x="280" y="420" width="4" height="30" fill="#B8734A"/>
+  <rect x="310" y="420" width="4" height="30" fill="#B8734A"/>
+  
+  <!-- Side table with visible legs -->
+  <rect x="580" y="400" width="60" height="30" fill="#D98958"/>
+  <rect x="590" y="430" width="4" height="20" fill="#B8734A"/>
+  <rect x="620" y="430" width="4" height="20" fill="#B8734A"/>
+  
+  <!-- Bed with space underneath -->
+  <rect x="100" y="150" width="180" height="100" rx="5" fill="url(#furnitureGradient)"/>
+  <!-- Mattress -->
+  <rect x="110" y="140" width="160" height="15" rx="8" fill="#F5F5DC"/>
+  <!-- Bed legs -->
+  <rect x="120" y="250" width="6" height="50" fill="#D98958"/>
+  <rect x="150" y="250" width="6" height="50" fill="#D98958"/>
+  <rect x="240" y="250" width="6" height="50" fill="#D98958"/>
+  <rect x="270" y="250" width="6" height="50" fill="#D98958"/>
+  
+  <!-- Open shelving unit -->
+  <rect x="650" y="100" width="120" height="300" fill="none" stroke="#D98958" stroke-width="3"/>
+  <!-- Shelves -->
+  <rect x="655" y="150" width="110" height="6" fill="#D98958"/>
+  <rect x="655" y="220" width="110" height="6" fill="#D98958"/>
+  <rect x="655" y="290" width="110" height="6" fill="#D98958"/>
+  <rect x="655" y="360" width="110" height="6" fill="#D98958"/>
+  <!-- Vertical supports (legs) -->
+  <rect x="655" y="100" width="6" height="300" fill="#D98958"/>
+  <rect x="759" y="100" width="6" height="300" fill="#D98958"/>
+  
+  <!-- Flow lines showing continuous floor space -->
+  <path d="M 50 470 Q 400 460 750 470" stroke="#32CD32" stroke-width="3" fill="none" stroke-dasharray="10,5"/>
+  <path d="M 50 490 Q 400 480 750 490" stroke="#32CD32" stroke-width="3" fill="none" stroke-dasharray="10,5"/>
+  
+  <!-- Comparison: Solid base furniture (shown as negative example) -->
+  <rect x="400" y="150" width="150" height="80" fill="#8B4513" opacity="0.3"/>
+  <text x="475" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#FF0000">BLOCKS FLOW</text>
+  <line x1="400" y1="150" x2="550" y2="230" stroke="#FF0000" stroke-width="3"/>
+  <line x1="550" y1="150" x2="400" y2="230" stroke="#FF0000" stroke-width="3"/>
+  
+  <!-- Visual flow arrows -->
+  <path d="M 80 500 L 120 500" stroke="#32CD32" stroke-width="2" marker-end="url(#greenArrow)"/>
+  <path d="M 180 500 L 220 500" stroke="#32CD32" stroke-width="2" marker-end="url(#greenArrow)"/>
+  <path d="M 380 500 L 420 500" stroke="#32CD32" stroke-width="2" marker-end="url(#greenArrow)"/>
+  <path d="M 580 500 L 620 500" stroke="#32CD32" stroke-width="2" marker-end="url(#greenArrow)"/>
+  <path d="M 680 500 L 720 500" stroke="#32CD32" stroke-width="2" marker-end="url(#greenArrow)"/>
+  
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="greenArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#32CD32"/>
+    </marker>
+  </defs>
+  
+  <!-- Labels -->
+  <text x="250" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#32CD32" font-weight="bold">VISUAL FLOW</text>
+  <text x="190" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#236B7C">RAISED SOFA</text>
+  <text x="490" y="300" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#236B7C">SLIM LEGS</text>
+  <text x="710" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#236B7C">OPEN SHELVING</text>
+  
+  <!-- Text overlay -->
+  <text x="400" y="570" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#236B7C">"Leggy" Furniture Design</text>
+  <text x="400" y="590" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">Visible legs create visual flow and spaciousness</text>
+</svg> 

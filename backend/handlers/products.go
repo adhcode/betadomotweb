@@ -245,3 +245,39 @@ func generateSlug(name string) string {
 func generateSKU() string {
 	return fmt.Sprintf("SKU-%s", strings.ToUpper(uuid.New().String()[:8]))
 }
+
+// GetProductCategories handles GET /product-categories
+func (h *ProductHandler) GetProductCategories(w http.ResponseWriter, r *http.Request) {
+	client := h.db.GetClient()
+	jsonStr, _, err := client.From("product_categories").
+		Select("*", "exact", false).
+		Order("display_order", nil).
+		ExecuteString()
+	
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(jsonStr))
+}
+
+// GetProductCategoryBySlug handles GET /product-categories/{slug}
+func (h *ProductHandler) GetProductCategoryBySlug(w http.ResponseWriter, r *http.Request) {
+	slug := chi.URLParam(r, "slug")
+
+	client := h.db.GetClient()
+	jsonStr, _, err := client.From("product_categories").
+		Select("*", "exact", false).
+		Eq("slug", slug).
+		ExecuteString()
+	
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(jsonStr))
+}

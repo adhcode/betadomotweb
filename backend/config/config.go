@@ -17,6 +17,7 @@ type Config struct {
 	Port          string
 	FromEmail     string
 	WebsiteURL    string
+	DatabaseURL   string
 }
 
 // Load reads configuration from environment variables
@@ -35,6 +36,7 @@ func Load() *Config {
 		Port:          getEnv("PORT", "8080"),
 		FromEmail:     getEnv("FROM_EMAIL", "onboarding@resend.dev"),
 		WebsiteURL:    getEnv("WEBSITE_URL", "https://yourdomain.com"),
+		DatabaseURL:   getEnv("DATABASE_URL", ""),
 	}
 
 	// Validate required configs

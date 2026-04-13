@@ -3,11 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Share, MessageCircle, ArrowUpRight, Link2 } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { ArrowLeft, Share2, MessageCircle } from "lucide-react";
 import Comments from "@/components/Comments";
-import { H1, Body, MonoText, Container, Section, FadeInUp } from "@/components/ui/DesignSystem";
 
 // Clap icon using the SVG from public folder
 function ClapIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -237,177 +234,203 @@ export default function BlogPostPageClient({ initialPost }: BlogPostPageClientPr
     };
 
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-white">
-                {/* Hero Section */}
-                <Section className="pt-20 sm:pt-24 pb-4">
-                    <Container>
-                        <FadeInUp>
-                            <Link
-                                href="/"
-                                className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors mb-4 group"
-                            >
-                                <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-300" />
-                                <MonoText className="text-sm">Home</MonoText>
-                            </Link>
-                        </FadeInUp>
+        <main className="min-h-screen bg-white">
+            {/* Back Button - Simple and Minimal */}
+            <div className="fixed top-20 left-6 lg:left-12 z-40">
+                <Link 
+                    href="/"
+                    className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors group"
+                >
+                    <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+                    <span className="text-sm font-light tracking-wide">Back</span>
+                </Link>
+            </div>
 
-                        <FadeInUp delay={100}>
-                            <div className="mb-4">
-                                <H1 className="mb-2 text-3xl sm:text-4xl lg:text-5xl">{post.title}</H1>
+            {/* Article */}
+            <article className="pt-32 pb-24">
+                {/* Title & Meta */}
+                <div className="max-w-[680px] mx-auto px-6 mb-16">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-gray-900 mb-8 leading-[1.1]">
+                        {post.title}
+                    </h1>
+                    
+                    <div className="flex items-center gap-4 text-sm text-gray-500 font-light mb-8">
+                        <time>{formatDate(post.published_at)}</time>
+                        <span>·</span>
+                        <span>{post.read_time || '6 min read'}</span>
+                    </div>
 
-                                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 mb-3">
-                                    <MonoText className="text-xs">{formatDate(post.published_at)}</MonoText>
-                                    <span>•</span>
-                                    <MonoText className="text-xs">{post.read_time || '5 min read'}</MonoText>
-                                </div>
-
-                                {post.excerpt && (
-                                    <Body className="text-base sm:text-lg text-gray-600 max-w-3xl leading-relaxed">
-                                        {post.excerpt}
-                                    </Body>
-                                )}
-                            </div>
-                        </FadeInUp>
-
-                        {/* Tags */}
-                        {post.tags && post.tags.length > 0 && (
-                            <FadeInUp delay={200}>
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {post.tags.map((tag) => (
-                                        <Link
-                                            key={tag}
-                                            href={`/blog?tag=${encodeURIComponent(tag)}`}
-                                            className="text-xs font-mono text-gray-500 bg-gray-50 px-2 py-1 rounded-sm border border-gray-100 hover:bg-gray-100 transition-colors"
-                                        >
-                                            {tag}
-                                        </Link>
-                                    ))}
-                                </div>
-                            </FadeInUp>
-                        )}
-
-                        {/* Engagement Bar */}
-                        <FadeInUp delay={300}>
-                            <div className="flex items-center justify-between py-2 border-y border-gray-100">
-                                <div className="flex items-center gap-3">
-                                    <button
-                                        onClick={handleClap}
-                                        className={`group inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-gray-200 bg-white transition-all hover:bg-gray-50 hover:border-gray-300 ${justClapped ? 'ring-2 ring-gray-300' : ''}`}
-                                    >
-                                        <ClapIcon className="w-4 h-4 text-gray-700 group-hover:text-gray-900" />
-                                        <MonoText className="text-xs">{formatClaps(totalClaps)}</MonoText>
-                                    </button>
-
-                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-gray-200 bg-white">
-                                        <MessageCircle className="w-4 h-4 text-gray-700" />
-                                        <MonoText className="text-xs">{commentsCount}</MonoText>
-                                    </div>
-                                </div>
-
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setShowShare(!showShare)}
-                                        className="p-1.5 rounded-full border border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 transition-all"
-                                    >
-                                        <Share className="w-4 h-4 text-gray-700" />
-                                    </button>
-
-                                    {showShare && (
-                                        <div className="absolute right-0 mt-2 w-56 sm:w-64 bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden z-20">
-                                            <div className="px-3 py-2 text-xs uppercase tracking-widest text-gray-500 bg-gray-50">Share</div>
-                                            <a
-                                                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50"
-                                            >
-                                                <ArrowUpRight className="w-4 h-4 text-gray-700" />
-                                                <span className="text-sm text-gray-800">Share on X</span>
-                                            </a>
-                                            <a
-                                                href={`https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50"
-                                            >
-                                                <ArrowUpRight className="w-4 h-4 text-blue-600" />
-                                                <span className="text-sm text-gray-800">Share on Facebook</span>
-                                            </a>
-                                            <button
-                                                onClick={() => {
-                                                    navigator.clipboard.writeText(shareUrl);
-                                                    setShowShare(false);
-                                                }}
-                                                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50"
-                                            >
-                                                <Link2 className="w-4 h-4 text-gray-700" />
-                                                <span className="text-sm text-gray-800">Copy link</span>
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </FadeInUp>
-                    </Container>
-                </Section>
+                    {/* Excerpt */}
+                    {post.excerpt && (
+                        <p className="text-xl text-gray-600 font-light leading-relaxed">
+                            {post.excerpt}
+                        </p>
+                    )}
+                </div>
 
                 {/* Featured Image */}
                 {post.featured_image && !imageError && (
-                    <div>
-                        <Container>
-                            <FadeInUp delay={400}>
-                                <div className="relative aspect-[16/9] overflow-hidden rounded-lg">
-                                    <Image
-                                        src={post.featured_image}
-                                        alt={post.title}
-                                        fill
-                                        className="object-cover"
-                                        onError={handleImageError}
-                                        priority
-                                        unoptimized={isExternalImage(post.featured_image)}
-                                    />
-                                </div>
-                            </FadeInUp>
-                        </Container>
+                    <div className="max-w-[1200px] mx-auto px-6 mb-16">
+                        <div className="relative aspect-[16/9] overflow-hidden">
+                            <Image
+                                src={post.featured_image}
+                                alt={post.title}
+                                fill
+                                className="object-cover"
+                                onError={handleImageError}
+                                priority
+                                unoptimized={isExternalImage(post.featured_image)}
+                            />
+                        </div>
                     </div>
                 )}
 
-                {/* Article Content */}
-                <div className="py-6">
-                    <Container>
-                        <FadeInUp delay={500}>
-                            <article className="max-w-3xl mx-auto">
-                                <div
-                                    className="prose prose-lg max-w-none"
-                                    style={{
-                                        lineHeight: '1.8',
-                                        fontSize: '18px'
-                                    }}
-                                    dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
-                                />
-                            </article>
-                        </FadeInUp>
-                    </Container>
-                </div>
+                {/* Content */}
+                <div className="max-w-[680px] mx-auto px-6">
+                    {/* Article Body */}
+                    <div 
+                        className="prose prose-lg max-w-none"
+                        style={{
+                            fontSize: '18px',
+                            lineHeight: '1.8',
+                            color: '#000000'
+                        }}
+                        dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
+                    />
 
-                {/* Bottom Engagement - Removed */}
-
-                {/* Comments Section */}
-                <Section className="border-t border-gray-100">
-                    <Container>
-                        <FadeInUp>
-                            <div className="max-w-3xl mx-auto">
-                                <Comments postSlug={post.slug} />
+                    {/* Tags */}
+                    {post.tags && post.tags.length > 0 && (
+                        <div className="mt-16 pt-12 border-t border-gray-100">
+                            <div className="flex flex-wrap gap-3">
+                                {post.tags.map((tag, index) => (
+                                    <span
+                                        key={index}
+                                        className="text-sm text-gray-600 font-light px-4 py-2 border border-gray-200 rounded-full hover:border-gray-900 transition-colors"
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
                             </div>
-                        </FadeInUp>
-                    </Container>
-                </Section>
+                        </div>
+                    )}
 
-                {/* Newsletter Section */}
-            </main>
-            <Footer />
-        </>
+                    {/* Newsletter CTA - Subtle */}
+                    <div className="mt-16 pt-12 border-t border-gray-100">
+                        <div className="text-center max-w-md mx-auto">
+                            <h3 className="text-2xl font-light text-gray-900 mb-4">
+                                More like this
+                            </h3>
+                            <p className="text-base text-gray-600 font-light mb-6 leading-relaxed">
+                                One thoughtful email a week with home ideas, tips, and curated finds.
+                            </p>
+                            <form className="flex gap-3">
+                                <input
+                                    type="email"
+                                    placeholder="your@email.com"
+                                    className="flex-1 px-4 py-3 border border-gray-200 rounded-lg text-sm font-light focus:outline-none focus:border-gray-400 transition-colors"
+                                />
+                                <button
+                                    type="submit"
+                                    className="px-6 py-3 bg-gray-900 text-white text-sm font-light rounded-lg hover:bg-gray-800 transition-colors"
+                                >
+                                    Subscribe
+                                </button>
+                            </form>
+                            <p className="text-xs text-gray-500 font-light mt-3">
+                                No spam. Unsubscribe anytime.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Comments */}
+                    <div className="mt-16 pt-12 border-t border-gray-100">
+                        <Comments postSlug={post.slug} />
+                    </div>
+                </div>
+            </article>
+
+            {/* Fixed Clap Button - Bottom Left */}
+            <div className="fixed bottom-8 left-8 z-40 hidden md:block">
+                <button
+                    onClick={handleClap}
+                    disabled={userClaps >= 50}
+                    className={`flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-full shadow-lg hover:shadow-xl transition-all ${
+                        justClapped ? 'scale-110' : ''
+                    } ${userClaps >= 50 ? 'opacity-50 cursor-not-allowed' : 'hover:border-gray-900'}`}
+                >
+                    <ClapIcon className="w-5 h-5 text-gray-900" />
+                    <span className="text-sm font-medium text-gray-900">{totalClaps}</span>
+                </button>
+            </div>
+
+            {/* Fixed Share Button - Bottom Right */}
+            <div className="fixed bottom-8 right-8 z-40 hidden md:block">
+                <div className="relative">
+                    <button
+                        onClick={() => setShowShare(!showShare)}
+                        className="flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-full shadow-lg hover:shadow-xl hover:border-gray-900 transition-all"
+                    >
+                        <Share2 size={18} className="text-gray-900" />
+                        <span className="text-sm font-medium text-gray-900">Share</span>
+                    </button>
+
+                    {showShare && (
+                        <div className="absolute bottom-full right-0 mb-3 w-64 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden">
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(shareUrl);
+                                    setShowShare(false);
+                                }}
+                                className="w-full px-4 py-3 text-left text-sm text-gray-900 hover:bg-gray-50 transition-colors"
+                            >
+                                Copy link
+                            </button>
+                            <button
+                                onClick={() => {
+                                    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`, '_blank');
+                                    setShowShare(false);
+                                }}
+                                className="w-full px-4 py-3 text-left text-sm text-gray-900 hover:bg-gray-50 transition-colors border-t border-gray-100"
+                            >
+                                Share on X
+                            </button>
+                            <button
+                                onClick={() => {
+                                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+                                    setShowShare(false);
+                                }}
+                                className="w-full px-4 py-3 text-left text-sm text-gray-900 hover:bg-gray-50 transition-colors border-t border-gray-100"
+                            >
+                                Share on Facebook
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Mobile Engagement Bar */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 px-6 py-4">
+                <div className="flex items-center justify-between">
+                    <button
+                        onClick={handleClap}
+                        disabled={userClaps >= 50}
+                        className={`flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-full ${
+                            justClapped ? 'scale-110' : ''
+                        } ${userClaps >= 50 ? 'opacity-50' : ''}`}
+                    >
+                        <ClapIcon className="w-4 h-4 text-gray-900" />
+                        <span className="text-sm font-medium text-gray-900">{totalClaps}</span>
+                    </button>
+
+                    <button
+                        onClick={() => setShowShare(!showShare)}
+                        className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-full"
+                    >
+                        <Share2 size={16} className="text-gray-900" />
+                        <span className="text-sm font-medium text-gray-900">Share</span>
+                    </button>
+                </div>
+            </div>
+        </main>
     );
 }

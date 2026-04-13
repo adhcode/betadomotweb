@@ -1,0 +1,58 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="roomGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F3F3E0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="sofaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#236B7C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A5460;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Room background -->
+  <rect width="800" height="600" fill="url(#roomGradient)"/>
+  
+  <!-- Floor -->
+  <rect x="0" y="450" width="800" height="150" fill="#E8E8E0"/>
+  
+  <!-- Back wall -->
+  <rect x="0" y="0" width="800" height="450" fill="#F8F8F0"/>
+  
+  <!-- Window -->
+  <rect x="500" y="80" width="180" height="250" fill="#87CEEB" stroke="#236B7C" stroke-width="4"/>
+  <line x1="590" y1="80" x2="590" y2="330" stroke="#236B7C" stroke-width="2"/>
+  <line x1="500" y1="205" x2="680" y2="205" stroke="#236B7C" stroke-width="2"/>
+  
+  <!-- Large mirror reflecting window -->
+  <rect x="100" y="120" width="140" height="200" fill="#E6F3FF" stroke="#C0C0C0" stroke-width="3"/>
+  <rect x="110" y="130" width="120" height="180" fill="#F0F8FF" opacity="0.7"/>
+  
+  <!-- Sofa -->
+  <rect x="280" y="350" width="240" height="80" rx="10" fill="url(#sofaGradient)"/>
+  <rect x="270" y="340" width="20" height="90" rx="10" fill="url(#sofaGradient)"/>
+  <rect x="520" y="340" width="20" height="90" rx="10" fill="url(#sofaGradient)"/>
+  
+  <!-- Coffee table with legs -->
+  <rect x="320" y="440" width="160" height="8" fill="#D98958"/>
+  <rect x="330" y="440" width="4" height="30" fill="#B8734A"/>
+  <rect x="470" y="440" width="4" height="30" fill="#B8734A"/>
+  <rect x="330" y="410" width="4" height="30" fill="#B8734A"/>
+  <rect x="470" y="410" width="4" height="30" fill="#B8734A"/>
+  
+  <!-- Plants -->
+  <ellipse cx="650" cy="400" rx="25" ry="40" fill="#228B22"/>
+  <rect x="640" y="440" width="20" height="30" fill="#D98958"/>
+  
+  <!-- Floating shelves -->
+  <rect x="50" y="280" width="80" height="8" fill="#D98958"/>
+  <rect x="50" y="320" width="80" height="8" fill="#D98958"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="90" cy="270" r="8" fill="#236B7C"/>
+  <rect x="60" y="310" width="15" height="20" fill="#D98958"/>
+  
+  <!-- Text overlay -->
+  <text x="400" y="550" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#236B7C">Modern Lagos Apartment Living Room</text>
+  <text x="400" y="580" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#666">Strategic mirrors and light colors maximize space</text>
+</svg> 

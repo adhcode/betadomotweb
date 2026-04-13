@@ -1,24 +1,10 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Proza_Libre } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/hooks/useToast";
 import { WishlistProvider } from "@/hooks/useWishlist";
 import { generateOrganizationStructuredData } from "@/components/SEO";
-import CartDrawer from '@/components/CartDrawer';
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-cormorant",
-  weight: ["400", "500", "700"],
-  display: "swap",
-});
-
-const prozaLibre = Proza_Libre({
-  subsets: ["latin"],
-  variable: "--font-proza",
-  weight: ["400", "500", "700"],
-  display: "swap",
-});
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://betadomot.blog' : 'http://localhost:3000'),
@@ -96,11 +82,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${cormorant.variable} ${prozaLibre.variable} font-body antialiased bg-white text-gray-900`}>
+      <body className="antialiased bg-white text-gray-900">
         <ToastProvider>
           <WishlistProvider>
-            <CartDrawer />
+            <Header />
             {children}
+            <Footer />
           </WishlistProvider>
         </ToastProvider>
       </body>

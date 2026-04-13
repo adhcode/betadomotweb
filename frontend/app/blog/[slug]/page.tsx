@@ -3,6 +3,9 @@ import { fetchPost } from "@/lib/api-client";
 import { notFound } from "next/navigation";
 import BlogPostPageClient from "./BlogPostPageClient";
 
+// Enable dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
 // Generate metadata for social sharing - runs on server
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const resolvedParams = await params;

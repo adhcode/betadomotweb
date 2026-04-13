@@ -40,12 +40,11 @@
   --brand-gold-light: #e6b85c;
   --brand-ivory: #F3F3E0;
 
-  /* Typography System - Font Family Variables */
-  --font-gilroy: 'Gilroy', 'Arial', sans-serif;
-  --font-cormorant: var(--font-cormorant), 'Georgia', serif;
-  --font-proza: var(--font-proza), 'Helvetica', sans-serif;
+  /* Typography System - Gilroy Only */
+  --font-gilroy: 'Gilroy', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  --text-primary: #0A0A0A;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
   --text-black: #000000;
 }
 
@@ -77,9 +76,9 @@ html {
 
 body {
   font-family: var(--font-gilroy);
-  font-weight: 300;
-  color: var(--text-black);
-  line-height: 1.6;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
@@ -88,6 +87,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  background: #ffffff;
 }
 
 /* Logo styling with Gilroy */
@@ -106,87 +106,75 @@ h4,
 h5,
 h6 {
   font-family: var(--font-gilroy);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: #0a0a0a;
+  letter-spacing: -0.02em;
+  color: var(--text-black);
 }
 
 h1 {
-  font-family: var(--font-gilroy);
   font-size: 3.5rem;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.1;
-  margin-bottom: 2rem;
-  color: #0a0a0a;
+  margin-bottom: 1.5rem;
 }
 
 h2 {
-  font-family: var(--font-gilroy);
   font-size: 2.5rem;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.2;
-  margin-bottom: 1.5rem;
-  color: #0a0a0a;
+  margin-bottom: 1.25rem;
 }
 
 h3 {
-  font-family: var(--font-gilroy);
   font-size: 2rem;
   font-weight: 400;
   line-height: 1.3;
-  margin-bottom: 1.25rem;
-  color: #0a0a0a;
+  margin-bottom: 1rem;
 }
 
 h4 {
-  font-family: var(--font-gilroy);
   font-size: 1.5rem;
   font-weight: 400;
   line-height: 1.3;
-  margin-bottom: 1rem;
-  color: #0a0a0a;
+  margin-bottom: 0.875rem;
 }
 
 h5 {
-  font-family: var(--font-gilroy);
   font-size: 1.25rem;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.4;
   margin-bottom: 0.75rem;
-  color: #0a0a0a;
 }
 
 h6 {
-  font-family: var(--font-gilroy);
   font-size: 1.125rem;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.4;
   margin-bottom: 0.5rem;
-  color: #0a0a0a;
 }
 
-/* Clean body text with Proza Libre */
+/* Clean body text with Gilroy */
 p {
-  font-family: var(--font-proza);
+  font-family: var(--font-gilroy);
   font-weight: 400;
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   line-height: 1.8;
-  color: #0a0a0a;
-  margin-bottom: 1.75rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
 }
 
-/* Elegant emphasis with Proza Libre */
+/* Elegant emphasis */
 strong {
-  font-family: var(--font-proza);
-  font-weight: 700;
-  color: #0a0a0a;
+  font-family: var(--font-gilroy);
+  font-weight: 600;
+  color: var(--text-black);
 }
 
 em {
-  font-family: var(--font-proza);
+  font-family: var(--font-gilroy);
   font-style: italic;
-  color: #0a0a0a;
+  color: var(--text-primary);
 }
 
 /* Links */

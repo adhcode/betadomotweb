@@ -1,0 +1,97 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="roomGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F8F8F0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F3F3E0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="furnitureGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D98958;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B8734A;stop-opacity:1" />
+    </linearGradient>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#FF6347"/>
+    </marker>
+  </defs>
+  
+  <!-- Room background -->
+  <rect width="800" height="600" fill="url(#roomGradient)"/>
+  
+  <!-- Floor -->
+  <rect x="0" y="500" width="800" height="100" fill="#E8E8E0"/>
+  
+  <!-- Ottoman with storage (open) -->
+  <rect x="100" y="400" width="120" height="60" rx="5" fill="url(#furnitureGradient)"/>
+  <rect x="110" y="410" width="100" height="40" fill="#F3F3E0" stroke="#D98958" stroke-width="2"/>
+  <!-- Items inside ottoman -->
+  <rect x="115" y="415" width="20" height="15" fill="#236B7C"/>
+  <rect x="140" y="420" width="25" height="10" fill="#228B22"/>
+  <rect x="170" y="415" width="30" height="20" fill="#8B4513"/>
+  <!-- Ottoman lid (partially open) -->
+  <rect x="105" y="395" width="110" height="8" rx="3" fill="url(#furnitureGradient)" transform="rotate(-15 160 399)"/>
+  
+  <!-- Dining table that doubles as work desk -->
+  <rect x="300" y="350" width="200" height="100" rx="5" fill="url(#furnitureGradient)"/>
+  <!-- Table legs -->
+  <rect x="310" y="450" width="6" height="50" fill="#B8734A"/>
+  <rect x="330" y="450" width="6" height="50" fill="#B8734A"/>
+  <rect x="470" y="450" width="6" height="50" fill="#B8734A"/>
+  <rect x="490" y="450" width="6" height="50" fill="#B8734A"/>
+  
+  <!-- Work items on table -->
+  <rect x="320" y="340" width="40" height="30" fill="#C0C0C0" stroke="#A0A0A0" stroke-width="1"/>
+  <text x="340" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#000">LAPTOP</text>
+  <rect x="370" y="345" width="15" height="20" fill="#FFFFFF" stroke="#D3D3D3" stroke-width="1"/>
+  <circle cx="450" cy="355" r="8" fill="#236B7C"/>
+  
+  <!-- Dining items -->
+  <circle cx="420" cy="365" r="12" fill="#FFFFFF" stroke="#D3D3D3" stroke-width="2"/>
+  <circle cx="460" cy="375" r="10" fill="#F0E68C" stroke="#DAA520" stroke-width="1"/>
+  
+  <!-- Bed with built-in drawers -->
+  <rect x="550" y="300" width="200" height="150" rx="10" fill="#236B7C"/>
+  <!-- Mattress -->
+  <rect x="560" y="290" width="180" height="20" rx="10" fill="#F5F5DC"/>
+  <!-- Drawers underneath -->
+  <rect x="560" y="450" width="85" height="30" fill="url(#furnitureGradient)" stroke="#A0673D" stroke-width="1"/>
+  <rect x="655" y="450" width="85" height="30" fill="url(#furnitureGradient)" stroke="#A0673D" stroke-width="1"/>
+  <!-- Drawer handles -->
+  <circle cx="602" cy="465" r="3" fill="#FFD700"/>
+  <circle cx="697" cy="465" r="3" fill="#FFD700"/>
+  
+  <!-- Coffee table with storage compartments -->
+  <rect x="250" y="480" width="150" height="8" fill="url(#furnitureGradient)"/>
+  <!-- Table legs -->
+  <rect x="260" y="480" width="4" height="20" fill="#B8734A"/>
+  <rect x="390" y="480" width="4" height="20" fill="#B8734A"/>
+  <!-- Storage compartment (open) -->
+  <rect x="280" y="460" width="90" height="20" fill="#F3F3E0" stroke="#D98958" stroke-width="1"/>
+  <rect x="285" y="465" width="15" height="8" fill="#236B7C"/>
+  <rect x="305" y="467" width="20" height="6" fill="#228B22"/>
+  <rect x="330" y="465" width="25" height="10" fill="#8B4513"/>
+  
+  <!-- Folding chairs (one folded, one unfolded) -->
+  <!-- Unfolded chair -->
+  <rect x="150" y="300" width="40" height="80" fill="#236B7C"/>
+  <rect x="155" y="280" width="30" height="25" fill="#236B7C"/>
+  
+  <!-- Folded chair (flat against wall) -->
+  <rect x="50" y="250" width="8" height="60" fill="#236B7C"/>
+  <rect x="50" y="240" width="8" height="15" fill="#236B7C"/>
+  
+  <!-- Wall -->
+  <rect x="40" y="0" width="20" height="500" fill="#E8E8E0"/>
+  
+  <!-- Arrows showing multi-functionality -->
+  <path d="M 160 340 Q 180 320 200 340" stroke="#FF6347" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 400 320 Q 420 300 440 320" stroke="#FF6347" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 650 280 Q 670 260 690 280" stroke="#FF6347" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Labels -->
+  <text x="160" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#FF6347">STORAGE</text>
+  <text x="400" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#FF6347">WORK + DINING</text>
+  <text x="650" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#FF6347">SLEEP + STORAGE</text>
+  
+  <!-- Text overlay -->
+  <text x="400" y="570" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#236B7C">Multi-Functional Furniture</text>
+  <text x="400" y="590" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">Every piece serves multiple purposes</text>
+</svg> 

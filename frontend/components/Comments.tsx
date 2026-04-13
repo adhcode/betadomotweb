@@ -117,10 +117,10 @@ export default function Comments({ postSlug }: CommentsProps) {
         <div className="max-w-3xl">
             {/* Header */}
             <div className="mb-6">
-                <h3 className="text-xl font-gilroy font-medium text-gray-900 mb-2">
+                <h3 className="text-xl font-light text-gray-900 mb-2">
                     Share your thoughts
                 </h3>
-                <p className="font-proza text-sm text-gray-500">
+                <p className="text-sm font-light text-gray-500">
                     {comments.length === 0
                         ? "Be the first to share your perspective."
                         : `${comments.length} ${comments.length === 1 ? 'comment' : 'comments'}`
@@ -139,10 +139,10 @@ export default function Comments({ postSlug }: CommentsProps) {
                             value={commentText}
                             onChange={(e) => setCommentText(e.target.value)}
                             onFocus={handleCommentFocus}
-                            className="w-full px-4 py-3 font-proza text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 transition-all duration-200 resize-none placeholder-gray-400"
+                            className="w-full px-4 py-3 text-sm font-light bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 transition-all duration-200 resize-none placeholder-gray-400"
                             maxLength={500}
                         />
-                        <div className="absolute bottom-3 right-3 text-xs text-gray-400 font-proza">
+                        <div className="absolute bottom-3 right-3 text-xs text-gray-400 font-light">
                             {commentText.length}/500
                         </div>
                     </div>
@@ -151,7 +151,7 @@ export default function Comments({ postSlug }: CommentsProps) {
                     {showNameField && !savedName && (
                         <div className="animate-fade-in-up">
                             <label className="block mb-1.5">
-                                <span className="font-proza text-xs font-medium text-gray-600">
+                                <span className="text-xs font-light text-gray-600">
                                     Your name (optional)
                                 </span>
                             </label>
@@ -160,10 +160,10 @@ export default function Comments({ postSlug }: CommentsProps) {
                                 placeholder="Name"
                                 value={userName}
                                 onChange={(e) => setUserName(e.target.value)}
-                                className="w-full px-4 py-2.5 font-proza text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 transition-all duration-200 placeholder-gray-400"
+                                className="w-full px-4 py-2.5 text-sm font-light bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 transition-all duration-200 placeholder-gray-400"
                                 maxLength={50}
                             />
-                            <p className="mt-1.5 text-xs text-gray-400 font-proza">
+                            <p className="mt-1.5 text-xs text-gray-400 font-light">
                                 We'll remember this for next time
                             </p>
                         </div>
@@ -171,10 +171,10 @@ export default function Comments({ postSlug }: CommentsProps) {
 
                     {/* Submit Button */}
                     <div className="flex items-center justify-between pt-1">
-                        <p className="text-[11px] text-gray-400 font-proza">
+                        <p className="text-[11px] text-gray-400 font-light">
                             {savedName && (
                                 <span>
-                                    Posting as <span className="font-medium text-gray-500">{savedName}</span>
+                                    Posting as <span className="font-light text-gray-500">{savedName}</span>
                                     {' • '}
                                     <button
                                         type="button"
@@ -194,8 +194,7 @@ export default function Comments({ postSlug }: CommentsProps) {
                         <button
                             type="submit"
                             disabled={submitting || !commentText.trim()}
-                            className="px-5 py-2 bg-black font-proza text-sm rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                            style={{ color: '#ffffff' }}
+                            className="px-6 py-3 bg-gray-900 text-white text-sm font-light rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                             {submitting ? 'Posting...' : 'Post'}
                         </button>
@@ -219,7 +218,7 @@ export default function Comments({ postSlug }: CommentsProps) {
                 </div>
             ) : comments.length === 0 ? (
                 <div className="text-center py-12 border border-gray-200 rounded-lg bg-gray-50">
-                    <p className="font-proza text-sm text-gray-400">
+                    <p className="text-sm font-light text-gray-400">
                         No comments yet
                     </p>
                 </div>
@@ -229,7 +228,7 @@ export default function Comments({ postSlug }: CommentsProps) {
                         <div key={comment.id} className="flex gap-3 items-start">
                             {/* Avatar */}
                             <div className="w-9 h-9 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center flex-shrink-0">
-                                <span className="font-gilroy font-medium text-gray-700 text-xs">
+                                <span className="font-light text-gray-700 text-xs">
                                     {initials(comment.author_name || 'A')}
                                 </span>
                             </div>
@@ -237,14 +236,14 @@ export default function Comments({ postSlug }: CommentsProps) {
                             {/* Comment Content */}
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-baseline gap-2 mb-1">
-                                    <span className="font-gilroy font-medium text-sm text-gray-900">
+                                    <span className="font-light text-sm text-gray-900">
                                         {comment.author_name || 'Anonymous'}
                                     </span>
-                                    <span className="text-xs text-gray-400 font-proza">
+                                    <span className="text-xs text-gray-400 font-light">
                                         {formatDate(comment.created_at)}
                                     </span>
                                 </div>
-                                <p className="font-proza text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+                                <p className="text-sm font-light text-gray-700 leading-relaxed whitespace-pre-wrap">
                                     {comment.body}
                                 </p>
                             </div>

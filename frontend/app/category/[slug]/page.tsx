@@ -257,7 +257,7 @@ export default function CategoryPage() {
 
                                 <div className="font-proza flex items-center gap-4 text-sm text-black">
                                     <span className="font-medium">{posts.length} Articles</span>
-                                    
+
                                 </div>
                             </div>
 

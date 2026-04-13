@@ -161,32 +161,39 @@ type UpdateProductRequest struct {
 
 // Order represents a customer order
 type Order struct {
-	ID              string      `json:"id"`
-	CustomerEmail   string      `json:"customer_email"`
-	CustomerName    string      `json:"customer_name"`
-	Items           []OrderItem `json:"items"`
-	Subtotal        float64     `json:"subtotal"`
-	Tax             float64     `json:"tax"`
-	Shipping        float64     `json:"shipping"`
-	Total           float64     `json:"total"`
-	Status          string      `json:"status"` // pending, paid, shipped, delivered, cancelled
-	PaymentMethod   string      `json:"payment_method"`
-	ShippingAddress Address     `json:"shipping_address"`
-	BillingAddress  Address     `json:"billing_address"`
-	Notes           string      `json:"notes"`
-	CreatedAt       string      `json:"created_at"`
-	UpdatedAt       string      `json:"updated_at"`
+	ID                string                 `json:"id"`
+	OrderNumber       string                 `json:"order_number"`
+	CustomerEmail     string                 `json:"customer_email"`
+	CustomerPhone     string                 `json:"customer_phone,omitempty"`
+	CustomerName      string                 `json:"customer_name"`
+	Items             []OrderItem            `json:"items"`
+	Subtotal          float64                `json:"subtotal"`
+	Tax               float64                `json:"tax"`
+	Shipping          float64                `json:"shipping"`
+	Total             float64                `json:"total"`
+	Status            string                 `json:"status"` // pending, paid, shipped, delivered, cancelled
+	PaymentMethod     string                 `json:"payment_method"`
+	PaymentStatus     string                 `json:"payment_status"` // pending, processing, success, failed, refunded
+	PaymentReference  string                 `json:"payment_reference,omitempty"`
+	PaystackReference string                 `json:"paystack_reference,omitempty"`
+	ShippingAddress   map[string]interface{} `json:"shipping_address"`
+	BillingAddress    Address                `json:"billing_address,omitempty"`
+	Notes             string                 `json:"notes"`
+	CreatedAt         string                 `json:"created_at"`
+	UpdatedAt         string                 `json:"updated_at"`
+	PaidAt            *string                `json:"paid_at,omitempty"`
 }
 
 // OrderItem represents an item in an order
 type OrderItem struct {
-	ID          string  `json:"id"`
+	ID          string  `json:"id,omitempty"`
 	ProductID   string  `json:"product_id"`
 	ProductSlug string  `json:"product_slug"`
 	Name        string  `json:"name"`
 	Price       float64 `json:"price"`
 	Quantity    int     `json:"quantity"`
-	Subtotal    float64 `json:"subtotal"`
+	Subtotal    float64 `json:"subtotal,omitempty"`
+	Image       string  `json:"image,omitempty"`
 }
 
 // Address represents a shipping or billing address
@@ -205,13 +212,18 @@ type Address struct {
 
 // CreateOrderRequest represents the payload for creating a new order
 type CreateOrderRequest struct {
-	CustomerEmail   string      `json:"customer_email"`
-	CustomerName    string      `json:"customer_name"`
-	Items           []OrderItem `json:"items"`
-	PaymentMethod   string      `json:"payment_method"`
-	ShippingAddress Address     `json:"shipping_address"`
-	BillingAddress  Address     `json:"billing_address"`
-	Notes           string      `json:"notes"`
+	CustomerEmail   string                 `json:"customer_email"`
+	CustomerPhone   string                 `json:"customer_phone"`
+	CustomerName    string                 `json:"customer_name"`
+	Items           []OrderItem            `json:"items"`
+	Subtotal        float64                `json:"subtotal"`
+	ShippingCost    float64                `json:"shipping_cost"`
+	Tax             float64                `json:"tax"`
+	Total           float64                `json:"total"`
+	PaymentMethod   string                 `json:"payment_method"`
+	ShippingAddress map[string]interface{} `json:"shipping_address"`
+	BillingAddress  Address                `json:"billing_address,omitempty"`
+	Notes           string                 `json:"notes,omitempty"`
 }
 
 // CartItem represents an item in the shopping cart

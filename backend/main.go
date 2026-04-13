@@ -30,6 +30,7 @@ func main() {
 	adminHandler := handlers.NewAdminHandler(db, email)
 	newsletterAdminHandler := handlers.NewNewsletterAdminHandler(db, email)
 	productHandler := handlers.NewProductHandler(db)
+	orderHandler := handlers.NewOrderHandlerSupabase(db, email)
 
 	// Initialize router
 	r := chi.NewRouter()
@@ -50,6 +51,23 @@ func main() {
 		r.Get("/", productHandler.GetProducts)
 		r.Get("/{slug}", productHandler.GetProduct)
 	})
+
+	// Product category routes (public)
+	r.Route("/product-categories", func(r chi.Router) {
+		r.Get("/", productHandler.GetProductCategories)
+		r.Get("/{slug}", productHandler.GetProductCategoryBySlug)
+	})
+
+	// Order and Payment routes (public)
+	r.Route("/orders", func(r chi.Router) {
+		r.Post("/initialize-payment", orderHandler.InitializePayment)
+		r.Get("/verify-payment", orderHandler.VerifyPayment)
+		r.Get("/{id}", orderHandler.GetOrder)
+	})
+
+	// Payment callback and webhook
+	r.Get("/payment/callback", orderHandler.PaymentCallback)
+	r.Post("/payment/webhook", orderHandler.WebhookHandler)
 
 	// Post routes
 	r.Route("/posts", func(r chi.Router) {
@@ -146,6 +164,10 @@ func main() {
 		// Product Assignment Management
 		r.Post("/assign-products", handlers.AssignProducts)
 		r.Get("/collection-products/{type}/{id}", handlers.GetCollectionProducts)
+
+		// Order management
+		r.Get("/orders", orderHandler.ListOrders)
+		r.Get("/orders/{id}", orderHandler.GetOrder)
 	})
 
 	// Serve admin UI (public routes)
