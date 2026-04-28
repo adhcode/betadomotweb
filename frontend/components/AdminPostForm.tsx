@@ -201,14 +201,23 @@ export default function AdminPostForm({
             const uploadFormData = new FormData();
             uploadFormData.append('image', file);
 
+            // Get auth credentials
+            const credentials = JSON.parse(
+                localStorage.getItem('adminCredentials') ||
+                sessionStorage.getItem('adminCredentials') ||
+                '{}'
+            );
+
             const backendUrl = process.env.NODE_ENV === 'production' 
                 ? 'https://betadomotweb-production.up.railway.app' 
                 : 'http://localhost:8080';
 
             const response = await fetch(`${backendUrl}/admin/upload/image`, {
                 method: 'POST',
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`${credentials.username}:${credentials.password}`)
+                },
                 body: uploadFormData,
-                credentials: 'include',
             });
 
             if (!response.ok) {

@@ -194,7 +194,11 @@ export default function CollectionsPage() {
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await fetch('http://localhost:8080/admin/upload/image', {
+      const backendUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://betadomotweb-production.up.railway.app' 
+        : 'http://localhost:8080';
+
+      const response = await fetch(`${backendUrl}/admin/upload/image`, {
         method: 'POST',
         headers: {
           'Authorization': getAuthHeaders()['Authorization']
