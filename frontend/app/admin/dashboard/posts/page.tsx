@@ -18,10 +18,12 @@ import {
     Tag,
     Clock,
     ExternalLink,
-    FileText
+    FileText,
+    Upload
 } from 'lucide-react';
 import { fetchAdminPosts, createPost, updatePost, deletePost, setFeaturedHero, unsetFeaturedHero } from '@/lib/api-client';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Post {
     id: string;
@@ -50,6 +52,7 @@ export default function PostsPage() {
     const [categoryFilter, setCategoryFilter] = useState('');
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [editingPost, setEditingPost] = useState<Post | null>(null);
+    const [uploadingImage, setUploadingImage] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         excerpt: '',
@@ -239,6 +242,64 @@ export default function PostsPage() {
         });
     };
 
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            setError('Please select an image file');
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            setError('Image size must be less than 5MB');
+            return;
+        }
+
+        setUploadingImage(true);
+        setError('');
+
+        try {
+            const authHeader = getAuthHeader();
+            if (!authHeader) {
+                setUploadingImage(false);
+                return;
+            }
+
+            const uploadFormData = new FormData();
+            uploadFormData.append('image', file);
+
+            const backendUrl = process.env.NODE_ENV === 'production' 
+                ? 'https://betadomotweb-production.up.railway.app' 
+                : 'http://localhost:8080';
+
+            const response = await fetch(`${backendUrl}/admin/upload/image`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': authHeader,
+                },
+                body: uploadFormData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+
+            const data = await response.json();
+            setFormData({ ...formData, featured_image: data.url });
+            setSuccess('Image uploaded successfully!');
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            setError('Failed to upload image. Please try again.');
+        } finally {
+            setUploadingImage(false);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setFormData({ ...formData, featured_image: '' });
+    };
+
     const filteredPosts = posts.filter(post => {
         const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -367,8 +428,8 @@ export default function PostsPage() {
                             />
                         </div>
 
-                        {/* Grid: Category, Read Time, Featured Image */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Grid: Category, Read Time */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Category
@@ -397,19 +458,68 @@ export default function PostsPage() {
                                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#236b7c] focus:border-transparent transition-all"
                                 />
                             </div>
+                        </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Featured Image URL
-                                </label>
-                                <input
-                                    type="url"
-                                    value={formData.featured_image}
-                                    onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#236b7c] focus:border-transparent transition-all"
-                                    placeholder="https://..."
-                                />
-                            </div>
+                        {/* Featured Image Upload */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Featured Image
+                            </label>
+                            
+                            {formData.featured_image ? (
+                                <div className="space-y-3">
+                                    {/* Image Preview */}
+                                    <div className="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden">
+                                        <Image
+                                            src={formData.featured_image}
+                                            alt="Featured image preview"
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    
+                                    {/* Remove Button */}
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveImage}
+                                        className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-lg transition-colors"
+                                    >
+                                        <X className="w-4 h-4" />
+                                        Remove Image
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
+                                        disabled={uploadingImage}
+                                        className="hidden"
+                                        id="featured-image-upload"
+                                    />
+                                    <label
+                                        htmlFor="featured-image-upload"
+                                        className="cursor-pointer flex flex-col items-center gap-3"
+                                    >
+                                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                            {uploadingImage ? (
+                                                <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                                            ) : (
+                                                <Upload className="w-5 h-5 text-gray-400" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-gray-700">
+                                                {uploadingImage ? 'Uploading...' : 'Click to upload featured image'}
+                                            </p>
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                PNG, JPG, WEBP up to 5MB
+                                            </p>
+                                        </div>
+                                    </label>
+                                </div>
+                            )}
                         </div>
 
                         {/* Tags */}

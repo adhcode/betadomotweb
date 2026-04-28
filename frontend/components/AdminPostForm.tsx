@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Search, Plus, Trash2, Tag, Package } from 'lucide-react';
-import { H2, H3, Body, MonoText, GhostButton } from '@/components/ui/DesignSystem';
+import { X, Search, Plus, Trash2, Tag, Package, Upload } from 'lucide-react';
+import { H2, Body, MonoText, GhostButton } from '@/components/ui/DesignSystem';
+import Image from 'next/image';
 
 interface Product {
     id: string;
@@ -70,6 +71,7 @@ export default function AdminPostForm({
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
     const [topicInput, setTopicInput] = useState('');
     const [tagInput, setTagInput] = useState('');
+    const [uploadingImage, setUploadingImage] = useState(false);
 
     // Load products for selection
     useEffect(() => {
@@ -176,6 +178,56 @@ export default function AdminPostForm({
     );
 
     const currentTags = formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please select an image file');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Image size must be less than 5MB');
+            return;
+        }
+
+        setUploadingImage(true);
+
+        try {
+            const uploadFormData = new FormData();
+            uploadFormData.append('image', file);
+
+            const backendUrl = process.env.NODE_ENV === 'production' 
+                ? 'https://betadomotweb-production.up.railway.app' 
+                : 'http://localhost:8080';
+
+            const response = await fetch(`${backendUrl}/admin/upload/image`, {
+                method: 'POST',
+                body: uploadFormData,
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+
+            const data = await response.json();
+            setFormData({ ...formData, featured_image: data.url });
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Failed to upload image. Please try again.');
+        } finally {
+            setUploadingImage(false);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setFormData({ ...formData, featured_image: '' });
+    };
 
     if (!isOpen) return null;
 
@@ -466,16 +518,64 @@ export default function AdminPostForm({
                         )}
                     </div>
 
-                    {/* Featured Image */}
+                    {/* Featured Image Upload - Updated to use file upload instead of URL */}
                     <div>
-                        <MonoText className="text-xs text-gray-700 mb-2">FEATURED IMAGE URL</MonoText>
-                        <input
-                            type="url"
-                            value={formData.featured_image}
-                            onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-                            className="w-full p-3 border border-gray-200 focus:outline-none focus:border-gray-900 transition-colors font-proza"
-                            placeholder="https://example.com/image.jpg"
-                        />
+                        <MonoText className="text-xs text-gray-700 mb-2">FEATURED IMAGE</MonoText>
+                        
+                        {formData.featured_image ? (
+                            <div className="space-y-3">
+                                {/* Image Preview */}
+                                <div className="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden">
+                                    <Image
+                                        src={formData.featured_image}
+                                        alt="Featured image preview"
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                                
+                                {/* Remove Button */}
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveImage}
+                                    className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 transition-colors"
+                                >
+                                    <X className="w-4 h-4" />
+                                    Remove Image
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    disabled={uploadingImage}
+                                    className="hidden"
+                                    id="featured-image-upload"
+                                />
+                                <label
+                                    htmlFor="featured-image-upload"
+                                    className="cursor-pointer flex flex-col items-center gap-3"
+                                >
+                                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                                        {uploadingImage ? (
+                                            <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                                        ) : (
+                                            <Upload className="w-5 h-5 text-gray-400" />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-700">
+                                            {uploadingImage ? 'Uploading...' : 'Click to upload featured image'}
+                                        </p>
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            PNG, JPG, WEBP up to 5MB
+                                        </p>
+                                    </div>
+                                </label>
+                            </div>
+                        )}
                     </div>
 
                     {/* Submit Buttons */}
