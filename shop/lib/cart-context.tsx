@@ -50,6 +50,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   const addToCart = (product: any) => {
+    // Check if product can be added to cart (prevents editorial products)
+    if (product.product_type === 'editorial') {
+      console.warn('Editorial products cannot be added to cart');
+      return;
+    }
+
     setItems(current => {
       const existing = current.find(item => item.id === product.id);
       

@@ -4,55 +4,58 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import type { ComponentPropsWithoutRef } from 'react';
 
 interface MarkdownContentProps {
     content: string;
 }
 
 export default function MarkdownContent({ content }: MarkdownContentProps) {
+    const cleanedContent = content.replace(/<NewsletterSignup\s*\/?>\s*/g, '');
+
     return (
         <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
                 h1: ({ children }) => (
-                    <h1 className="text-4xl font-cormorant font-normal text-gray-900 mt-12 mb-6 first:mt-0 leading-tight">
+                    <h1 className="mt-14 mb-6 text-4xl font-cormorant font-normal leading-[1.08] tracking-[-0.02em] text-gray-900 first:mt-0 md:text-5xl">
                         {children}
                     </h1>
                 ),
                 h2: ({ children }) => (
-                    <h2 className="text-3xl font-cormorant font-normal text-gray-900 mt-10 mb-5 leading-tight border-b border-gray-200 pb-3">
+                    <h2 className="mt-12 mb-5 border-b border-gray-200 pb-3 text-3xl font-cormorant font-normal leading-tight tracking-[-0.015em] text-gray-900 md:text-4xl">
                         {children}
                     </h2>
                 ),
                 h3: ({ children }) => (
-                    <h3 className="text-2xl font-cormorant font-normal text-gray-900 mt-8 mb-4 leading-tight">
+                    <h3 className="mt-10 mb-4 text-2xl font-cormorant font-normal leading-tight tracking-[-0.01em] text-gray-900 md:text-[2rem]">
                         {children}
                     </h3>
                 ),
                 h4: ({ children }) => (
-                    <h4 className="text-xl font-cormorant font-normal text-gray-800 mt-6 mb-3 leading-tight">
+                    <h4 className="mt-8 mb-3 text-xl font-cormorant font-normal leading-tight text-gray-800">
                         {children}
                     </h4>
                 ),
                 h5: ({ children }) => (
-                    <h5 className="text-lg font-cormorant font-normal text-gray-800 mt-5 mb-2 leading-tight">
+                    <h5 className="mt-6 mb-2 text-lg font-cormorant font-normal leading-tight text-gray-800">
                         {children}
                     </h5>
                 ),
                 h6: ({ children }) => (
-                    <h6 className="text-base font-cormorant font-normal text-gray-800 mt-4 mb-2 leading-tight">
+                    <h6 className="mt-5 mb-2 text-base font-cormorant font-normal leading-tight text-gray-800">
                         {children}
                     </h6>
                 ),
                 p: ({ children }) => (
-                    <p className="text-base font-proza text-gray-700 leading-relaxed mb-5">
+                    <p className="mb-6 text-[1.05rem] leading-8 text-gray-700 font-proza md:text-[1.1rem]">
                         {children}
                     </p>
                 ),
                 a: ({ href, children }) => (
                     <a
                         href={href}
-                        className="text-blue-600 hover:text-blue-700 underline decoration-blue-300 hover:decoration-blue-500 transition-colors"
+                        className="text-[#1f5d6c] underline decoration-gray-300 underline-offset-4 transition-colors hover:text-[#173f49] hover:decoration-[#1f5d6c]"
                         target={href?.startsWith('http') ? '_blank' : undefined}
                         rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
                     >
@@ -60,26 +63,26 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
                     </a>
                 ),
                 ul: ({ children }) => (
-                    <ul className="list-disc list-outside ml-6 mb-5 space-y-2 text-gray-700 font-proza">
+                    <ul className="mb-6 ml-6 list-disc space-y-2 text-gray-700 font-proza marker:text-gray-400">
                         {children}
                     </ul>
                 ),
                 ol: ({ children }) => (
-                    <ol className="list-decimal list-outside ml-6 mb-5 space-y-2 text-gray-700 font-proza">
+                    <ol className="mb-6 ml-6 list-decimal space-y-2 text-gray-700 font-proza marker:text-gray-400">
                         {children}
                     </ol>
                 ),
                 li: ({ children }) => (
-                    <li className="leading-relaxed pl-1 font-proza">
+                    <li className="pl-1 leading-8 font-proza text-gray-700">
                         {children}
                     </li>
                 ),
                 blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-blue-500 bg-blue-50 pl-6 pr-4 py-4 my-6 italic text-gray-700 font-proza">
+                    <blockquote className="my-8 border-l-4 border-gray-300 bg-gray-50 py-4 pl-6 pr-4 italic text-gray-700 font-proza">
                         {children}
                     </blockquote>
                 ),
-                code: ({ inline, className, children, ...props }: any) => {
+                code: ({ inline, className, children, ...props }: ComponentPropsWithoutRef<'code'> & { inline?: boolean }) => {
                     const match = /language-(\w+)/.exec(className || '');
                     return !inline && match ? (
                         <div className="my-6 rounded-lg overflow-hidden shadow-sm">
@@ -93,13 +96,13 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
                             </SyntaxHighlighter>
                         </div>
                     ) : (
-                        <code className="bg-gray-100 text-pink-600 px-2 py-0.5 rounded text-sm font-mono" {...props}>
+                        <code className="rounded bg-gray-100 px-2 py-0.5 font-mono text-sm text-gray-800" {...props}>
                             {children}
                         </code>
                     );
                 },
                 pre: ({ children }) => (
-                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto my-6">
+                    <pre className="my-6 overflow-x-auto rounded-lg bg-gray-900 p-4 text-gray-100">
                         {children}
                     </pre>
                 ),
@@ -136,17 +139,18 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
                     </td>
                 ),
                 hr: () => (
-                    <hr className="my-8 border-t-2 border-gray-200" />
+                    <hr className="my-10 border-t border-gray-200" />
                 ),
                 img: ({ src, alt }) => (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                         src={src}
                         alt={alt || ''}
-                        className="rounded-lg my-6 w-full shadow-md"
+                        className="my-8 w-full rounded-sm border border-gray-100 object-cover"
                     />
                 ),
                 strong: ({ children }) => (
-                    <strong className="font-medium text-gray-900 font-proza">
+                    <strong className="font-semibold text-gray-900 font-proza">
                         {children}
                     </strong>
                 ),
@@ -157,7 +161,7 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
                 ),
             }}
         >
-            {content}
+            {cleanedContent}
         </ReactMarkdown>
     );
 }

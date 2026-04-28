@@ -55,9 +55,7 @@ export default function CloudinaryUpload({ onUpload, multiple = false, className
                 maxFileSize: 10000000, // 10MB
                 allowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
                 showAdvancedOptions: false,
-                cropping: true,
-                croppingAspectRatio: 16 / 9,
-                croppingShowDimensions: true,
+                cropping: false,
                 theme: 'minimal',
                 styles: {
                     palette: {

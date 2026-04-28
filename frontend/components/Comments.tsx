@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { H3, Body, MonoText } from '@/components/ui/DesignSystem';
 
 interface Comment {
     id: string;
@@ -164,7 +163,7 @@ export default function Comments({ postSlug }: CommentsProps) {
                                 maxLength={50}
                             />
                             <p className="mt-1.5 text-xs text-gray-400 font-light">
-                                We'll remember this for next time
+                                We&apos;ll remember this for next time
                             </p>
                         </div>
                     )}
@@ -194,7 +193,7 @@ export default function Comments({ postSlug }: CommentsProps) {
                         <button
                             type="submit"
                             disabled={submitting || !commentText.trim()}
-                            className="px-6 py-3 bg-gray-900 text-white text-sm font-light rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="px-6 py-3 bg-[#dca744] text-[#111111] text-sm font-semibold rounded-lg border border-[#b8871d] shadow-sm hover:bg-[#e6b85c] hover:border-[#a87718] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                             {submitting ? 'Posting...' : 'Post'}
                         </button>

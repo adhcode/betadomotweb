@@ -123,6 +123,31 @@ type Product struct {
 	Active      bool     `json:"active"`
 	CreatedAt   string   `json:"created_at"`
 	UpdatedAt   string   `json:"updated_at"`
+	
+	// Product Type System
+	ProductType        string           `json:"product_type"` // "editorial" or "everyday"
+	
+	// Editorial-specific fields
+	EditorialNote      string           `json:"editorial_note,omitempty"`
+	ExternalLink       string           `json:"external_link,omitempty"`
+	AvailabilityStatus string           `json:"availability_status,omitempty"` // available, limited, reference, sold_out
+	
+	// Everyday-specific fields
+	Variants           []ProductVariant `json:"variants,omitempty"`
+	ShippingInfo       string           `json:"shipping_info,omitempty"`
+	ReturnPolicy       string           `json:"return_policy,omitempty"`
+	CareInstructions   string           `json:"care_instructions,omitempty"`
+}
+
+// ProductVariant represents a product variant (size, color, material, etc.)
+type ProductVariant struct {
+	ID              string  `json:"id"`
+	Name            string  `json:"name"`              // e.g., "Small", "Blue", "Oak"
+	Type            string  `json:"type"`              // size, color, material, other
+	PriceAdjustment float64 `json:"price_adjustment"`  // +/- from base price
+	SKUSuffix       string  `json:"sku_suffix"`        // e.g., "-SM", "-BLU"
+	Stock           int     `json:"stock"`
+	ImageIndex      *int    `json:"image_index,omitempty"` // Which product image to show
 }
 
 // CreateProductRequest represents the payload for creating a new product
@@ -140,6 +165,16 @@ type CreateProductRequest struct {
 	Dimensions  string   `json:"dimensions"`
 	Featured    bool     `json:"featured"`
 	Active      bool     `json:"active"`
+	
+	// Product Type System
+	ProductType        string           `json:"product_type"` // "editorial" or "everyday"
+	EditorialNote      string           `json:"editorial_note,omitempty"`
+	ExternalLink       string           `json:"external_link,omitempty"`
+	AvailabilityStatus string           `json:"availability_status,omitempty"`
+	Variants           []ProductVariant `json:"variants,omitempty"`
+	ShippingInfo       string           `json:"shipping_info,omitempty"`
+	ReturnPolicy       string           `json:"return_policy,omitempty"`
+	CareInstructions   string           `json:"care_instructions,omitempty"`
 }
 
 // UpdateProductRequest represents the payload for updating a product
@@ -157,6 +192,16 @@ type UpdateProductRequest struct {
 	Dimensions  string   `json:"dimensions"`
 	Featured    bool     `json:"featured"`
 	Active      bool     `json:"active"`
+	
+	// Product Type System
+	ProductType        string           `json:"product_type"` // "editorial" or "everyday"
+	EditorialNote      string           `json:"editorial_note,omitempty"`
+	ExternalLink       string           `json:"external_link,omitempty"`
+	AvailabilityStatus string           `json:"availability_status,omitempty"`
+	Variants           []ProductVariant `json:"variants,omitempty"`
+	ShippingInfo       string           `json:"shipping_info,omitempty"`
+	ReturnPolicy       string           `json:"return_policy,omitempty"`
+	CareInstructions   string           `json:"care_instructions,omitempty"`
 }
 
 // Order represents a customer order

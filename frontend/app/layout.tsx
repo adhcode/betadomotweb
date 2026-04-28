@@ -3,8 +3,7 @@ import "./globals.css";
 import { ToastProvider } from "@/hooks/useToast";
 import { WishlistProvider } from "@/hooks/useWishlist";
 import { generateOrganizationStructuredData } from "@/components/SEO";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import SiteChrome from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://betadomot.blog' : 'http://localhost:3000'),
@@ -85,9 +84,7 @@ export default function RootLayout({
       <body className="antialiased bg-white text-gray-900">
         <ToastProvider>
           <WishlistProvider>
-            <Header />
-            {children}
-            <Footer />
+            <SiteChrome>{children}</SiteChrome>
           </WishlistProvider>
         </ToastProvider>
       </body>

@@ -13,13 +13,15 @@ import {
     Menu,
     X,
     Home,
-    Lightbulb
+    Lightbulb,
+    ShoppingBag
 } from 'lucide-react';
 
 const navigation = [
     { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Posts', href: '/admin/dashboard/posts', icon: FileText },
     { name: 'Guides', href: '/admin/dashboard/guides', icon: Lightbulb },
+    { name: 'Shop', href: '/admin/dashboard/shop', icon: ShoppingBag },
     { name: 'Comments', href: '/admin/dashboard/comments', icon: MessageSquare },
     { name: 'Newsletter', href: '/admin/dashboard/newsletter', icon: Send },
     { name: 'Analytics', href: '/admin/dashboard/analytics', icon: BarChart2 },

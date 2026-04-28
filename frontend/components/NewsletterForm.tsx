@@ -143,7 +143,7 @@ function getVariantStyles(variant: string) {
             form: "mb-0",
             inputGroup: "flex gap-3 justify-center",
             input: "flex-1 min-w-[260px] px-4 py-3 text-primary-900 bg-white border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#236b7c] focus:border-transparent placeholder-gray-400 transition-all duration-300",
-            button: "font-gilroy font-bold uppercase px-6 py-3 bg-[#dca744] text-gray-900 rounded-lg hover:bg-[#e6b85c] transition-colors duration-200 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed",
+            button: "font-gilroy font-bold uppercase px-6 py-3 bg-[#dca744] text-[#111111] rounded-lg border border-[#b8871d] shadow-sm hover:bg-[#e6b85c] hover:border-[#a87718] transition-colors duration-200 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed",
             trustIndicators: "mt-2"
         },
         sidebar: {
@@ -159,7 +159,7 @@ function getVariantStyles(variant: string) {
             form: "mb-6",
             inputGroup: "flex flex-col sm:flex-row gap-4 max-w-md mx-auto",
             input: "flex-1 px-4 py-4 text-black bg-white border-2 border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#236b7c] focus:border-[#236b7c] placeholder-neutral-400 text-lg transition-all duration-300 shadow-sm",
-            button: "bg-[#236b7c] text-white px-8 py-4 font-gilroy font-medium tracking-wide hover:bg-[#1a5463] transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-lg shadow-sm",
+            button: "bg-[#dca744] text-[#111111] px-8 py-4 font-gilroy font-semibold tracking-wide hover:bg-[#e6b85c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-lg border border-[#b8871d] shadow-sm",
             trustIndicators: "mt-6"
         }
     };

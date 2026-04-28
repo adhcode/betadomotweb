@@ -9,15 +9,18 @@ import (
 
 // Config holds all configuration for the application
 type Config struct {
-	SupabaseURL   string
-	SupabaseKey   string
-	ResendAPIKey  string
-	AdminUsername string
-	AdminPassword string
-	Port          string
-	FromEmail     string
-	WebsiteURL    string
-	DatabaseURL   string
+	SupabaseURL        string
+	SupabaseKey        string
+	ResendAPIKey       string
+	AdminUsername      string
+	AdminPassword      string
+	Port               string
+	FromEmail          string
+	WebsiteURL         string
+	DatabaseURL        string
+	CloudinaryName     string
+	CloudinaryAPIKey   string
+	CloudinaryAPISecret string
 }
 
 // Load reads configuration from environment variables
@@ -28,15 +31,18 @@ func Load() *Config {
 	}
 
 	config := &Config{
-		SupabaseURL:   getEnv("SUPABASE_URL", ""),
-		SupabaseKey:   getEnv("SUPABASE_ANON_KEY", ""),
-		ResendAPIKey:  getEnv("RESEND_API_KEY", ""),
-		AdminUsername: getEnv("ADMIN_USERNAME", "admin"),
-		AdminPassword: getEnv("ADMIN_PASSWORD", "password"),
-		Port:          getEnv("PORT", "8080"),
-		FromEmail:     getEnv("FROM_EMAIL", "onboarding@resend.dev"),
-		WebsiteURL:    getEnv("WEBSITE_URL", "https://yourdomain.com"),
-		DatabaseURL:   getEnv("DATABASE_URL", ""),
+		SupabaseURL:         getEnv("SUPABASE_URL", ""),
+		SupabaseKey:         getEnv("SUPABASE_ANON_KEY", ""),
+		ResendAPIKey:        getEnv("RESEND_API_KEY", ""),
+		AdminUsername:       getEnv("ADMIN_USERNAME", "admin"),
+		AdminPassword:       getEnv("ADMIN_PASSWORD", "password"),
+		Port:                getEnv("PORT", "8080"),
+		FromEmail:           getEnv("FROM_EMAIL", "onboarding@resend.dev"),
+		WebsiteURL:          getEnv("WEBSITE_URL", "https://yourdomain.com"),
+		DatabaseURL:         getEnv("DATABASE_URL", ""),
+		CloudinaryName:      getEnv("CLOUDINARY_CLOUD_NAME", ""),
+		CloudinaryAPIKey:    getEnv("CLOUDINARY_API_KEY", ""),
+		CloudinaryAPISecret: getEnv("CLOUDINARY_API_SECRET", ""),
 	}
 
 	// Validate required configs

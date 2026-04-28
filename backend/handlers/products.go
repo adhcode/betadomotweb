@@ -31,6 +31,7 @@ func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	// Get query parameters
 	category := r.URL.Query().Get("category")
 	featured := r.URL.Query().Get("featured")
+	productType := r.URL.Query().Get("type") // NEW: Filter by product type
 	limit := r.URL.Query().Get("limit")
 
 	query := client.From("products").Select("*", "exact", false).Eq("active", "true")
@@ -41,6 +42,13 @@ func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 
 	if featured == "true" {
 		query = query.Eq("featured", "true")
+	}
+
+	// NEW: Filter by product type (editorial or everyday)
+	if productType != "" {
+		if productType == "editorial" || productType == "everyday" {
+			query = query.Eq("product_type", productType)
+		}
 	}
 
 	if limit != "" {
@@ -99,6 +107,18 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 	now := time.Now().Format(time.RFC3339)
 
+	// Set default availability_status if empty
+	availabilityStatus := req.AvailabilityStatus
+	if availabilityStatus == "" {
+		availabilityStatus = "available"
+	}
+
+	// Set default product_type if empty
+	productType := req.ProductType
+	if productType == "" {
+		productType = "everyday"
+	}
+
 	product := map[string]interface{}{
 		"id":          uuid.New().String(),
 		"slug":        slug,
@@ -117,12 +137,23 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		"active":      req.Active,
 		"created_at":  now,
 		"updated_at":  now,
+		// Product Type System
+		"product_type":        productType,
+		"editorial_note":      req.EditorialNote,
+		"external_link":       req.ExternalLink,
+		"availability_status": availabilityStatus,
+		"variants":            req.Variants,
+		"shipping_info":       req.ShippingInfo,
+		"return_policy":       req.ReturnPolicy,
+		"care_instructions":   req.CareInstructions,
 	}
 
 	client := h.db.GetClient()
 	_, _, err := client.From("products").Insert(product, false, "", "", "").Execute()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Printf("Product creation error: %v\n", err)
+		fmt.Printf("Product data: %+v\n", product)
+		http.Error(w, fmt.Sprintf("Failed to create product: %v", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -148,6 +179,18 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 
 	now := time.Now().Format(time.RFC3339)
 
+	// Set default availability_status if empty
+	availabilityStatus := req.AvailabilityStatus
+	if availabilityStatus == "" {
+		availabilityStatus = "available"
+	}
+
+	// Set default product_type if empty
+	productType := req.ProductType
+	if productType == "" {
+		productType = "everyday"
+	}
+
 	updateData := map[string]interface{}{
 		"name":        req.Name,
 		"description": req.Description,
@@ -163,6 +206,15 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		"featured":    req.Featured,
 		"active":      req.Active,
 		"updated_at":  now,
+		// Product Type System
+		"product_type":        productType,
+		"editorial_note":      req.EditorialNote,
+		"external_link":       req.ExternalLink,
+		"availability_status": availabilityStatus,
+		"variants":            req.Variants,
+		"shipping_info":       req.ShippingInfo,
+		"return_policy":       req.ReturnPolicy,
+		"care_instructions":   req.CareInstructions,
 	}
 
 	client := h.db.GetClient()

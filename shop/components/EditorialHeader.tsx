@@ -71,6 +71,17 @@ export default function EditorialHeader() {
           {/* Menu Content */}
           <div className="min-h-full flex items-center justify-center px-6 py-24">
             <div className="max-w-5xl w-full">
+              {/* All Products - Prominent Link */}
+              <div className="mb-16 pb-16 border-b border-gray-100">
+                <Link
+                  href="/shop"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="inline-block text-4xl md:text-5xl font-light text-gray-900 hover:text-gray-600 transition-colors"
+                >
+                  All Products
+                </Link>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24">
                 
                 {/* Explore by Space */}

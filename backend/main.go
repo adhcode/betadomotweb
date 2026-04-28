@@ -21,6 +21,7 @@ func main() {
 	// Initialize services
 	db := services.NewDatabaseService(cfg)
 	email := services.NewEmailService(cfg)
+	cloudinary := services.NewCloudinaryService(cfg.CloudinaryName, cfg.CloudinaryAPIKey, cfg.CloudinaryAPISecret)
 
 	// Initialize handlers
 	postHandler := handlers.NewPostHandler(db)
@@ -31,6 +32,9 @@ func main() {
 	newsletterAdminHandler := handlers.NewNewsletterAdminHandler(db, email)
 	productHandler := handlers.NewProductHandler(db)
 	orderHandler := handlers.NewOrderHandlerSupabase(db, email)
+	categoryHandler := handlers.NewCategoryHandler(db)
+	shopAdminHandler := handlers.NewShopAdminHandler(db)
+	uploadHandler := handlers.NewUploadHandler(cloudinary)
 
 	// Initialize router
 	r := chi.NewRouter()
@@ -58,6 +62,20 @@ func main() {
 		r.Get("/{slug}", productHandler.GetProductCategoryBySlug)
 	})
 
+	// Category routes (public) - for full shop
+	r.Route("/categories", func(r chi.Router) {
+		r.Get("/", categoryHandler.GetCategories)
+		r.Get("/{slug}", categoryHandler.GetCategory)
+		r.Get("/{slug}/products", categoryHandler.GetCategoryProducts)
+	})
+
+	// Collection routes (public)
+	r.Route("/collections", func(r chi.Router) {
+		r.Get("/", shopAdminHandler.GetCollections)
+		r.Get("/{slug}", shopAdminHandler.GetCollection)
+		r.Get("/{slug}/products", shopAdminHandler.GetCollectionProducts)
+	})
+
 	// Order and Payment routes (public)
 	r.Route("/orders", func(r chi.Router) {
 		r.Post("/initialize-payment", orderHandler.InitializePayment)
@@ -68,6 +86,12 @@ func main() {
 	// Payment callback and webhook
 	r.Get("/payment/callback", orderHandler.PaymentCallback)
 	r.Post("/payment/webhook", orderHandler.WebhookHandler)
+
+	// Upload endpoint (protected)
+	r.Route("/admin/upload", func(r chi.Router) {
+		r.Use(middleware.BasicAuth(cfg.AdminUsername, cfg.AdminPassword))
+		r.Post("/image", uploadHandler.UploadImage)
+	})
 
 	// Post routes
 	r.Route("/posts", func(r chi.Router) {
@@ -143,27 +167,17 @@ func main() {
 		r.Put("/products/{slug}", productHandler.UpdateProduct)
 		r.Delete("/products/{slug}", productHandler.DeleteProduct)
 
-		// Product Categories Management
-		r.Get("/product-categories", handlers.GetProductCategories)
-		r.Post("/product-categories", handlers.CreateProductCategory)
-		r.Put("/product-categories/{id}", handlers.UpdateProductCategory)
-		r.Delete("/product-categories/{id}", handlers.DeleteProductCategory)
+		// Category management
+		r.Post("/categories", shopAdminHandler.CreateCategory)
+		r.Put("/categories/{id}", shopAdminHandler.UpdateCategory)
+		r.Delete("/categories/{id}", shopAdminHandler.DeleteCategory)
 
-		// Lifestyle Collections Management
-		r.Get("/lifestyle-collections", handlers.GetLifestyleCollections)
-		r.Post("/lifestyle-collections", handlers.CreateLifestyleCollection)
-		r.Put("/lifestyle-collections/{id}", handlers.UpdateLifestyleCollection)
-		r.Delete("/lifestyle-collections/{id}", handlers.DeleteLifestyleCollection)
-
-		// Blog-to-Product Collections Management
-		r.Get("/blog-to-product-collections", handlers.GetBlogToProductCollections)
-		r.Post("/blog-to-product-collections", handlers.CreateBlogToProductCollection)
-		r.Put("/blog-to-product-collections/{id}", handlers.UpdateBlogToProductCollection)
-		r.Delete("/blog-to-product-collections/{id}", handlers.DeleteBlogToProductCollection)
-
-		// Product Assignment Management
-		r.Post("/assign-products", handlers.AssignProducts)
-		r.Get("/collection-products/{type}/{id}", handlers.GetCollectionProducts)
+		// Collection management
+		r.Post("/collections", shopAdminHandler.CreateCollection)
+		r.Put("/collections/{id}", shopAdminHandler.UpdateCollection)
+		r.Delete("/collections/{id}", shopAdminHandler.DeleteCollection)
+		r.Post("/collections/{id}/products", shopAdminHandler.AddProductToCollection)
+		r.Delete("/collections/{id}/products/{productId}", shopAdminHandler.RemoveProductFromCollection)
 
 		// Order management
 		r.Get("/orders", orderHandler.ListOrders)

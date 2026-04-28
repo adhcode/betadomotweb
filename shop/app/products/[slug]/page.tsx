@@ -1,6 +1,7 @@
 import { fetchProduct } from '@/lib/api-client';
 import { notFound } from 'next/navigation';
-import AppleEditorialProductPage from '@/components/AppleEditorialProductPage';
+import { Product } from '@/lib/product-utils';
+import EditorialProductPage from '@/components/EditorialProductPage';
 
 export default async function ProductPage({ 
   params 
@@ -8,15 +9,15 @@ export default async function ProductPage({
   params: Promise<{ slug: string }> 
 }) {
   const { slug } = await params;
-  console.log('[ProductPage] Fetching product with slug:', slug);
   
   const product = await fetchProduct(slug);
-  console.log('[ProductPage] Product fetched:', product ? 'Success' : 'Not found');
   
   if (!product) {
-    console.log('[ProductPage] Product not found, showing 404');
     notFound();
   }
 
-  return <AppleEditorialProductPage product={product} />;
+  const typedProduct = product as Product;
+
+  // Always use editorial product page for all products
+  return <EditorialProductPage product={typedProduct} />;
 }
