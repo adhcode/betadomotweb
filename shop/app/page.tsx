@@ -28,22 +28,31 @@ export default async function HomePage() {
             src="/images/blog/hero.png"
             alt="Thoughtful living"
             fill
-            className="object-cover opacity-90"
+            className="object-cover"
             priority
             sizes="100vw"
           />
         </div>
 
+        {/* Dark overlay for better text contrast */}
+        <div className="absolute inset-0 bg-black/40" />
+
         <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-light tracking-tight text-white mb-6">
-            Design-led home essentials
+          <h1 
+            className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight mb-6" 
+            style={{ color: '#ffffff', textShadow: '0 4px 6px rgba(0, 0, 0, 0.5)' }}
+          >
+            Better Homes, Better Life
           </h1>
-          <p className="text-lg md:text-xl text-white/90 font-light mb-12 max-w-2xl mx-auto">
-            Curated products for intentional living
+          <p 
+            className="text-lg md:text-xl font-normal mb-12 max-w-2xl mx-auto" 
+            style={{ color: '#ffffff', textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)' }}
+          >
+            Products designed to make everyday living feel better.
           </p>
           <Link 
             href="/shop"
-            className="inline-block px-8 py-4 bg-white text-gray-900 text-sm font-medium hover:bg-gray-100 transition-colors"
+            className="inline-block px-8 py-4 bg-white text-gray-900 text-sm font-medium hover:bg-gray-100 transition-colors shadow-lg"
           >
             Explore the Shop
           </Link>
