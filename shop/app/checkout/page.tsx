@@ -25,7 +25,6 @@ export default function CheckoutPage() {
     city: '',
     state: '',
     zipCode: '',
-    paymentMethod: 'card',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -64,9 +63,8 @@ export default function CheckoutPage() {
         })),
         subtotal: totalPrice,
         shipping_cost: shippingCost,
-        tax: tax,
         total: finalTotal,
-        payment_method: formData.paymentMethod,
+        payment_method: 'paystack',
       };
 
       console.log('[Checkout] Submitting order:', orderData);
@@ -97,8 +95,7 @@ export default function CheckoutPage() {
   };
 
   const shippingCost = totalPrice > 50000 ? 0 : 2500;
-  const tax = Math.round(totalPrice * 0.075);
-  const finalTotal = totalPrice + shippingCost + tax;
+  const finalTotal = totalPrice + shippingCost;
 
   if (items.length === 0) {
     return (
@@ -271,56 +268,27 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Payment */}
+              {/* Payment Info */}
               <div>
                 <h2 className="text-sm text-gray-500 uppercase tracking-wider font-light mb-8">
                   Payment
                 </h2>
-                <div className="space-y-4">
-                  <label className="flex items-start gap-4 cursor-pointer group">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="card"
-                      checked={formData.paymentMethod === 'card'}
-                      onChange={handleChange}
-                      className="mt-1 w-4 h-4 text-gray-900 border-gray-300 focus:ring-0"
+                <div className="p-6 bg-gray-50 border border-gray-200">
+                  <div className="flex items-center gap-4 mb-3">
+                    {/* Official Paystack Logo */}
+                    <img 
+                      src="https://paystack.com/assets/img/logo/paystack-blue.svg" 
+                      alt="Paystack" 
+                      className="h-8 w-auto"
                     />
                     <div className="flex-1">
-                      <div className="text-base font-light text-gray-900">Card</div>
-                      <div className="text-sm text-gray-500 font-light">Secure payment</div>
+                      <p className="text-base font-medium text-gray-900">Secure Payment</p>
+                      <p className="text-sm text-gray-500 font-light">Card, Bank Transfer, USSD & More</p>
                     </div>
-                  </label>
-
-                  <label className="flex items-start gap-4 cursor-pointer group">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="transfer"
-                      checked={formData.paymentMethod === 'transfer'}
-                      onChange={handleChange}
-                      className="mt-1 w-4 h-4 text-gray-900 border-gray-300 focus:ring-0"
-                    />
-                    <div className="flex-1">
-                      <div className="text-base font-light text-gray-900">Bank transfer</div>
-                      <div className="text-sm text-gray-500 font-light">Direct transfer</div>
-                    </div>
-                  </label>
-
-                  <label className="flex items-start gap-4 cursor-pointer group">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="delivery"
-                      checked={formData.paymentMethod === 'delivery'}
-                      onChange={handleChange}
-                      className="mt-1 w-4 h-4 text-gray-900 border-gray-300 focus:ring-0"
-                    />
-                    <div className="flex-1">
-                      <div className="text-base font-light text-gray-900">Pay on delivery</div>
-                      <div className="text-sm text-gray-500 font-light">Cash or card</div>
-                    </div>
-                  </label>
+                  </div>
+                  <p className="text-xs text-gray-500 font-light">
+                    You&apos;ll be redirected to Paystack&apos;s secure checkout to complete your payment.
+                  </p>
                 </div>
               </div>
 
@@ -329,7 +297,7 @@ export default function CheckoutPage() {
                 disabled={isProcessing}
                 className="w-full bg-[#dca744] text-gray-900 py-4 text-sm font-bold tracking-wide hover:bg-[#e6b85c] disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                {isProcessing ? 'Processing order...' : 'Complete order'}
+                {isProcessing ? 'Processing...' : 'Continue to Payment'}
               </button>
 
               <p className="text-center text-sm text-gray-500 font-light">
@@ -354,6 +322,7 @@ export default function CheckoutPage() {
                           src={item.image}
                           alt={item.name}
                           fill
+                          sizes="80px"
                           className="object-cover"
                         />
                       )}
@@ -383,10 +352,6 @@ export default function CheckoutPage() {
                   <span className="font-light text-gray-900">
                     {shippingCost === 0 ? 'Free' : `₦${shippingCost.toLocaleString()}`}
                   </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500 font-light">Tax</span>
-                  <span className="font-light text-gray-900">₦{tax.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-base pt-4 border-t border-gray-100">
                   <span className="font-light text-gray-900">Total</span>

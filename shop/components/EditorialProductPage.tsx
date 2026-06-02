@@ -6,7 +6,7 @@ import EditorialHeader from '@/components/EditorialHeader';
 import ShopFooter from '@/components/ShopFooter';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, X, ZoomIn, Package, ChevronRight } from 'lucide-react';
+import { X, ZoomIn, Package, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function EditorialProductPage({ product }: { product: EditorialProduct }) {
@@ -59,7 +59,7 @@ export default function EditorialProductPage({ product }: { product: EditorialPr
     if (!isAvailable || isReference) return;
     
     setIsAdding(true);
-    addToCart(product as any);
+    addToCart(product);
     setTimeout(() => setIsAdding(false), 1000);
   };
 
@@ -120,6 +120,7 @@ export default function EditorialProductPage({ product }: { product: EditorialPr
                       src={selectedImage}
                       alt={product.name}
                       fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                       priority
                     />
@@ -149,6 +150,7 @@ export default function EditorialProductPage({ product }: { product: EditorialPr
                         src={img}
                         alt={`${product.name} view ${idx + 1}`}
                         fill
+                        sizes="(max-width: 768px) 20vw, 100px"
                         className="object-cover"
                       />
                     </button>
@@ -320,6 +322,7 @@ export default function EditorialProductPage({ product }: { product: EditorialPr
                             src={relatedProduct.images[0]}
                             alt={relatedProduct.name}
                             fill
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                         ) : (
@@ -363,6 +366,7 @@ export default function EditorialProductPage({ product }: { product: EditorialPr
                 src={selectedImage}
                 alt={product.name}
                 fill
+                sizes="100vw"
                 className="object-contain"
                 quality={100}
               />
@@ -385,6 +389,7 @@ export default function EditorialProductPage({ product }: { product: EditorialPr
                       src={img}
                       alt={`${product.name} view ${idx + 1}`}
                       fill
+                      sizes="80px"
                       className="object-cover"
                     />
                   </button>

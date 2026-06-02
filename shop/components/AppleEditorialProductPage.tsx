@@ -67,6 +67,7 @@ export default function AppleEditorialProductPage({ product }: { product: Produc
                 src={product.images[0]}
                 alt={product.name}
                 fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-contain"
                 priority
               />
@@ -108,6 +109,7 @@ export default function AppleEditorialProductPage({ product }: { product: Produc
                       src={img}
                       alt={`${product.name} detail ${idx + 1}`}
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover"
                     />
                   </div>
@@ -129,6 +131,7 @@ export default function AppleEditorialProductPage({ product }: { product: Produc
                 src={product.images[3] || product.images[0]}
                 alt={`${product.name} in use`}
                 fill
+                sizes="(max-width: 1536px) 100vw, 1280px"
                 className="object-cover"
               />
             </div>

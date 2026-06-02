@@ -28,9 +28,9 @@ export default async function HomePage() {
             src="/images/blog/hero.png"
             alt="Thoughtful living"
             fill
+            sizes="100vw"
             className="object-cover"
             priority
-            sizes="100vw"
           />
         </div>
 
@@ -89,7 +89,7 @@ export default async function HomePage() {
                         className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 flex items-center justify-center">
+                      <div className="w-full h-full bg-linear-to-br from-gray-100 to-gray-50 flex items-center justify-center">
                         <span className="text-gray-400 text-sm">{product.name}</span>
                       </div>
                     )}

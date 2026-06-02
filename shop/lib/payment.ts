@@ -27,7 +27,7 @@ export interface InitializePaymentRequest {
   }>;
   subtotal: number;
   shipping_cost: number;
-  tax: number;
+  tax?: number;
   total: number;
   payment_method: string;
 }

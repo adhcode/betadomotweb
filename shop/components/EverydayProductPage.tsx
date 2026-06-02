@@ -111,6 +111,7 @@ export default function EverydayProductPage({ product }: EverydayProductPageProp
                       src={selectedImage}
                       alt={product.name}
                       fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                       priority
                     />
@@ -145,6 +146,7 @@ export default function EverydayProductPage({ product }: EverydayProductPageProp
                         src={img}
                         alt={`${product.name} view ${idx + 1}`}
                         fill
+                        sizes="(max-width: 768px) 20vw, 100px"
                         className="object-cover"
                       />
                     </button>
@@ -359,6 +361,7 @@ export default function EverydayProductPage({ product }: EverydayProductPageProp
                             src={relatedProduct.images[0]}
                             alt={relatedProduct.name}
                             fill
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                         ) : (
@@ -420,6 +423,7 @@ export default function EverydayProductPage({ product }: EverydayProductPageProp
                 src={selectedImage}
                 alt={product.name}
                 fill
+                sizes="100vw"
                 className="object-contain"
                 quality={100}
               />
@@ -442,6 +446,7 @@ export default function EverydayProductPage({ product }: EverydayProductPageProp
                       src={img}
                       alt={`${product.name} view ${idx + 1}`}
                       fill
+                      sizes="80px"
                       className="object-cover"
                     />
                   </button>
